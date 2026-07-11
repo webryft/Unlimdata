@@ -1,294 +1,684 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Bulk WhatsApp Helper — Open chats without saving contacts</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>UnlimData — Unlimited Internet Subscription for All Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-  :root { --accent: #25D366; --bg: #f6f8fb; --card: #fff; --muted:#6b7280; }
-  body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: var(--bg); margin:0; padding:20px; color:#0f172a; }
-  .wrap { max-width:950px; margin:18px auto; }
-  header { display:flex; gap:12px; align-items:center; }
-  header h1 { margin:0; font-size:20px; }
-  .card { background:var(--card); border-radius:12px; padding:18px; box-shadow: 0 6px 18px rgba(12, 20, 39, 0.06); margin-top:16px; }
-  label { display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
-  textarea, input[type="text"], input[type="number"]{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e9ef; font-size:14px; box-sizing:border-box; }
-  .grid { display:grid; grid-template-columns: 1fr 240px; gap:12px; }
-  .row { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
-  button { background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; }
-  button.secondary { background:transparent; color:#0f172a; border:1px solid #e6e9ef; }
-  .links { margin-top:14px; max-height:260px; overflow:auto; padding:8px; border-radius:8px; background:#fbfdff; border:1px dashed #e9eef6; }
-  .link-item { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px; border-radius:6px; background:linear-gradient(180deg,#fff,#fbfdff); margin-bottom:8px; }
-  .link-item a { text-decoration:none; color:#0f172a; font-size:13px; word-break:break-all; }
-  .muted { color:var(--muted); font-size:13px; }
-  .small { font-size:13px; color:#334155; }
-  footer { margin-top:18px; font-size:13px; color:var(--muted); }
-  .danger { background:#fee2e2; color:#9b1c1c; border-radius:6px; padding:8px; margin-top:12px; }
+:root{--gold:#f5a623;--gold2:#e6920f;--gold-dim:rgba(245,166,35,0.12);--gold-glow:rgba(245,166,35,0.30);--bg:#fff;--bg2:#fffdf5;--bg3:#fff8e1;--dark:#111;--dark2:#1c1c1c;--ink:#222;--muted:#666;--muted2:#999;--border:#e8e8e8;--border2:#d0d0d0;--green:#16a34a;--green-dim:rgba(22,163,74,0.10);--red:#dc2626;--display:'Syne',sans-serif;--body:'Inter',sans-serif;--r:14px;--rsm:9px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#f5f5f5;}::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px;}
+img{display:block;max-width:100%;}
+button{font-family:var(--body);cursor:pointer;}
+a{text-decoration:none;}
+nav{position:fixed;top:0;left:0;right:0;z-index:400;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(14px,4vw,54px);background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);transition:box-shadow .3s;}
+nav.scrolled{box-shadow:0 2px 22px rgba(0,0,0,0.09);}
+.nav-logo{font-family:var(--display);font-size:1.25rem;font-weight:800;color:var(--dark);letter-spacing:-0.03em;cursor:pointer;display:flex;align-items:center;}
+.navdot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-left:3px;box-shadow:0 0 0 3px rgba(245,166,35,0.22);}
+.nav-right{display:flex;align-items:center;gap:9px;}
+.nbtn{font-size:0.8rem;font-weight:600;padding:8px 17px;border-radius:30px;border:none;transition:all .2s;-webkit-tap-highlight-color:transparent;}
+.nbtn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--border2);}
+.nbtn-ghost:hover{background:var(--bg2);border-color:var(--gold);}
+.nbtn-fill{background:var(--gold);color:#fff;box-shadow:0 2px 10px var(--gold-glow);}
+.nbtn-fill:hover{background:var(--gold2);transform:translateY(-1px);}
+.hbg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:38px;height:38px;border-radius:8px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s;}
+.hbg:hover{background:var(--bg3);}
+.hbg span{display:block;width:20px;height:2px;background:var(--dark);border-radius:2px;}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px clamp(16px,6vw,100px) 60px;background:linear-gradient(160deg,#fffdf5 0%,#fff 55%,#fff8e1 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(245,166,35,0.14),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(245,166,35,0.09),transparent 70%);pointer-events:none;}
+.hbadge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-dim);border:1px solid rgba(245,166,35,0.35);color:var(--gold2);font-size:0.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:5px 16px;border-radius:30px;margin-bottom:26px;}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 1.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.hero-h1{font-family:var(--display);font-size:clamp(2.4rem,7vw,5.2rem);font-weight:800;line-height:1.08;letter-spacing:-0.04em;color:var(--dark);margin-bottom:20px;max-width:880px;}
+.hero-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.18rem);color:var(--muted);max-width:540px;line-height:1.72;margin-bottom:42px;}
+.hero-btns{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-bottom:54px;}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;font-weight:700;font-size:0.9rem;padding:14px 30px;border-radius:30px;border:none;transition:all .25s;box-shadow:0 4px 20px var(--gold-glow);-webkit-tap-highlight-color:transparent;}
+.btn-p:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 28px var(--gold-glow);}
+.btn-o{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--dark);font-weight:600;font-size:0.9rem;padding:13px 28px;border-radius:30px;border:2px solid var(--border2);transition:all .25s;-webkit-tap-highlight-color:transparent;}
+.btn-o:hover{border-color:var(--gold);color:var(--gold2);background:var(--gold-dim);}
+.hero-stats{display:flex;gap:clamp(26px,6vw,60px);flex-wrap:wrap;justify-content:center;}
+.stat{text-align:center;}
+.stat-n{font-family:var(--display);font-size:clamp(1.8rem,4vw,2.7rem);font-weight:800;color:var(--dark);letter-spacing:-0.04em;}
+.stat-n b{color:var(--gold);}
+.stat-l{font-size:0.7rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:3px;}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;font-size:0.62rem;letter-spacing:.2em;color:var(--muted2);text-transform:uppercase;}
+.sarr{width:22px;height:22px;border:1.5px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;animation:arr 2s ease-in-out infinite;}
+@keyframes arr{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+.ads-wrap{padding:18px clamp(14px,4vw,54px);background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.ads-label{font-size:0.58rem;color:var(--muted2);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:8px;}
+.ads-frame{width:100%;max-width:728px;height:90px;margin:0 auto;background:linear-gradient(135deg,#fff8e1,#fff3cd);border:1.5px solid rgba(245,166,35,0.3);border-radius:var(--r);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;box-shadow:0 2px 12px rgba(245,166,35,0.1);}
+.ads-frame img{width:100%;height:100%;object-fit:cover;border-radius:var(--r);}
+.ads-ph{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 24px;}
+.ads-ph-l{display:flex;flex-direction:column;gap:4px;}
+.ads-ph-title{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--gold2);}
+.ads-ph-sub{font-size:0.75rem;color:var(--muted);}
+.ads-ph-btn{background:var(--gold);color:#fff;font-size:0.75rem;font-weight:700;padding:7px 18px;border-radius:20px;border:none;white-space:nowrap;}
+.ads-tag{position:absolute;top:5px;right:8px;font-size:0.52rem;color:var(--muted2);letter-spacing:.1em;}
+.sec{padding:clamp(60px,8vw,104px) clamp(14px,5vw,78px);}
+.sec-lbl{font-size:0.67rem;font-weight:700;letter-spacing:.22em;color:var(--gold2);text-transform:uppercase;margin-bottom:10px;}
+.sec-h2{font-family:var(--display);font-size:clamp(1.8rem,4vw,2.9rem);font-weight:800;letter-spacing:-0.03em;color:var(--dark);margin-bottom:10px;line-height:1.14;}
+.sec-sub{color:var(--muted);font-size:0.96rem;line-height:1.66;max-width:500px;}
+.divider{height:1px;background:var(--border);}
+.nets-sec{background:var(--bg2);}
+.nets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:13px;margin-top:40px;}
+.nc{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:20px 13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;transition:all .25s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;}
+.nc:hover{border-color:var(--gold);box-shadow:0 6px 26px rgba(245,166,35,0.16);transform:translateY(-3px);}
+.nc:active{transform:translateY(-1px);}
+.nc-img{width:64px;height:64px;border-radius:13px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;}
+.nc-img img{width:100%;height:100%;object-fit:contain;padding:7px;}
+.nc-fall{width:64px;height:64px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.3rem;font-weight:800;}
+.nc-name{font-family:var(--display);font-size:0.78rem;font-weight:700;color:var(--dark);}
+.nc-tag{font-size:0.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:var(--green-dim);padding:2px 8px;border-radius:20px;}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:17px;margin-top:40px;}
+.feat{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:24px 20px;transition:border-color .25s,box-shadow .25s;}
+.feat:hover{border-color:rgba(245,166,35,0.4);box-shadow:0 4px 18px rgba(245,166,35,0.1);}
+.feat-ic{width:42px;height:42px;border-radius:10px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px;}
+.feat-h{font-family:var(--display);font-size:0.96rem;font-weight:700;color:var(--dark);margin-bottom:6px;}
+.feat-p{font-size:0.83rem;color:var(--muted);line-height:1.65;}
+.invite-sec{background:linear-gradient(135deg,#fffbea,#fff8d6);border-top:1px solid rgba(245,166,35,0.2);border-bottom:1px solid rgba(245,166,35,0.2);}
+.invite-inner{display:flex;align-items:center;gap:38px;flex-wrap:wrap;}
+.invite-em{font-size:3.4rem;flex-shrink:0;line-height:1;}
+.invite-body{flex:1;min-width:230px;}
+.invite-h{font-family:var(--display);font-size:1.45rem;font-weight:800;color:var(--dark);margin-bottom:7px;}
+.invite-p{font-size:0.88rem;color:var(--muted);line-height:1.66;margin-bottom:4px;}
+.invite-note{font-size:0.72rem;color:var(--muted2);font-style:italic;}
+.tstrip{background:var(--dark2);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;gap:16px;text-decoration:none;transition:background .22s;-webkit-tap-highlight-color:transparent;}
+.tstrip:hover{background:var(--dark);}
+.ts-ic{font-size:1.55rem;flex-shrink:0;}
+.ts-body{flex:1;}
+.ts-title{font-family:var(--display);font-size:.98rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.ts-sub{font-size:0.78rem;color:rgba(255,255,255,0.5);}
+.ts-arr{font-size:1.1rem;color:var(--gold);}
+footer{background:var(--dark);color:rgba(255,255,255,0.8);padding:54px clamp(14px,5vw,78px) 26px;}
+.ft-top{display:flex;gap:42px;flex-wrap:wrap;margin-bottom:42px;}
+.ft-brand{flex:1;min-width:200px;}
+.ft-logo{font-family:var(--display);font-size:1.22rem;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-0.03em;}
+.ft-logo b{color:var(--gold);}
+.ft-tag{font-size:0.83rem;color:rgba(255,255,255,0.42);line-height:1.7;max-width:250px;}
+.ft-col-h{font-size:0.66rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:15px;}
+.ft-lnk{display:block;font-size:0.84rem;color:rgba(255,255,255,0.52);margin-bottom:10px;cursor:pointer;transition:color .2s;-webkit-tap-highlight-color:transparent;}
+.ft-lnk:hover{color:var(--gold);}
+.ft-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.ft-copy{font-size:0.76rem;color:rgba(255,255,255,0.28);}
+.ft-row{display:flex;gap:18px;flex-wrap:wrap;}
+.ft-row a{font-size:0.76rem;color:rgba(255,255,255,0.3);cursor:pointer;transition:color .2s;}
+.ft-row a:hover{color:var(--gold);}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(308px,90vw);background:#fff;border-left:1.5px solid var(--border);z-index:500;transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,0.12);}
+#drawer.open{transform:translateX(0);}
+.dr-head{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.dr-logo{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--dark);}
+.dr-logo b{color:var(--gold);}
+.dr-x{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);background:transparent;font-size:1rem;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.dr-x:hover{background:var(--bg3);border-color:var(--gold);color:var(--dark);}
+.dr-user{padding:14px 18px;background:var(--gold-dim);border-bottom:1px solid rgba(245,166,35,0.2);display:none;}
+.dr-user.on{display:block;}
+.dr-uname{font-family:var(--display);font-size:0.9rem;font-weight:700;color:var(--dark);}
+.dr-usub{font-size:0.73rem;color:var(--muted);margin-top:2px;}
+.dr-ubonus{font-size:0.7rem;color:var(--gold2);font-weight:600;margin-top:5px;background:#fff;padding:3px 9px;border-radius:20px;display:inline-block;}
+.dr-body{padding:10px;flex:1;}
+.dr-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:9px;cursor:pointer;transition:background .2s;font-size:0.87rem;font-weight:500;color:var(--muted);-webkit-tap-highlight-color:transparent;}
+.dr-item:hover{background:var(--bg3);color:var(--dark);}
+.dr-item.hl{background:var(--gold-dim);color:var(--gold2);font-weight:600;}
+.dr-ic{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.dr-sep{height:1px;background:var(--border);margin:7px 13px;}
+.dr-so{margin:10px;padding:10px;border-radius:9px;background:rgba(220,38,38,0.06);border:1.5px solid rgba(220,38,38,0.15);color:var(--red);font-size:0.84rem;font-weight:600;display:none;transition:all .2s;text-align:center;}
+.dr-so.on{display:block;}
+.dr-so:hover{background:rgba(220,38,38,0.12);}
+#dimmer{position:fixed;inset:0;z-index:490;background:rgba(0,0,0,0.45);opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
+#dimmer.on{opacity:1;pointer-events:all;}
+.mw{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(0,0,0,0.52);opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px);}
+.mw.on{opacity:1;pointer-events:all;}
+.mb{background:#fff;border-radius:20px;width:100%;max-width:440px;padding:28px 24px;position:relative;max-height:92vh;overflow-y:auto;transform:scale(.95) translateY(14px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 24px 80px rgba(0,0,0,0.2);}
+.mw.on .mb{transform:scale(1) translateY(0);}
+.mx{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.mx:hover{background:var(--bg3);color:var(--dark);border-color:var(--gold);}
+.mt{font-family:var(--display);font-size:1.2rem;font-weight:800;color:var(--dark);margin-bottom:5px;}
+.ms{font-size:0.83rem;color:var(--muted);margin-bottom:20px;line-height:1.55;}
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.fi{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);padding:11px 13px;color:var(--dark);font-family:var(--body);font-size:0.88rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+.fi:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,0.11);}
+.fi::placeholder{color:var(--muted2);}
+textarea.fi{resize:vertical;min-height:94px;}
+.ferr{font-size:0.72rem;color:var(--red);margin-top:4px;display:none;}
+.ferr.on{display:block;}
+.fbtn{width:100%;background:var(--gold);color:#fff;font-family:var(--body);font-size:0.88rem;font-weight:700;padding:12px;border-radius:var(--rsm);border:none;transition:all .2s;margin-top:4px;}
+.fbtn:hover{background:var(--gold2);transform:translateY(-1px);}
+.fbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.fbtn.red{background:rgba(220,38,38,0.08);color:var(--red);border:1.5px solid rgba(220,38,38,0.2);}
+.fbtn.red:hover{background:rgba(220,38,38,0.14);}
+.flink{display:block;text-align:center;font-size:0.8rem;color:var(--gold2);cursor:pointer;margin-top:13px;transition:opacity .2s;font-weight:500;}
+.flink:hover{opacity:.7;}
+.fdiv{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--muted2);font-size:0.76rem;}
+.fdiv::before,.fdiv::after{content:'';flex:1;height:1px;background:var(--border);}
+.nm-head{display:flex;align-items:center;gap:13px;padding-bottom:18px;margin-bottom:20px;border-bottom:1.5px solid var(--border);}
+.nm-logo{width:52px;height:52px;border-radius:12px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nm-logo img{width:100%;height:100%;object-fit:contain;padding:5px;}
+.nm-name{font-family:var(--display);font-size:1.05rem;font-weight:800;color:var(--dark);}
+.nm-sub{font-size:0.76rem;color:var(--muted);margin-top:2px;}
+.plans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
+.plan{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--rsm);padding:14px 11px;cursor:pointer;text-align:center;transition:all .22s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;}
+.plan:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(245,166,35,0.14);}
+.plan::before{content:'';position:absolute;inset:0;background:var(--gold-dim);opacity:0;transition:opacity .2s;}
+.plan:hover::before{opacity:1;}
+.pop-badge{position:absolute;top:0;right:0;background:var(--gold);color:#fff;font-size:0.48rem;font-weight:800;letter-spacing:.1em;padding:2px 7px;border-radius:0 var(--rsm) 0 var(--rsm);text-transform:uppercase;}
+.plan-data{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--gold2);position:relative;}
+.plan-price{font-family:var(--display);font-size:0.86rem;font-weight:700;color:var(--dark);margin-top:2px;position:relative;}
+.plan-val{font-size:0.6rem;color:var(--muted);margin-top:3px;position:relative;}
+.buy-pill{background:linear-gradient(135deg,var(--gold-dim),rgba(245,166,35,0.05));border:1.5px solid rgba(245,166,35,0.28);border-radius:var(--rsm);padding:13px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.bp-data{font-family:var(--display);font-size:1.12rem;font-weight:800;color:var(--gold2);}
+.bp-price{font-family:var(--display);font-size:.98rem;font-weight:700;color:var(--dark);}
+.party-row{display:flex;border-radius:var(--rsm);overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px;}
+.pty{flex:1;padding:10px 7px;text-align:center;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted);background:var(--bg2);-webkit-tap-highlight-color:transparent;}
+.pty.on{background:var(--gold);color:#fff;}
+.inv-box{background:var(--bg3);border:1.5px solid rgba(245,166,35,0.24);border-radius:var(--rsm);padding:15px;margin-top:15px;}
+.inv-bh{font-family:var(--display);font-size:.83rem;font-weight:700;color:var(--dark);margin-bottom:11px;display:flex;align-items:center;gap:6px;}
+.inv-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--border);}
+.inv-row:last-of-type{border-bottom:none;}
+.inv-val{font-family:var(--display);font-weight:700;color:var(--gold2);}
+.inv-bar-w{height:7px;background:var(--border);border-radius:4px;margin-top:9px;overflow:hidden;}
+.inv-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px;transition:width .6s;}
+.inv-claim{width:100%;margin-top:11px;padding:10px;border-radius:var(--rsm);background:var(--gold-dim);border:1.5px solid rgba(245,166,35,0.3);color:var(--gold2);font-size:.8rem;font-weight:700;transition:all .2s;}
+.inv-claim:hover:not(:disabled){background:rgba(245,166,35,0.2);}
+.inv-claim:disabled{opacity:.4;cursor:not-allowed;}
+.policy-body{font-size:0.84rem;color:var(--muted);line-height:1.8;}
+.policy-body h3{font-family:var(--display);font-size:0.88rem;font-weight:700;color:var(--dark);margin:16px 0 6px;}
+.policy-body h3:first-child{margin-top:0;}
+.policy-body p{margin-bottom:10px;}
+.policy-body ul{padding-left:18px;margin-bottom:10px;}
+.policy-body ul li{margin-bottom:5px;}
+.policy-footer{border-top:1px solid var(--border);margin-top:16px;padding-top:12px;font-size:0.72rem;color:var(--muted2);}
+#loader{position:fixed;inset:0;z-index:999;background:rgba(255,255,255,0.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0;pointer-events:none;transition:opacity .3s;}
+#loader.on{opacity:1;pointer-events:all;}
+.ld-ring{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ld-txt{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--dark);letter-spacing:.08em;}
+.ld-sub{font-size:.76rem;color:var(--muted);}
+#success{position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:700;max-width:min(480px,92vw);width:100%;background:#fff;border:1.5px solid rgba(22,163,74,0.35);border-radius:16px;padding:17px 18px;display:flex;align-items:flex-start;gap:13px;box-shadow:0 12px 48px rgba(0,0,0,0.13);opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+#success.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;}
+.suc-ic{font-size:1.7rem;flex-shrink:0;line-height:1;}
+.suc-t{font-family:var(--display);font-size:.9rem;font-weight:800;color:var(--green);margin-bottom:3px;}
+.suc-m{font-size:.8rem;color:var(--muted);line-height:1.5;}
+.suc-x{background:none;border:none;color:var(--muted2);font-size:1rem;flex-shrink:0;padding:2px;}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);z-index:800;background:var(--dark);color:#fff;font-size:.8rem;padding:9px 20px;border-radius:30px;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.22);}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:600px){.plans-grid{grid-template-columns:repeat(2,1fr);}.ft-top{flex-direction:column;}.ft-bottom{flex-direction:column;align-items:flex-start;}.hero-stats{gap:24px;}.invite-inner{gap:22px;}.nbtn{display:none;}.ads-frame{height:70px;}}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24'><path fill='%2325D366' d='M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 .01 5.36.01 12c0 2.11.56 4.09 1.62 5.82L0 24l6.41-1.64A11.95 11.95 0 0 0 12 24c6.63 0 12-5.36 12-12 0-3.21-1.25-6.17-3.48-8.52z'/></svg>" alt="" />
-      <h1>Bulk WhatsApp Helper</h1>
-    </header>
+<div id="loader"><div class="ld-ring"></div><div class="ld-txt" id="ld-txt">PROCESSING</div><div class="ld-sub" id="ld-sub">Please wait…</div></div>
+<div id="success"><div class="suc-ic">✅</div><div style="flex:1;"><div class="suc-t">Payment Successful!</div><div class="suc-m" id="suc-m">Your data plan has been activated.</div></div><button class="suc-x" onclick="hideBanner()">✕</button></div>
+<div id="toast"></div>
+<div id="dimmer" onclick="closeDimmer()"></div>
 
-    <div class="card">
-      <div class="grid">
-        <div>
-          <label for="numbers">Phone numbers <span class="muted">(one per line, or comma separated). Can include + or not.</span></label>
-          <textarea id="numbers" rows="8" placeholder="e.g. 08031234567 OR +2348031234567 OR 2348031234567"></textarea>
-
-          <div style="display:flex; gap:8px; margin-top:10px;">
-            <div style="flex:1">
-              <label for="defaultCountry">Default country code (no +)</label>
-              <input id="defaultCountry" type="text" value="234" />
-            </div>
-            <div style="width:140px;">
-              <label for="openDelay">Open delay (ms)</label>
-              <input id="openDelay" type="number" value="1200" />
-            </div>
-          </div>
-
-          <label for="message" style="margin-top:12px;">Message</label>
-          <textarea id="message" rows="4" placeholder="Type the message that will be prefilled into WhatsApp. Use {name} as placeholder if you want to replace per contact (optional)."></textarea>
-
-          <div class="row">
-            <button id="generateBtn">Generate Links</button>
-            <button id="openSeqBtn" class="secondary">Open Sequentially</button>
-            <button id="copyBtn" class="secondary">Copy All Links</button>
-            <button id="clearBtn" class="secondary">Clear</button>
-          </div>
-
-          <div class="danger small">
-            Note: This tool only **opens** WhatsApp chat windows (wa.me links). You must press **Send** yourself in each chat. Opening many tabs/windows may be blocked by your browser — use the "Open Sequentially" button to reduce popup blocking.
-          </div>
-        </div>
-
-        <div>
-          <label>Preview / Generated links</label>
-          <div class="links" id="linksContainer">
-            <div class="muted">No links yet. Click <strong>Generate Links</strong>.</div>
-          </div>
-
-          <div style="margin-top:12px;">
-            <label>Export / actions</label>
-            <div class="row">
-              <button id="downloadCsv" class="secondary">Download CSV</button>
-              <button id="exportTxt" class="secondary">Export Text</button>
-            </div>
-            <p class="small" style="margin-top:10px">Tip: If some numbers don't include the country code, the default above will be prepended. Numbers are sanitized to digits only.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <footer>
-      <div class="small">Built for one-by-one user-driven messaging. Do not use for spam or unsolicited bulk messaging. Respect recipient consent and WhatsApp terms of service.</div>
-    </footer>
+<nav id="nav">
+  <div class="nav-logo" onclick="scrollTo(0,0)">Unlim<span style="color:var(--gold)">Data</span><div class="navdot"></div></div>
+  <div class="nav-right">
+    <button class="nbtn nbtn-ghost" id="nav-li" onclick="openM('m-login')">Sign In</button>
+    <button class="nbtn nbtn-fill" id="nav-cta" onclick="openM('m-signup')">Get Started</button>
+    <div class="hbg" onclick="openDrawer()"><span></span><span></span><span></span></div>
   </div>
+</nav>
+
+<div id="drawer">
+  <div class="dr-head"><div class="dr-logo">Unlim<b>Data</b></div><button class="dr-x" onclick="closeDrawer()">✕</button></div>
+  <div class="dr-user" id="dr-user"><div class="dr-uname" id="dr-uname"></div><div class="dr-usub">UnlimData Member</div><div class="dr-ubonus" id="dr-ubonus">🎁 Bonus: 0 GB</div></div>
+  <div class="dr-body">
+    <a class="tstrip" href="unlimited.html" target="_blank" style="margin-bottom:12px;">
+      <div class="ts-ic">🛠</div><div class="ts-body"><div class="ts-title">Data Tools</div><div class="ts-sub">Browse safely · Bypass restrictions</div></div><div class="ts-arr">↗</div>
+    </a>
+    <div class="dr-item" onclick="closeDrawer();scrollToNets()"><span class="dr-ic">📡</span>Buy Data</div>
+    <div class="dr-item hl" onclick="closeDrawer();openInvite()"><span class="dr-ic">🎁</span>Invite Friends — Earn 1GB</div>
+    <div class="dr-sep"></div>
+    <div class="dr-item" id="dr-li" onclick="closeDrawer();openM('m-login')"><span class="dr-ic">👤</span>Sign In</div>
+    <div class="dr-item" id="dr-su" onclick="closeDrawer();openM('m-signup')"><span class="dr-ic">✨</span>Create Account</div>
+    <div class="dr-sep"></div>
+    <div class="dr-item" onclick="closeDrawer();openM('m-contact')"><span class="dr-ic">💬</span>Contact Us</div>
+    <div class="dr-item" onclick="closeDrawer();openM('m-about')"><span class="dr-ic">ℹ️</span>About UnlimData</div>
+    <div class="dr-item" onclick="closeDrawer();openM('m-forgot')"><span class="dr-ic">🔑</span>Forgot Password</div>
+    <div class="dr-item" onclick="closeDrawer();openM('m-privacy')"><span class="dr-ic">🔒</span>Privacy Policy</div>
+    <div class="dr-item" onclick="closeDrawer();openM('m-terms')"><span class="dr-ic">📄</span>Terms of Service</div>
+  </div>
+  <button class="dr-so" id="dr-so" onclick="signOut()">Sign Out</button>
+</div>
+
+<section class="hero">
+  <div class="hbadge"><div class="pulse"></div>All Networks · Always On</div>
+  <h1 class="hero-h1">Unlimited Data Subscription<br>for <em>All Networks</em></h1>
+  <p class="hero-sub">Browse anything, anywhere, anytime. One subscription that works across all Nigerian and global networks — at prices that make sense.</p>
+  <div class="hero-btns">
+    <button class="btn-p" onclick="scrollToNets()">🚀 Buy Data Now</button>
+    <button class="btn-o" onclick="openM('m-about')">Learn More</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n"><b>8</b>+</div><div class="stat-l">Networks</div></div>
+    <div class="stat"><div class="stat-n"><b>30</b>D</div><div class="stat-l">Max Plan</div></div>
+    <div class="stat"><div class="stat-n">₦<b>1000</b></div><div class="stat-l">Starts From</div></div>
+    <div class="stat"><div class="stat-n"><b>24</b>/7</div><div class="stat-l">Support</div></div>
+  </div>
+  <div class="scroll-hint"><div class="sarr">↓</div>Scroll to networks</div>
+</section>
+
+<div class="ads-wrap">
+  <div class="ads-label">Advertisement</div>
+  <div class="ads-frame">
+    <img src="ads.gif" alt="Advertisement" onerror="this.style.display='none';document.getElementById('ads-ph').style.display='flex';"/>
+    <div class="ads-ph" id="ads-ph" style="display:none;">
+      <div class="ads-ph-l"><div class="ads-ph-title">🚀 Advertise Here</div><div class="ads-ph-sub">Reach thousands of Nigerian internet users daily · 728×90</div></div>
+      <button class="ads-ph-btn" onclick="openM('m-contact')">Get Ad Spot</button>
+    </div>
+    <div class="ads-tag">AD</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<section class="sec nets-sec" id="nets-sec">
+  <div class="sec-lbl">Choose Your Network</div>
+  <h2 class="sec-h2">All Networks, One Platform</h2>
+  <p class="sec-sub">Select your provider to see all available data plans instantly.</p>
+  <div class="nets-grid" id="nets-grid"></div>
+</section>
+
+<div class="divider"></div>
+
+<section class="sec">
+  <div class="sec-lbl">Why UnlimData</div>
+  <h2 class="sec-h2">Everything You Need to Stay Connected</h2>
+  <div class="feats">
+    <div class="feat"><div class="feat-ic">⚡</div><div class="feat-h">Instant Activation</div><div class="feat-p">Data reflects in your account under 60 seconds after payment. No delays, no waiting calls.</div></div>
+    <div class="feat"><div class="feat-ic">🔐</div><div class="feat-h">Secure Payments</div><div class="feat-p">Powered by Paystack — Nigeria's most trusted payment gateway. Every transaction is encrypted end-to-end.</div></div>
+    <div class="feat"><div class="feat-ic">📡</div><div class="feat-h">All Major Networks</div><div class="feat-p">MTN, Glo, Airtel, 9Mobile, Smile, T-Mobile, Vodafone, ntel — all in one place.</div></div>
+    <div class="feat"><div class="feat-ic">💸</div><div class="feat-h">Unbeatable Prices</div><div class="feat-p">₦100 for 10GB. Our rates beat any reseller in the market, guaranteed.</div></div>
+    <div class="feat"><div class="feat-ic">🎁</div><div class="feat-h">Refer &amp; Earn Free Data</div><div class="feat-p">Invite friends and earn 1GB per referral. Redeem once you hit 50GB in your bonus box.</div></div>
+    <div class="feat"><div class="feat-ic">🛠</div><div class="feat-h">Free Browsing Tools</div><div class="feat-p">VPN guides, speed tests, bypass tools, data usage calculators — all free.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="sec invite-sec">
+  <div class="invite-inner">
+    <div class="invite-em">🎁</div>
+    <div class="invite-body">
+      <div class="invite-h">Invite Friends, Earn Free Data</div>
+      <div class="invite-p">Every friend you bring earns you <strong>1GB free</strong>. Accumulate in your bonus box — redeem at 50GB.</div>
+      <div class="invite-note">* Referral GB redeemable when total in bonus box reaches 50GB.</div>
+    </div>
+    <button class="btn-p" onclick="openInvite()">🔗 Get My Invite Link</button>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="sec" style="padding-top:44px;padding-bottom:44px;">
+  <a class="tstrip" href="unlimited.html" target="_blank">
+    <div class="ts-ic">🛠</div>
+    <div class="ts-body"><div class="ts-title">Unlimited Data Tools — Always Free</div><div class="ts-sub">Stack VPN · Psiphon · Orbot/Tor · Speedify · Windscribe · Speed tests · DNS leak tests · URL block checker and more</div></div>
+    <div class="ts-arr">↗</div>
+  </a>
+</section>
+
+<footer>
+  <div class="ft-top">
+    <div class="ft-brand"><div class="ft-logo">Unlim<b>Data</b></div><div class="ft-tag">Unlimited internet subscription for all Nigerian and global networks. Browse anything, anywhere, anytime.</div></div>
+    <div><div class="ft-col-h">Services</div><span class="ft-lnk" onclick="scrollToNets()">Buy Data</span><a class="ft-lnk" href="unlimited.html" target="_blank">Data Tools</a><span class="ft-lnk" onclick="openInvite()">Referral Program</span></div>
+    <div><div class="ft-col-h">Account</div><span class="ft-lnk" onclick="openM('m-signup')">Create Account</span><span class="ft-lnk" onclick="openM('m-login')">Sign In</span><span class="ft-lnk" onclick="openM('m-forgot')">Forgot Password</span></div>
+    <div><div class="ft-col-h">Company</div><span class="ft-lnk" onclick="openM('m-about')">About Us</span><span class="ft-lnk" onclick="openM('m-contact')">Contact Us</span><span class="ft-lnk" onclick="openM('m-privacy')">Privacy Policy</span><span class="ft-lnk" onclick="openM('m-terms')">Terms of Service</span></div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">© Unlimited Data 2026. All rights reserved.</div>
+    <div class="ft-row"><a onclick="openM('m-about')">About</a><a onclick="openM('m-contact')">Contact</a><a onclick="openM('m-privacy')">Privacy</a><a onclick="openM('m-terms')">Terms</a></div>
+  </div>
+</footer>
+
+<!-- NETWORK PLANS MODAL -->
+<div class="mw" id="m-net"><div class="mb" style="max-width:500px;">
+  <button class="mx" onclick="closeM('m-net')">✕</button>
+  <div class="nm-head"><div class="nm-logo" id="nm-logo"></div><div><div class="nm-name" id="nm-name"></div><div class="nm-sub" id="nm-sub"></div></div></div>
+  <div style="font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;">Select a Plan</div>
+  <div class="plans-grid" id="nm-plans"></div>
+</div></div>
+
+<!-- BUY MODAL -->
+<div class="mw" id="m-buy"><div class="mb">
+  <button class="mx" onclick="closeM('m-buy')">✕</button>
+  <div class="mt">Confirm Purchase</div><div class="ms" id="buy-sub"></div>
+  <div class="buy-pill"><div><div style="font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;">Selected Plan</div><div class="bp-data" id="buy-data"></div></div><div class="bp-price" id="buy-price"></div></div>
+  <div class="party-row"><div class="pty on" onclick="setParty('self',this)">My Number</div><div class="pty" onclick="setParty('third',this)">3rd Party</div></div>
+  <div class="fg"><label class="fl" id="buy-ph-lbl">Phone Number</label><input class="fi" type="tel" id="buy-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="buy-ph-err">Enter a valid 11-digit Nigerian number.</div><div style="font-size:.73rem;color:var(--muted);margin-top:4px;" id="buy-hint">Number that will receive the data.</div></div>
+  <button class="fbtn" onclick="processBuy()">💳 Pay with Paystack</button>
+</div></div>
+
+<!-- SIGN UP -->
+<div class="mw" id="m-signup"><div class="mb">
+  <button class="mx" onclick="closeM('m-signup')">✕</button>
+  <div class="mt">Create Account</div><div class="ms">Join UnlimData — takes under 30 seconds.</div>
+  <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="su-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="su-ph-err">Enter a valid 11-digit number.</div></div>
+  <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="su-pw" placeholder="Create a password (min 6 chars)"/><div class="ferr" id="su-pw-err">Password must be at least 6 characters.</div></div>
+  <button class="fbtn" onclick="doSignup()">Create Account — It's Free</button>
+  <span class="flink" onclick="switchM('m-signup','m-login')">Already have an account? Sign In →</span>
+</div></div>
+
+<!-- LOGIN -->
+<div class="mw" id="m-login"><div class="mb">
+  <button class="mx" onclick="closeM('m-login')">✕</button>
+  <div class="mt">Welcome Back</div><div class="ms">Sign in to your UnlimData account.</div>
+  <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="li-ph" placeholder="080XXXXXXXX" maxlength="11"/></div>
+  <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="li-pw" placeholder="Your password"/><div class="ferr" id="li-err">Incorrect phone number or password.</div></div>
+  <button class="fbtn" onclick="doLogin()">Sign In</button>
+  <span class="flink" onclick="switchM('m-login','m-forgot')">Forgot your password?</span>
+  <div class="fdiv">or</div>
+  <span class="flink" onclick="switchM('m-login','m-signup')">Create a new account →</span>
+</div></div>
+
+<!-- FORGOT PASSWORD -->
+<div class="mw" id="m-forgot"><div class="mb">
+  <button class="mx" onclick="closeM('m-forgot')">✕</button>
+  <div class="mt" id="fp-title">Reset Password</div><div class="ms" id="fp-sub">Enter your registered phone number to continue.</div>
+  <div id="fp-s1">
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="fp-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="fp-ph-err">Phone number not found in our system.</div></div>
+    <button class="fbtn" onclick="fpStep1()">Continue</button>
+    <span class="flink" onclick="switchM('m-forgot','m-login')">← Back to Sign In</span>
+  </div>
+  <div id="fp-s2" style="display:none;">
+    <div class="fg"><label class="fl">New Password</label><input class="fi" type="password" id="fp-npw" placeholder="Enter new password (min 6 chars)"/><div class="ferr" id="fp-pw-err">Password must be at least 6 characters.</div></div>
+    <button class="fbtn" onclick="fpStep2()">Change Password</button>
+    <button class="fbtn red" onclick="closeM('m-forgot')" style="margin-top:8px;">Cancel</button>
+  </div>
+</div></div>
+
+<!-- CONTACT -->
+<div class="mw" id="m-contact"><div class="mb">
+  <button class="mx" onclick="closeM('m-contact')">✕</button>
+  <div class="mt">Contact Us 💬</div><div class="ms">Have a question? We respond via WhatsApp — usually within minutes.</div>
+  <div class="fg"><label class="fl">Your Phone Number</label><input class="fi" type="tel" id="ct-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="ct-ph-err">Enter a valid phone number.</div></div>
+  <div class="fg"><label class="fl">Your Question or Issue</label><textarea class="fi" id="ct-msg" placeholder="Type your question here…"></textarea><div class="ferr" id="ct-msg-err">Please type your question.</div></div>
+  <button class="fbtn" onclick="doContact()">💬 Send via WhatsApp</button>
+  <div style="margin-top:14px;text-align:center;font-size:.76rem;color:var(--muted2);">📞 WhatsApp: +1 (740) 406-1406 · Response time: under 30 minutes</div>
+</div></div>
+
+<!-- ABOUT -->
+<div class="mw" id="m-about"><div class="mb" style="max-width:500px;">
+  <button class="mx" onclick="closeM('m-about')">✕</button>
+  <div class="mt">About UnlimData 🌐</div>
+  <div class="policy-body">
+    <p><strong style="color:var(--dark);">UnlimData</strong> is Nigeria's go-to platform for affordable, instant internet data subscriptions across all major networks — MTN, Glo, Airtel, 9Mobile, Smile, T-Mobile, Vodafone, ntel, and more.</p>
+    <h3>Our Mission</h3>
+    <p>We believe internet access should be fast, easy, and affordable for everyone. Our platform lets you buy data for yourself or any number in seconds, with payments secured by Paystack.</p>
+    <h3>What We Offer</h3>
+    <ul>
+      <li>Data plans from ₦100 (10GB) to ₦50,000 (5TB)</li>
+      <li>Instant activation across 8+ networks</li>
+      <li>3rd party gifting — send data to any number</li>
+      <li>Free data tools: VPN guides, speed tests, bypass tools</li>
+      <li>Referral program — earn 1GB per friend invited</li>
+    </ul>
+    <h3>Why Trust Us</h3>
+    <p>Thousands of users across Nigeria trust UnlimData to keep them connected. Every transaction is processed securely through Paystack and every plan is activated instantly.</p>
+    <p><em>"Browse anything, anywhere, anytime — that is the UnlimData promise."</em></p>
+    <div class="policy-footer">Version 2.0 · © Unlimited Data 2026 · All rights reserved</div>
+  </div>
+</div></div>
+
+<!-- PRIVACY -->
+<div class="mw" id="m-privacy"><div class="mb" style="max-width:520px;">
+  <button class="mx" onclick="closeM('m-privacy')">✕</button>
+  <div class="mt">Privacy Policy 🔒</div><div class="ms">Last updated: January 2026</div>
+  <div class="policy-body">
+    <h3>1. Information We Collect</h3>
+    <ul><li><strong>Phone number</strong> — used as your account identifier and for data delivery</li><li><strong>Password</strong> — stored securely and never shared</li><li><strong>Transaction data</strong> — processed securely by Paystack (we do not store card details)</li><li><strong>Usage data</strong> — anonymous analytics to improve our platform</li></ul>
+    <h3>2. How We Use Your Information</h3>
+    <ul><li>To create and manage your UnlimData account</li><li>To process data plan purchases and activate subscriptions</li><li>To send transaction confirmations</li><li>To respond to your support inquiries</li><li>To improve our services and user experience</li></ul>
+    <h3>3. Data Sharing</h3>
+    <p>We do <strong>not</strong> sell, trade, or rent your personal information. We share data only with Paystack (payment processing) and network providers (phone number only, to deliver your data plan).</p>
+    <h3>4. Data Security</h3>
+    <p>All data is stored securely. Passwords are never stored in plain text. Payment information is handled entirely by Paystack and never touches our servers.</p>
+    <h3>5. Cookies</h3>
+    <p>We use minimal browser storage (localStorage) to keep you signed in and remember preferences. No third-party tracking cookies are used.</p>
+    <h3>6. Your Rights</h3>
+    <ul><li>Right to access your personal data</li><li>Right to delete your account and data</li><li>Right to opt out of communications</li></ul>
+    <p>To exercise these rights, contact us via WhatsApp at +1 (740) 406-1406.</p>
+    <h3>7. Changes to This Policy</h3>
+    <p>We may update this policy occasionally. Continued use of UnlimData after changes means you accept the updated policy.</p>
+    <div class="policy-footer">© Unlimited Data 2026 · Contact: WhatsApp +1 (740) 406-1406</div>
+  </div>
+</div></div>
+
+<!-- TERMS -->
+<div class="mw" id="m-terms"><div class="mb" style="max-width:520px;">
+  <button class="mx" onclick="closeM('m-terms')">✕</button>
+  <div class="mt">Terms of Service 📄</div><div class="ms">Last updated: January 2026 — Please read carefully before using UnlimData.</div>
+  <div class="policy-body">
+    <h3>1. Acceptance of Terms</h3>
+    <p>By using UnlimData, you agree to these Terms of Service. If you do not agree, please do not use our platform.</p>
+    <h3>2. Service Description</h3>
+    <p>UnlimData provides a digital platform for purchasing mobile data subscriptions. We act as a reseller and are not affiliated with any network operator.</p>
+    <h3>3. Account Responsibility</h3>
+    <ul><li>You are responsible for the security of your account password</li><li>You must provide a valid, active Nigerian phone number</li><li>You may not share your credentials with others</li><li>You are responsible for all purchases made through your account</li></ul>
+    <h3>4. Payments and Refunds</h3>
+    <ul><li>All payments are processed securely by Paystack</li><li>Prices are displayed in Nigerian Naira (₦) and are final</li><li>Data plans are activated automatically after payment confirmation</li><li>Refunds are processed within 24–48 hours for failed activations only</li></ul>
+    <h3>5. Prohibited Uses</h3>
+    <ul><li>Purchasing data for fraudulent or illegal activities</li><li>Attempting to hack or reverse-engineer our platform</li><li>Creating multiple accounts to abuse referral programs</li><li>Reselling data plans without authorization</li></ul>
+    <h3>6. Referral Program</h3>
+    <ul><li>1GB is credited per genuine referral (friend must complete a purchase)</li><li>Referral GB is redeemable when your bonus box reaches 50GB</li><li>Fraudulent referrals will result in account termination</li></ul>
+    <h3>7. Limitation of Liability</h3>
+    <p>UnlimData is not liable for service interruptions caused by network providers. Our maximum liability is limited to the value of the transaction in dispute.</p>
+    <h3>8. Contact</h3>
+    <p>For any disputes, contact us via WhatsApp at +1 (740) 406-1406.</p>
+    <div class="policy-footer">© Unlimited Data 2026 · These terms are governed by Nigerian law.</div>
+  </div>
+</div></div>
+
+<!-- INVITE -->
+<div class="mw" id="m-invite"><div class="mb">
+  <button class="mx" onclick="closeM('m-invite')">✕</button>
+  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">Each friend that subscribes earns you 1GB free. Redeem at 50GB total.</div>
+  <div id="inv-prompt" style="text-align:center;padding:20px 0;">
+    <div style="font-size:2.5rem;margin-bottom:11px;">🔐</div>
+    <div style="font-size:.86rem;color:var(--muted);margin-bottom:16px;">Sign in to get your personal invite link and track your earned GBs.</div>
+    <button class="fbtn" style="max-width:190px;margin:0 auto;" onclick="switchM('m-invite','m-login')">Sign In First</button>
+  </div>
+  <div id="inv-content" style="display:none;">
+    <div class="fg"><label class="fl">Your Invite Link</label><div style="display:flex;gap:8px;"><input class="fi" type="text" id="inv-link" readonly style="flex:1;"/><button class="fbtn" style="width:auto;padding:0 15px;margin-top:0;" onclick="copyInvLink()">Copy</button></div></div>
+    <div class="inv-box">
+      <div class="inv-bh">🎁 Your Bonus Box</div>
+      <div class="inv-row"><span>Friends Invited</span><span class="inv-val" id="inv-cnt">0</span></div>
+      <div class="inv-row"><span>GB Earned</span><span class="inv-val" id="inv-gb">0 GB</span></div>
+      <div class="inv-row"><span>Needed to Redeem</span><span class="inv-val">50 GB</span></div>
+      <div class="inv-bar-w"><div class="inv-bar" id="inv-bar" style="width:0%"></div></div>
+      <button class="inv-claim" id="inv-claim" disabled onclick="claimGB()">Claim Free Data (Need 50GB)</button>
+    </div>
+  </div>
+</div></div>
 
 <script>
-(function(){
-  const el = (id) => document.getElementById(id);
-  const numbersInput = el('numbers');
-  const defaultCountry = el('defaultCountry');
-  const messageInput = el('message');
-  const linksContainer = el('linksContainer');
-  const generateBtn = el('generateBtn');
-  const openSeqBtn = el('openSeqBtn');
-  const copyBtn = el('copyBtn');
-  const clearBtn = el('clearBtn');
-  const downloadCsv = el('downloadCsv');
-  const exportTxt = el('exportTxt');
-  const openDelayInput = el('openDelay');
-
-  let generated = []; // {raw, cleaned, link}
-
-  function sanitizeNumber(raw) {
-    if (!raw) return null;
-    // remove all non-digits and leading zeros (but keep zeros if it's part of number)
-    let s = String(raw).replace(/\s+/g, '');
-    // if it begins with +, remove
-    s = s.replace(/^\+/, '');
-    // remove all non-digit chars
-    s = s.replace(/\D/g, '');
-    // discard if too short
-    if (s.length < 6) return null;
-    return s;
-  }
-
-  function normalizeNumber(raw, defaultCc) {
-    let cleaned = sanitizeNumber(raw);
-    if (!cleaned) return null;
-    // If number starts with country code (length > 9), assume it's international already.
-    // Very simple heuristic: if length >= 10 and defaultCc is present, assume it's fine.
-    // If number length is less than default country + local length, prepend default.
-    if (defaultCc && !cleaned.startsWith(defaultCc) && cleaned.length <= 10) {
-      cleaned = defaultCc + cleaned.replace(/^0+/, ''); // remove leading zeros
-    }
-    return cleaned;
-  }
-
-  function buildWaLink(number, message) {
-    const encoded = encodeURIComponent(message || '');
-    // wa.me requires number without + or spaces
-    return `https://wa.me/${number}${encoded ? '?text=' + encoded : ''}`;
-  }
-
-  function renderLinks(list) {
-    linksContainer.innerHTML = '';
-    if (!list.length) {
-      linksContainer.innerHTML = '<div class="muted">No links yet. Click <strong>Generate Links</strong>.</div>';
-      return;
-    }
-    list.forEach((item, idx) => {
-      const div = document.createElement('div');
-      div.className = 'link-item';
-      const a = document.createElement('a');
-      a.href = item.link;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.textContent = item.link;
-      const right = document.createElement('div');
-      right.style.display = 'flex';
-      right.style.gap = '8px';
-      const btnCopy = document.createElement('button');
-      btnCopy.className = 'secondary';
-      btnCopy.style.padding = '6px 8px';
-      btnCopy.textContent = 'Open';
-      btnCopy.onclick = () => window.open(item.link, '_blank');
-      const small = document.createElement('div');
-      small.className = 'small';
-      small.textContent = item.cleaned;
-      right.appendChild(small);
-      right.appendChild(btnCopy);
-      div.appendChild(a);
-      div.appendChild(right);
-      linksContainer.appendChild(div);
+const PK='pk_live_4ff37d15381d1d12c78fd66f7bc86beb64c59415';
+const NETS=[
+  {id:'mtn',name:'MTN',img:'mtn.png',color:'#f5a623',bg:'#fff8e1',sub:'MTN Nigeria — 4G/5G Ready'},
+  {id:'glo',name:'Glo',img:'glo.png',color:'#00a550',bg:'#e8f5e9',sub:'Glo Mobile — Broadband Speed'},
+  {id:'airtel',name:'Airtel',img:'airtel.png',color:'#e51937',bg:'#fce4e7',sub:'Airtel Nigeria — 4G LTE'},
+  {id:'9mobile',name:'9Mobile',img:'9mobile.png',color:'#00934f',bg:'#e8f5ee',sub:'9Mobile — Smart Data Plans'},
+  {id:'tmobile',name:'T-Mobile',img:'T-Mobile.png',color:'#e20074',bg:'#fce4f1',sub:'T-Mobile — Nationwide 5G'},
+  {id:'vodafone',name:'Vodafone',img:'vodafone.png',color:'#e60000',bg:'#fde8e8',sub:'Vodafone — Stay Connected'},
+  {id:'smile',name:'Smile',img:'smile.png',color:'#ff7a00',bg:'#fff3e0',sub:'Smile — 4G LTE Broadband'},
+  {id:'ntel',name:'ntel',img:'ntel.png',color:'#00aeef',bg:'#e3f6fd',sub:'ntel — Fiber-Speed LTE'},
+];
+const PLANS=[
+  {data:'UnlimData',price:1000,label:'₦1000',val:'24 hours Unlimited data'},
+  {data:'UnlimData',price:5000,label:'₦5000',val:'7 days Unlimited data'},
+  {data:'UnlimData',price:15000,label:'₦15,000',val:'30 days Unlimited data'},
+];
+let user=null,currentBuy={},buyParty='self',fpPhone='';
+try{user=JSON.parse(localStorage.getItem('ud_u')||'null');}catch(e){}
+if(user)refreshUI();
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>10));
+const ng=document.getElementById('nets-grid');
+NETS.forEach(n=>{
+  const el=document.createElement('div');el.className='nc';
+  el.innerHTML=`<div class="nc-img"><img src="${n.img}" alt="${n.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="nc-fall" style="display:none;background:${n.bg};color:${n.color}">${n.name[0]}</div></div><div class="nc-name">${n.name}</div><div class="nc-tag">Active</div>`;
+  el.addEventListener('mouseenter',()=>{el.style.boxShadow=`0 6px 26px ${n.color}28`;});
+  el.addEventListener('mouseleave',()=>{el.style.boxShadow='';});
+  el.onclick=()=>openNetModal(n);ng.appendChild(el);
+});
+function openNetModal(net){
+  document.getElementById('nm-logo').innerHTML=`<img src="${net.img}" alt="${net.name}" style="width:100%;height:100%;object-fit:contain;padding:5px;" onerror="this.style.display='none'"/>`;
+  document.getElementById('nm-name').textContent=net.name;
+  document.getElementById('nm-sub').textContent=net.sub;
+  const pg=document.getElementById('nm-plans');pg.innerHTML='';
+  PLANS.forEach(p=>{
+    const el=document.createElement('div');el.className='plan';
+    el.innerHTML=`${p.pop?'<div class="pop-badge">Best Value</div>':''}<div class="plan-data">${p.data}</div><div class="plan-price">${p.label}</div><div class="plan-val">${p.val}</div>`;
+    el.onclick=()=>{closeM('m-net');openBuyModal(net,p);};pg.appendChild(el);
+  });
+  openM('m-net');
+}
+function openBuyModal(net,plan){
+  currentBuy={net,plan};buyParty='self';
+  document.getElementById('buy-sub').textContent=`${net.name} · ${plan.data} data plan`;
+  document.getElementById('buy-data').textContent=plan.data;
+  document.getElementById('buy-price').textContent=plan.label;
+  document.getElementById('buy-ph').value=user?user.phone:'';
+  document.getElementById('buy-ph-err').classList.remove('on');
+  document.getElementById('buy-ph-lbl').textContent='My Number';
+  document.getElementById('buy-hint').textContent='Number that will receive the data.';
+  document.querySelectorAll('.pty').forEach((e,i)=>e.classList.toggle('on',i===0));
+  openM('m-buy');
+}
+function setParty(type,el){
+  buyParty=type;document.querySelectorAll('.pty').forEach(e=>e.classList.remove('on'));el.classList.add('on');
+  document.getElementById('buy-ph-lbl').textContent=type==='self'?'My Number':"Friend's Number";
+  document.getElementById('buy-hint').textContent=type==='self'?'Number that will receive the data.':"Enter the number you are gifting data to.";
+  if(type==='self'&&user)document.getElementById('buy-ph').value=user.phone;
+  else if(type==='third')document.getElementById('buy-ph').value='';
+}
+function processBuy(){
+  const ph=document.getElementById('buy-ph').value.trim();
+  if(!/^0\d{10}$/.test(ph)){document.getElementById('buy-ph-err').classList.add('on');return;}
+  document.getElementById('buy-ph-err').classList.remove('on');
+  closeM('m-buy');showLoader('Connecting to Paystack…','Securing your payment…');
+  setTimeout(()=>{
+    hideLoader();
+    const handler=PaystackPop.setup({
+      key:PK,email:user?`${user.phone}@unlimdata.ng`:`${document.getElementById('buy-ph').value.trim()}@unlimdata.ng`,
+      amount:currentBuy.plan.price*1000,currency:'NGN',ref:'UD'+Date.now(),
+      metadata:{network:currentBuy.net.name,data_plan:currentBuy.plan.data,phone:ph,party:buyParty},
+      label:`UnlimData — ${currentBuy.plan.data} on ${currentBuy.net.name}`,
+      onClose(){showToast('Payment window closed. You can try again anytime.');},
+      callback(resp){onPaySuccess(resp,ph);}
     });
+    handler.openIframe();
+  },800);
+}
+function onPaySuccess(resp,ph){
+  showLoader('Activating your data…','Almost done — takes about 10 seconds…');
+  setTimeout(()=>{hideLoader();showBanner(`Your ${currentBuy.plan.data} ${currentBuy.net.name} data plan (${currentBuy.plan.label}) has been successfully activated and sent to ${ph}. Enjoy browsing! 🎉`);setTimeout(()=>hideBanner(),12000);},1400);
+}
+function doSignup(){
+  const ph=document.getElementById('su-ph').value.trim();const pw=document.getElementById('su-pw').value;let ok=true;
+  if(!/^0\d{10}$/.test(ph)){document.getElementById('su-ph-err').classList.add('on');ok=false;}else document.getElementById('su-ph-err').classList.remove('on');
+  if(pw.length<6){document.getElementById('su-pw-err').classList.add('on');ok=false;}else document.getElementById('su-pw-err').classList.remove('on');
+  if(!ok)return;const db=getDB();if(db[ph]){showToast('Account exists. Sign in instead.');return;}
+  db[ph]={phone:ph,pw,invGb:0,invites:0};saveDB(db);user=db[ph];localStorage.setItem('ud_u',JSON.stringify(user));
+  refreshUI();closeM('m-signup');showToast('✅ Account created! Welcome to UnlimData.');
+}
+function doLogin(){
+  const ph=document.getElementById('li-ph').value.trim();const pw=document.getElementById('li-pw').value;const db=getDB();
+  if(!db[ph]||db[ph].pw!==pw){document.getElementById('li-err').classList.add('on');return;}
+  document.getElementById('li-err').classList.remove('on');user=db[ph];localStorage.setItem('ud_u',JSON.stringify(user));
+  refreshUI();closeM('m-login');showToast(`✅ Welcome back, ${ph}!`);
+}
+function signOut(){user=null;localStorage.removeItem('ud_u');refreshUI();closeDrawer();showToast('Signed out successfully.');}
+function refreshUI(){
+  const on=!!user;
+  document.getElementById('dr-user').classList.toggle('on',on);
+  document.getElementById('dr-so').classList.toggle('on',on);
+  document.getElementById('dr-li').style.display=on?'none':'flex';
+  document.getElementById('dr-su').style.display=on?'none':'flex';
+  if(on){document.getElementById('dr-uname').textContent=`📱 ${user.phone}`;document.getElementById('dr-ubonus').textContent=`🎁 Bonus: ${user.invGb||0}GB`;}
+  const cta=document.getElementById('nav-cta');const li=document.getElementById('nav-li');
+  if(on){cta.textContent='My Account';cta.onclick=openDrawer;li.style.display='none';}
+  else{cta.textContent='Get Started';cta.onclick=()=>openM('m-signup');li.style.display='';}
+}
+function fpStep1(){
+  const ph=document.getElementById('fp-ph').value.trim();const db=getDB();
+  if(!db[ph]){document.getElementById('fp-ph-err').classList.add('on');return;}
+  document.getElementById('fp-ph-err').classList.remove('on');fpPhone=ph;
+  document.getElementById('fp-s1').style.display='none';document.getElementById('fp-s2').style.display='block';
+  document.getElementById('fp-title').textContent='Change Password';document.getElementById('fp-sub').textContent=`Set a new password for ${ph}.`;
+}
+function fpStep2(){
+  const pw=document.getElementById('fp-npw').value;
+  if(pw.length<6){document.getElementById('fp-pw-err').classList.add('on');return;}
+  document.getElementById('fp-pw-err').classList.remove('on');
+  const db=getDB();db[fpPhone].pw=pw;saveDB(db);
+  if(user&&user.phone===fpPhone){user.pw=pw;localStorage.setItem('ud_u',JSON.stringify(user));}
+  closeM('m-forgot');
+  document.getElementById('fp-s1').style.display='block';document.getElementById('fp-s2').style.display='none';
+  document.getElementById('fp-title').textContent='Reset Password';document.getElementById('fp-sub').textContent='Enter your registered phone number to continue.';
+  document.getElementById('fp-ph').value='';document.getElementById('fp-npw').value='';
+  showToast('✅ Password changed successfully!');
+}
+function doContact(){
+  const ph=document.getElementById('ct-ph').value.trim();const msg=document.getElementById('ct-msg').value.trim();let ok=true;
+  if(!/^0\d{10}$/.test(ph)){document.getElementById('ct-ph-err').classList.add('on');ok=false;}else document.getElementById('ct-ph-err').classList.remove('on');
+  if(!msg){document.getElementById('ct-msg-err').classList.add('on');ok=false;}else document.getElementById('ct-msg-err').classList.remove('on');
+  if(!ok)return;
+  const txt=encodeURIComponent(`Hello! I am contacting you from UnlimData.\n\nMy phone: ${ph}\n\n${msg}`);
+  window.open(`https://wa.me/17404061406?text=${txt}`,'_blank');
+  closeM('m-contact');document.getElementById('ct-ph').value='';document.getElementById('ct-msg').value='';
+  showToast('Opening WhatsApp…');
+}
+function openInvite(){
+  const on=!!user;
+  document.getElementById('inv-prompt').style.display=on?'none':'block';
+  document.getElementById('inv-content').style.display=on?'block':'none';
+  if(on){
+    document.getElementById('inv-link').value=`${location.origin}${location.pathname}?ref=${user.phone}`;
+    const gb=user.invGb||0,cnt=user.invites||0;
+    document.getElementById('inv-cnt').textContent=cnt;document.getElementById('inv-gb').textContent=gb+' GB';
+    document.getElementById('inv-bar').style.width=Math.min(100,gb/50*100)+'%';
+    const btn=document.getElementById('inv-claim');btn.disabled=gb<50;
+    btn.textContent=gb>=50?'🎉 Claim Your 50GB Now!':`Claim Free Data (${50-gb}GB more needed)`;
   }
-
-  function parseInputToList() {
-    const raw = numbersInput.value || '';
-    // split by newlines, commas, spaces
-    const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
-    const defaultCc = (defaultCountry.value || '').replace(/\D/g,'');
-    const message = messageInput.value || '';
-    const out = [];
-    parts.forEach(p => {
-      // allow entries like "John Doe <08031234567>" or "08031234567|Alice"
-      let rawnum = p;
-      // If there's a pipe, allow optional name: "number|name"
-      let name = '';
-      if (p.includes('|')) {
-        const seg = p.split('|');
-        rawnum = seg[0].trim();
-        name = seg.slice(1).join('|').trim();
-      } else {
-        // detect angle bracket pattern
-        const m = p.match(/<([^>]+)>/);
-        if (m) {
-          rawnum = m[1];
-          name = p.replace(m[0],'').replace(/["<>]/g,'').trim();
-        }
-      }
-      const cleaned = normalizeNumber(rawnum, defaultCc);
-      if (!cleaned) return;
-      // replace {name} placeholder if present
-      const personalizedMsg = name ? message.replace(/\{name\}/g, name) : message;
-      const link = buildWaLink(cleaned, personalizedMsg);
-      out.push({ raw: rawnum, cleaned, name, link, msg: personalizedMsg });
-    });
-    return out;
-  }
-
-  generateBtn.addEventListener('click', () => {
-    generated = parseInputToList();
-    renderLinks(generated);
-  });
-
-  copyBtn.addEventListener('click', async () => {
-    if (!generated.length) {
-      alert('No links to copy. Generate links first.');
-      return;
-    }
-    const text = generated.map(g => g.link).join('\n');
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('All links copied to clipboard.');
-    } catch (e) {
-      prompt('Copy these links manually:', text);
-    }
-  });
-
-  clearBtn.addEventListener('click', () => {
-    numbersInput.value = '';
-    messageInput.value = '';
-    generated = [];
-    renderLinks([]);
-  });
-
-  openSeqBtn.addEventListener('click', async () => {
-    if (!generated.length) {
-      generated = parseInputToList();
-      renderLinks(generated);
-    }
-    if (!generated.length) {
-      alert('No valid numbers found. Check your input.');
-      return;
-    }
-    const delay = Math.max(300, Number(openDelayInput.value) || 1200);
-    if (!confirm(`This will open ${generated.length} chat windows sequentially in new tabs/windows. Browser popup blockers may intervene. Continue?`)) return;
-    for (let i = 0; i < generated.length; i++) {
-      try {
-        window.open(generated[i].link, '_blank');
-      } catch (e) {
-        console.warn('open blocked', e);
-      }
-      await new Promise(r => setTimeout(r, delay));
-    }
-  });
-
-  downloadCsv.addEventListener('click', () => {
-    if (!generated.length) {
-      generated = parseInputToList();
-      renderLinks(generated);
-    }
-    if (!generated.length) {
-      alert('No links to export.');
-      return;
-    }
-    const rows = [['number','name','link','message']];
-    generated.forEach(g => rows.push([g.cleaned, g.name || '', g.link, g.msg || '']));
-    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'whatsapp_links.csv'; document.body.appendChild(a); a.click();
-    a.remove(); URL.revokeObjectURL(url);
-  });
-
-  exportTxt.addEventListener('click', () => {
-    if (!generated.length) {
-      generated = parseInputToList();
-      renderLinks(generated);
-    }
-    if (!generated.length) {
-      alert('No links to export.');
-      return;
-    }
-    const txt = generated.map(g => g.link).join('\n');
-    const blob = new Blob([txt], {type:'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'whatsapp_links.txt'; document.body.appendChild(a); a.click();
-    a.remove(); URL.revokeObjectURL(url);
-  });
-
-  // initial render
-  renderLinks([]);
-})();
+  openM('m-invite');
+}
+function copyInvLink(){
+  const v=document.getElementById('inv-link').value;
+  navigator.clipboard.writeText(v).then(()=>showToast('✅ Invite link copied!')).catch(()=>{try{document.getElementById('inv-link').select();document.execCommand('copy');showToast('✅ Link copied!');}catch(e){showToast('Copy the link manually.');}});
+}
+function claimGB(){
+  if(!user||user.invGb<50)return;user.invGb-=50;
+  const db=getDB();db[user.phone].invGb=user.invGb;saveDB(db);localStorage.setItem('ud_u',JSON.stringify(user));
+  closeM('m-invite');showBanner('🎁 50GB referral bonus activated! Enjoy your free data.');setTimeout(()=>hideBanner(),10000);
+}
+const _ref=new URLSearchParams(location.search).get('ref');
+if(_ref&&user&&user.phone!==_ref){const db=getDB();if(db[_ref]){db[_ref].invGb=(db[_ref].invGb||0)+1;db[_ref].invites=(db[_ref].invites||0)+1;saveDB(db);}}
+function getDB(){try{return JSON.parse(localStorage.getItem('ud_db')||'{}');}catch(e){return{};}}
+function saveDB(d){localStorage.setItem('ud_db',JSON.stringify(d));}
+function openM(id){document.getElementById(id).classList.add('on');document.getElementById('dimmer').classList.add('on');}
+function closeM(id){document.getElementById(id).classList.remove('on');if(!document.querySelectorAll('.mw.on').length)document.getElementById('dimmer').classList.remove('on');}
+function switchM(a,b){closeM(a);setTimeout(()=>openM(b),180);}
+document.querySelectorAll('.mw').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)closeM(m.id);});});
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('dimmer').classList.add('on');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');if(!document.querySelectorAll('.mw.on').length)document.getElementById('dimmer').classList.remove('on');}
+function closeDimmer(){closeDrawer();document.querySelectorAll('.mw.on').forEach(m=>closeM(m.id));}
+function scrollToNets(){document.getElementById('nets-sec').scrollIntoView({behavior:'smooth'});}
+function showLoader(t,s){document.getElementById('ld-txt').textContent=t||'PROCESSING';document.getElementById('ld-sub').textContent=s||'Please wait…';document.getElementById('loader').classList.add('on');}
+function hideLoader(){document.getElementById('loader').classList.remove('on');}
+function showBanner(msg){document.getElementById('suc-m').textContent=msg;document.getElementById('success').classList.add('on');}
+function hideBanner(){document.getElementById('success').classList.remove('on');}
+let _tt;
+function showToast(msg,dur=3000){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('on'),dur);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mw.on').forEach(m=>closeM(m.id));closeDrawer();}});
 </script>
 </body>
 </html>
