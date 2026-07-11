@@ -236,7 +236,7 @@ textarea.fi{resize:vertical;min-height:94px;}
       <div class="ts-ic">🛠</div><div class="ts-body"><div class="ts-title">Data Tools</div><div class="ts-sub">Browse safely · Bypass restrictions</div></div><div class="ts-arr">↗</div>
     </a>
     <div class="dr-item" onclick="closeDrawer();scrollToNets()"><span class="dr-ic">📡</span>Buy Data</div>
-    <div class="dr-item hl" onclick="closeDrawer();openInvite()"><span class="dr-ic">🎁</span>Invite Friends — Earn 1GB</div>
+    <div class="dr-item hl" onclick="closeDrawer();openInvite()"><span class="dr-ic">🎁</span>Invite Friends — Earn 24hr unlim..</div>
     <div class="dr-sep"></div>
     <div class="dr-item" id="dr-li" onclick="closeDrawer();openM('m-login')"><span class="dr-ic">👤</span>Sign In</div>
     <div class="dr-item" id="dr-su" onclick="closeDrawer();openM('m-signup')"><span class="dr-ic">✨</span>Create Account</div>
@@ -297,8 +297,8 @@ textarea.fi{resize:vertical;min-height:94px;}
     <div class="feat"><div class="feat-ic">⚡</div><div class="feat-h">Instant Activation</div><div class="feat-p">Data reflects in your account under 60 seconds after payment. No delays, no waiting calls.</div></div>
     <div class="feat"><div class="feat-ic">🔐</div><div class="feat-h">Secure Payments</div><div class="feat-p">Powered by Paystack — Nigeria's most trusted payment gateway. Every transaction is encrypted end-to-end.</div></div>
     <div class="feat"><div class="feat-ic">📡</div><div class="feat-h">All Major Networks</div><div class="feat-p">MTN, Glo, Airtel, 9Mobile, Smile, T-Mobile, Vodafone, ntel — all in one place.</div></div>
-    <div class="feat"><div class="feat-ic">💸</div><div class="feat-h">Unbeatable Prices</div><div class="feat-p">₦100 for 10GB. Our rates beat any reseller in the market, guaranteed.</div></div>
-    <div class="feat"><div class="feat-ic">🎁</div><div class="feat-h">Refer &amp; Earn Free Data</div><div class="feat-p">Invite friends and earn 1GB per referral. Redeem once you hit 50GB in your bonus box.</div></div>
+    <div class="feat"><div class="feat-ic">💸</div><div class="feat-h">Unbeatable Prices</div><div class="feat-p">₦15,000 for 30 days unlimited. Our rates beat any reseller in the market, guaranteed.</div></div>
+    <div class="feat"><div class="feat-ic">🎁</div><div class="feat-h">Refer &amp; Earn Free Data</div><div class="feat-p">Invite friends and earn 24 hours unlimited per referral. Redeem once you hit 50 friends in your bonus box.</div></div>
     <div class="feat"><div class="feat-ic">🛠</div><div class="feat-h">Free Browsing Tools</div><div class="feat-p">VPN guides, speed tests, bypass tools, data usage calculators — all free.</div></div>
   </div>
 </section>
@@ -310,8 +310,8 @@ textarea.fi{resize:vertical;min-height:94px;}
     <div class="invite-em">🎁</div>
     <div class="invite-body">
       <div class="invite-h">Invite Friends, Earn Free Data</div>
-      <div class="invite-p">Every friend you bring earns you <strong>1GB free</strong>. Accumulate in your bonus box — redeem at 50GB.</div>
-      <div class="invite-note">* Referral GB redeemable when total in bonus box reaches 50GB.</div>
+      <div class="invite-p">Every friend you bring earns you <strong> 24 hours unlimited data free</strong>. Accumulate in your bonus box — redeem at 50 people.</div>
+      <div class="invite-note">* Referral unlimited redeemable when total in bonus box reaches 50 people.</div>
     </div>
     <button class="btn-p" onclick="openInvite()">🔗 Get My Invite Link</button>
   </div>
@@ -355,7 +355,7 @@ textarea.fi{resize:vertical;min-height:94px;}
   <div class="buy-pill"><div><div style="font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;">Selected Plan</div><div class="bp-data" id="buy-data"></div></div><div class="bp-price" id="buy-price"></div></div>
   <div class="party-row"><div class="pty on" onclick="setParty('self',this)">My Number</div><div class="pty" onclick="setParty('third',this)">3rd Party</div></div>
   <div class="fg"><label class="fl" id="buy-ph-lbl">Phone Number</label><input class="fi" type="tel" id="buy-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="buy-ph-err">Enter a valid 11-digit Nigerian number.</div><div style="font-size:.73rem;color:var(--muted);margin-top:4px;" id="buy-hint">Number that will receive the data.</div></div>
-  <button class="fbtn" onclick="processBuy()">💳 BUY</button>
+  <button class="fbtn" onclick="processBuy()">BUY NOW</button>
 </div></div>
 
 <!-- SIGN UP -->
@@ -416,11 +416,11 @@ textarea.fi{resize:vertical;min-height:94px;}
     <p>We believe internet access should be fast, easy, and affordable for everyone. Our platform lets you buy data for yourself or any number in seconds, with payments secured by Paystack.</p>
     <h3>What We Offer</h3>
     <ul>
-      <li>Data plans from ₦100 (10GB) to ₦50,000 (5TB)</li>
+      <li>Data plans from ₦1000 24 hours Unlimited data to ₦15,000 30 days Unlimited data</li>
       <li>Instant activation across 8+ networks</li>
       <li>3rd party gifting — send data to any number</li>
       <li>Free data tools: VPN guides, speed tests, bypass tools</li>
-      <li>Referral program — earn 1GB per friend invited</li>
+      <li>Referral program — earn 24 hours Unlimited data per friend invited</li>
     </ul>
     <h3>Why Trust Us</h3>
     <p>Thousands of users across Nigeria trust UnlimData to keep them connected. Every transaction is processed securely through Paystack and every plan is activated instantly.</p>
@@ -443,7 +443,7 @@ textarea.fi{resize:vertical;min-height:94px;}
     <h3>4. Data Security</h3>
     <p>All data is stored securely. Passwords are never stored in plain text. Payment information is handled entirely by Paystack and never touches our servers.</p>
     <h3>5. Cookies</h3>
-    <p>We use minimal browser storage (localStorage) to keep you signed in and remember preferences. No third-party tracking cookies are used.</p>
+    <p>We use minimal browser storage  to keep you signed in and remember preferences. No third-party tracking cookies are used.</p>
     <h3>6. Your Rights</h3>
     <ul><li>Right to access your personal data</li><li>Right to delete your account and data</li><li>Right to opt out of communications</li></ul>
     <p>To exercise these rights, contact us via WhatsApp at +1 (740) 406-1406.</p>
@@ -481,7 +481,7 @@ textarea.fi{resize:vertical;min-height:94px;}
 <!-- INVITE -->
 <div class="mw" id="m-invite"><div class="mb">
   <button class="mx" onclick="closeM('m-invite')">✕</button>
-  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">Each friend that subscribes earns you 1GB free. Redeem at 50GB total.</div>
+  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">50 friend that subscribes earns you 24hr free Unlimited. Redeem at 50 people total.</div>
   <div id="inv-prompt" style="text-align:center;padding:20px 0;">
     <div style="font-size:2.5rem;margin-bottom:11px;">🔐</div>
     <div style="font-size:.86rem;color:var(--muted);margin-bottom:16px;">Sign in to get your personal invite link and track your earned GBs.</div>
