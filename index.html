@@ -54,7 +54,7 @@ nav.scrolled{box-shadow:0 2px 22px rgba(0,0,0,0.09);}
 @keyframes arr{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
 .ads-wrap{padding:18px clamp(14px,4vw,54px);background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .ads-label{font-size:0.58rem;color:var(--muted2);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:8px;}
-.ads-frame{width:120%;max-width:728px;height:90px;margin:0 auto;background:linear-gradient(135deg,#fff8e1,#fff3cd);border:1.5px solid rgba(245,166,35,0.3);border-radius:var(--r);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;box-shadow:0 2px 12px rgba(245,166,35,0.1);}
+.ads-frame{width:100%;max-width:728px;height:90px;margin:0 auto;background:linear-gradient(135deg,#fff8e1,#fff3cd);border:1.5px solid rgba(245,166,35,0.3);border-radius:var(--r);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;box-shadow:0 2px 12px rgba(245,166,35,0.1);}
 .ads-frame img{width:100%;height:100%;object-fit:cover;border-radius:var(--r);}
 .ads-ph{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 24px;}
 .ads-ph-l{display:flex;flex-direction:column;gap:4px;}
@@ -298,8 +298,8 @@ textarea.fi{resize:vertical;min-height:94px;}
     <div class="feat"><div class="feat-ic">🔐</div><div class="feat-h">Secure Payments</div><div class="feat-p">Powered by Paystack — Nigeria's most trusted payment gateway. Every transaction is encrypted end-to-end.</div></div>
     <div class="feat"><div class="feat-ic">📡</div><div class="feat-h">All Major Networks</div><div class="feat-p">MTN, Glo, Airtel, 9Mobile, Smile, T-Mobile, Vodafone, ntel — all in one place.</div></div>
     <div class="feat"><div class="feat-ic">💸</div><div class="feat-h">Unbeatable Prices</div><div class="feat-p">₦15,000 for 30 days unlimited. Our rates beat any reseller in the market, guaranteed.</div></div>
-    <div class="feat"><div class="feat-ic">🎁</div><div class="feat-h">Refer &amp; Earn Free Data</div><div class="feat-p">Invite friends and earn 24 hours unlimited per referral. Redeem once you hit 50 friends in your bonus box.</div></div>
-    <div class="feat"><div class="feat-ic">🛠</div><div class="feat-h">Free Browsing Tools</div><div class="feat-p">VPN guides, speed tests, bypass tools, data usage calculators — all free.</div></div>
+    <div class="feat"><div class="feat-ic">🎁</div><div class="feat-h">Refer &amp; Earn Free Data</div><div class="feat-p">Invite friends and earn 24 hours unlimited per referral.</div></div>
+    <div class="feat"><div class="feat-ic">🛠</div><div class="feat-h">Free Browsing Tools</div><div class="feat-p">The Unlim premium VPN ensures that your subscription remains unlimited and uninterrupted.</div></div>
   </div>
 </section>
 
@@ -310,8 +310,8 @@ textarea.fi{resize:vertical;min-height:94px;}
     <div class="invite-em">🎁</div>
     <div class="invite-body">
       <div class="invite-h">Invite Friends, Earn Free Data</div>
-      <div class="invite-p">Every friend you bring earns you <strong> 24 hours unlimited data free</strong>. Accumulate in your bonus box — redeem at 50 people.</div>
-      <div class="invite-note">* Referral unlimited redeemable when total in bonus box reaches 50 people.</div>
+      <div class="invite-p">Every friend you bring earns you <strong> 24 hours unlimited data free</strong>. Accumulate in your bonus.</div>
+      <div class="invite-note">* Referral unlimited redeemable 24hr free.</div>
     </div>
     <button class="btn-p" onclick="openInvite()">🔗 Get My Invite Link</button>
   </div>
@@ -322,7 +322,8 @@ textarea.fi{resize:vertical;min-height:94px;}
 <section class="sec" style="padding-top:44px;padding-bottom:44px;">
   <a class="tstrip" href="unlimited.html" target="_blank">
     <div class="ts-ic">🛠</div>
-    <div class="ts-body"><div class="ts-title">Unlimited Data Tools — Always Free</div><div class="ts-sub">Stack VPN · Psiphon · Orbot/Tor · Speedify · Windscribe · Speed tests · DNS leak tests · URL block checker and more</div></div>
+    <div class="ts-body"><div class="ts-title">Unlimited data tool - premium 
+Unlim vpn</div><div class="ts-sub">Stack VPN · Psiphon · Orbot/Tor · Speedify · Windscribe · Speed tests · DNS leak tests · URL block checker and more</div></div>
     <div class="ts-arr">↗</div>
   </a>
 </section>
@@ -481,7 +482,7 @@ textarea.fi{resize:vertical;min-height:94px;}
 <!-- INVITE -->
 <div class="mw" id="m-invite"><div class="mb">
   <button class="mx" onclick="closeM('m-invite')">✕</button>
-  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">50 friend that subscribes earns you 24hr free Unlimited. Redeem at 50 people total.</div>
+  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">50 friend that subscribes earns you 24hr free Unlimited.</div>
   <div id="inv-prompt" style="text-align:center;padding:20px 0;">
     <div style="font-size:2.5rem;margin-bottom:11px;">🔐</div>
     <div style="font-size:.86rem;color:var(--muted);margin-bottom:16px;">Sign in to get your personal invite link and track your earned GBs.</div>
@@ -513,9 +514,9 @@ const NETS=[
   {id:'ntel',name:'ntel',img:'ntel.png',color:'#00aeef',bg:'#e3f6fd',sub:'ntel — Fiber-Speed LTE'},
 ];
 const PLANS=[
-  {data:'UnlimData',price:1000,label:'₦1000',val:'24 hours Unlimited data'},
-  {data:'UnlimData',price:5000,label:'₦5000',val:'7 days Unlimited data'},
-  {data:'UnlimData',price:15000,label:'₦15,000',val:'30 days Unlimited data'},
+  {data:'UnlimData',price:100,label:'₦1000',val:'24 hours Unlimited data'},
+  {data:'UnlimData',price:500,label:'₦5000',val:'7 days Unlimited data'},
+  {data:'UnlimData',price:1500,label:'₦15,000',val:'30 days Unlimited data'},
 ];
 let user=null,currentBuy={},buyParty='self',fpPhone='';
 try{user=JSON.parse(localStorage.getItem('ud_u')||'null');}catch(e){}
