@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
 :root{
   --gold:#f5a623;--gold2:#e6920f;--gold-dim:rgba(245,166,35,0.12);--gold-glow:rgba(245,166,35,0.28);
@@ -115,6 +116,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:64px;
 .badge-tor{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(124,58,237,0.2);}
 .badge-speed{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(14,165,233,0.2);}
 .badge-browser{background:rgba(220,38,38,0.07);color:var(--red);border:1px solid rgba(220,38,38,0.2);}
+.badge-premium{background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(230,146,15,0.15));color:var(--gold2);border:1px solid rgba(245,166,35,0.5);font-weight:800;}
 .tc-body{padding:0 18px 18px;}
 .tc-name{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--dark);margin-bottom:6px;}
 .tc-desc{font-size:0.83rem;color:var(--muted);line-height:1.62;margin-bottom:16px;}
@@ -250,12 +252,131 @@ footer{background:var(--dark);padding:34px clamp(14px,5vw,78px) 22px;
   footer{flex-direction:column;align-items:flex-start;}
   .ads-frame{height:70px;}
 }
+
+/* ══ VPN PURCHASE MODAL ══ */
+.mw{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;
+  padding:16px;background:rgba(0,0,0,0.55);opacity:0;pointer-events:none;
+  transition:opacity .25s;backdrop-filter:blur(5px);}
+.mw.on{opacity:1;pointer-events:all;}
+.mb{background:#fff;border-radius:20px;width:100%;max-width:420px;padding:28px 24px;
+  position:relative;max-height:92vh;overflow-y:auto;
+  transform:scale(.95) translateY(14px);
+  transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 24px 80px rgba(0,0,0,0.22);}
+.mw.on .mb{transform:scale(1) translateY(0);}
+.mx{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:8px;
+  background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-size:.95rem;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;}
+.mx:hover{background:var(--bg3);color:var(--dark);border-color:var(--gold);}
+.vpn-modal-hero{text-align:center;margin-bottom:22px;}
+.vpn-modal-icon{font-size:3rem;margin-bottom:10px;}
+.vpn-modal-title{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.vpn-modal-sub{font-size:0.82rem;color:var(--muted);line-height:1.55;}
+.vpn-price-card{background:linear-gradient(135deg,var(--gold-dim),rgba(245,166,35,0.05));
+  border:2px solid rgba(245,166,35,0.4);border-radius:var(--r);
+  padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.vpc-left{}
+.vpc-label{font-size:0.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px;}
+.vpc-product{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--dark);}
+.vpc-period{font-size:0.74rem;color:var(--muted);margin-top:2px;}
+.vpc-price{font-family:var(--display);font-size:1.8rem;font-weight:800;
+  color:var(--gold2);letter-spacing:-0.03em;}
+.vpc-price span{font-size:0.9rem;font-weight:600;}
+.vpn-features{margin-bottom:20px;}
+.vpn-feat{display:flex;align-items:center;gap:10px;padding:7px 0;
+  font-size:0.83rem;color:var(--muted);border-bottom:1px solid var(--border);}
+.vpn-feat:last-child{border-bottom:none;}
+.vpn-feat-ic{font-size:1rem;flex-shrink:0;width:22px;text-align:center;}
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:0.72rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.fi{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);
+  padding:11px 13px;color:var(--dark);font-family:var(--body);font-size:0.88rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;}
+.fi:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,0.11);}
+.fi::placeholder{color:var(--muted2);}
+.ferr{font-size:0.72rem;color:var(--red);margin-top:4px;display:none;}
+.ferr.on{display:block;}
+.pay-btn{width:100%;background:var(--gold);color:#fff;font-family:var(--body);font-size:0.92rem;
+  font-weight:700;padding:13px;border-radius:var(--rsm);border:none;
+  transition:all .2s;box-shadow:0 4px 18px var(--gold-glow);margin-top:4px;}
+.pay-btn:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 6px 24px var(--gold-glow);}
+.pay-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.pay-secure{text-align:center;font-size:0.72rem;color:var(--muted2);margin-top:10px;
+  display:flex;align-items:center;justify-content:center;gap:5px;}
+
+/* ══ SUCCESS BANNER ══ */
+#suc-banner{position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-20px);
+  z-index:700;max-width:min(460px,92vw);width:100%;background:#fff;
+  border:1.5px solid rgba(22,163,74,0.35);border-radius:16px;padding:16px 18px;
+  display:flex;align-items:flex-start;gap:12px;
+  box-shadow:0 12px 48px rgba(0,0,0,0.13);
+  opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+#suc-banner.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;}
+.sb-ic{font-size:1.6rem;flex-shrink:0;}
+.sb-t{font-family:var(--display);font-size:.88rem;font-weight:800;color:var(--green);margin-bottom:3px;}
+.sb-m{font-size:.79rem;color:var(--muted);line-height:1.5;}
+.sb-x{background:none;border:none;color:var(--muted2);font-size:1rem;flex-shrink:0;padding:2px;cursor:pointer;}
 </style>
 </head>
 <body>
 
 <div id="loader"><div class="ld-ring"></div><div class="ld-txt" id="ld-txt">Loading…</div></div>
 <div id="toast"></div>
+
+<!-- SUCCESS BANNER -->
+<div id="suc-banner">
+  <div class="sb-ic">✅</div>
+  <div style="flex:1;">
+    <div class="sb-t">Purchase Successful!</div>
+    <div class="sb-m" id="sb-msg">Your Unlimited VPN licence has been activated.</div>
+  </div>
+  <button class="sb-x" onclick="document.getElementById('suc-banner').classList.remove('on')">✕</button>
+</div>
+
+<!-- VPN PURCHASE MODAL -->
+<div class="mw" id="m-vpn">
+  <div class="mb">
+    <button class="mx" onclick="closeVpnModal()">✕</button>
+
+    <div class="vpn-modal-hero">
+      <div class="vpn-modal-icon">🔒</div>
+      <div class="vpn-modal-title">Unlimited VPN</div>
+      <div class="vpn-modal-sub">Premium private browsing — bypass any restriction on any network, anywhere in the world.</div>
+    </div>
+
+    <!-- PRICE CARD -->
+    <div class="vpn-price-card">
+      <div class="vpc-left">
+        <div class="vpc-label">One-Time Purchase</div>
+        <div class="vpc-product">Unlimited VPN — Full Access</div>
+        <div class="vpc-period">Lifetime licence · All devices</div>
+      </div>
+      <div class="vpc-price"><span></span></div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="vpn-features">
+      <div class="vpn-feat"><span class="vpn-feat-ic">🌍</span>Servers in 50+ countries — always fast</div>
+      <div class="vpn-feat"><span class="vpn-feat-ic">🚫</span>No logs, no tracking, full privacy</div>
+      <div class="vpn-feat"><span class="vpn-feat-ic">⚡</span>Unlimited speed — no throttling</div>
+      <div class="vpn-feat"><span class="vpn-feat-ic">📱</span>Works on Android, iOS, Windows & Mac</div>
+      <div class="vpn-feat"><span class="vpn-feat-ic">🔄</span>Bypasses ISP blocks on all Nigerian networks</div>
+      <div class="vpn-feat"><span class="vpn-feat-ic">♾️</span>Lifetime access — pay once, use forever</div>
+    </div>
+
+    <!-- PHONE FOR DELIVERY -->
+    <div class="fg">
+      <label class="fl">Your Phone Number</label>
+      <input class="fi" type="tel" id="vpn-ph" placeholder="080XXXXXXXX" maxlength="11"/>
+      <div class="ferr" id="vpn-ph-err">Enter a valid 11-digit Nigerian number to receive your VPN licence.</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:5px;">Your licence key will be sent to this number via SMS/WhatsApp after payment.</div>
+    </div>
+
+    <button class="pay-btn" onclick="purchaseVPN()">Purchase VPN</button>
+    <div class="pay-secure">🔐 Secured by Paystack · Safe & encrypted</div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -276,6 +397,7 @@ footer{background:var(--dark);padding:34px clamp(14px,5vw,78px) 22px;
     <div class="hpill"><div class="hpill-dot" style="background:var(--green)"></div>No Account Needed</div>
     <div class="hpill"><div class="hpill-dot" style="background:var(--purple)"></div>Privacy First</div>
     <div class="hpill"><div class="hpill-dot" style="background:var(--blue)"></div>10 Tools Available</div>
+    
   </div>
 </section>
 
@@ -301,8 +423,21 @@ footer{background:var(--dark);padding:34px clamp(14px,5vw,78px) 22px;
 <!-- TOOLS SECTION -->
 <section class="sec" style="background:var(--bg2);">
   <div class="sec-lbl">Browse All Tools</div>
-  <h2 class="sec-h2">Everything You Need</h2>
-  <p class="sec-sub">Tap any tool to expand the full step-by-step guide. All tools are free — no download or sign-up required to read the guides.</p>
+  <h2 class="sec-h2">feeling a slow connection?</h2>
+  <p class="sec-sub">If you’re experiencing slow speeds while using your unlimited data subscription, simply install and connect to Unlim VPN.
+
+The VPN helps connect your device to the network configuration required for the subscription to work as intended. In many cases, this can improve connection stability and ensure the service functions properly.
+
+How to get the best experience:
+<ul>
+<li> Install the latest version of Unlim VPN.</li>
+<li> Connect to the recommended server.</li>
+<li>Turn on your mobile data.</li>
+<li>If you still experience issues, reconnect to the VPN or contact our support team for assistance.</li>
+</ul>
+
+
+ <p class="sec-sub">A stable VPN connection can help you enjoy your subscription with fewer interruptions. Please note that your actual speed will still depend on your mobile network coverage, signal strength, and any applicable service policies..</p>
   <div class="tools-grid" id="tools-grid"></div>
 </section>
 
@@ -461,154 +596,19 @@ footer{background:var(--dark);padding:34px clamp(14px,5vw,78px) 22px;
 ═══════════════════════════════════════════════════════ */
 const TOOLS=[
   {
-    name:'Stack VPN',emoji:'🔒',img:'stackvpn.jpg',
-    badges:['badge-free','badge-vpn'],badgeLabels:['Free','VPN'],
-    link:'https://play.google.com/store/search?q=stack+vpn&c=apps',
-    desc:'A fast, free VPN app that routes your traffic through secure servers worldwide, bypassing ISP restrictions and keeping your browsing private.',
+    name:'Unlimited VPN',emoji:'🔒',img:'stackvpn.jpg',
+    badges:['badge-vpn','badge-premium'],badgeLabels:['Premium','VPN'],
+    paid:true,
+    desc:'Our own premium VPN — blazing fast servers in 50+ countries, zero logs, unlimited speed, and lifetime access. Bypasses all ISP blocks on MTN, Glo, Airtel, 9Mobile and more.',
     steps:[
-      'Go to Play Store and search for <strong>Stack VPN</strong>, or tap Download below.',
-      'Install the app and open it after installation completes.',
-      'When Android asks, tap <strong>Allow</strong> for VPN permission — this is required.',
-      'Select any free server from the list. US and UK servers are usually fastest.',
-      'Tap the <strong>Connect</strong> button and wait 5–15 seconds.',
-      'When you see the green Connected status, start browsing freely!',
+      'Tap <strong>Purchase VPN</strong> below to open the secure payment page.',
+      'Enter your phone number — your licence key will be sent there after payment.',
+      'Complete payment of ₦20,000 securely via Paystack.',
+      'Within minutes, you will receive your Unlimited VPN licence key via SMS or WhatsApp.',
+      'Download the VPN client using the link sent to you and enter your licence key.',
+      'Connect to any of 50+ server locations and enjoy unlimited private browsing!',
     ],
-    tip:'💡 If one server is slow or drops, switch to another country — try Netherlands or Canada for fast, stable connections.'
-  },
-  {
-    name:'Psiphon',emoji:'🌐',img:'psiphon.jpg',
-    badges:['badge-free','badge-vpn'],badgeLabels:['Free','VPN'],
-    link:'https://play.google.com/store/apps/details?id=com.psiphon3',
-    desc:'One of the most popular censorship circumvention tools globally. Uses a combination of VPN, SSH, and HTTP Proxy technologies to bypass any restriction.',
-    steps:[
-      'Download Psiphon from Play Store (by <strong>Psiphon Inc.</strong> — the official app).',
-      'Open the app — no account or login is required.',
-      'Tap the large <strong>Start</strong> button in the center of the screen.',
-      'Psiphon automatically selects the best available server for your location.',
-      'When you see a green checkmark or "Connected", you are ready to browse.',
-      'Go to Settings → enable <strong>Whole Device VPN</strong> to route all apps through Psiphon.',
-    ],
-    tip:'💡 In Settings, enable <strong>Use Less Data</strong> mode if your connection is slow. This compresses traffic for faster browsing on 3G.'
-  },
-  {
-    name:'Orbot / Tor',emoji:'🧅',img:'orbot.jpg',
-    badges:['badge-free','badge-tor'],badgeLabels:['Free','Tor'],
-    link:'https://play.google.com/store/apps/details?id=org.torproject.android',
-    desc:'Orbot routes your internet traffic through the Tor network — the gold standard for online anonymity. Bounces your connection through 3 relays worldwide.',
-    steps:[
-      'Download <strong>Orbot</strong> from Play Store (by Guardian Project / Tor Project — the official publisher).',
-      'Open Orbot after installation.',
-      'Go to <strong>Settings</strong> inside Orbot and toggle on <strong>VPN Mode</strong> to route all device apps through Tor.',
-      'Return to the main screen and tap and hold the Orbot power button until it turns green.',
-      'Wait for the message: <em>"You are connected to the Tor network!"</em>',
-      'You can pick specific apps to route through Tor in the Torified Apps section.',
-    ],
-    tip:'⚠️ Tor is slower than regular VPNs because your traffic bounces through 3 relays for anonymity. Use it for privacy-sensitive tasks, not for streaming video.'
-  },
-  {
-    name:'Speedify',emoji:'💨',img:'speedify.jpg',
-    badges:['badge-free','badge-speed'],badgeLabels:['Free','Speed'],
-    link:'https://play.google.com/store/apps/details?id=com.speedify.speedifyandroid',
-    desc:'Speedify is a unique bonding VPN that combines multiple internet connections (WiFi + mobile data) simultaneously to make your internet faster and more reliable.',
-    steps:[
-      'Download <strong>Speedify</strong> from Play Store.',
-      'Create a free Speedify account (you get 2GB free per month with no credit card).',
-      'Open the app and sign in with your account.',
-      'Make sure both WiFi and mobile data are turned on on your phone.',
-      'Tap <strong>Connect</strong> — Speedify will automatically bond both connections together.',
-      'You will see two active connections in the dashboard and a combined speed display.',
-    ],
-    tip:'💡 Speedify is great for unstable connections — if WiFi drops, it automatically switches to mobile data with zero interruption. Perfect for video calls.'
-  },
-  {
-    name:'Windscribe VPN',emoji:'🌬',img:'windscribe.jpg',
-    badges:['badge-free','badge-vpn'],badgeLabels:['Free','VPN'],
-    link:'https://play.google.com/store/apps/details?id=com.windscribe.vpn',
-    desc:'Windscribe gives you 10GB of free data per month across multiple server locations with no logs policy. One of the most generous free VPN plans available.',
-    steps:[
-      'Download Windscribe from Play Store.',
-      'Visit windscribe.com and create a free account — no credit card needed, just an email.',
-      'Open the Windscribe app and sign in with your new account.',
-      'Choose from free server locations: US, Canada, UK, Netherlands, Hong Kong, and more.',
-      'Tap <strong>Connect</strong> — you will see a shield icon in your Android notification bar.',
-      'Enjoy 10GB free every month. Tweet @windscribeVPN to get an extra 5GB bonus!',
-    ],
-    tip:'💡 Confirm your email address when signing up — without confirmation you only get 2GB per month instead of the full 10GB.'
-  },
-  {
-    name:'Turbo VPN',emoji:'⚡',img:'turbovpn.jpg',
-    badges:['badge-free','badge-vpn'],badgeLabels:['Free','VPN'],
-    link:'https://play.google.com/store/apps/details?id=free.vpn.unblock.proxy.turbovpn',
-    desc:'Simple one-tap VPN with fast auto-selected servers. Perfect for quick access to blocked content without complex setup or account creation.',
-    steps:[
-      'Download Turbo VPN from Play Store.',
-      'Open the app — no account required for the free version.',
-      'The default <strong>Auto</strong> server automatically picks the fastest server for you.',
-      'Tap the power button / rocket icon to connect instantly.',
-      'A key icon appears in your status bar when the VPN is active.',
-      'To choose a specific country, tap the flag icon and select from the server list.',
-    ],
-    tip:'💡 The free version shows ads — tap Skip after 5 seconds. For an ad-free experience with the same simplicity, try Psiphon or Windscribe instead.'
-  },
-  {
-    name:'Opera Mini Browser',emoji:'🔴',img:'operamini.jpg',
-    badges:['badge-free','badge-browser'],badgeLabels:['Free','Browser'],
-    link:'https://play.google.com/store/apps/details?id=com.opera.mini.native',
-    desc:'Opera Mini includes a free built-in VPN, ad blocker, and data compression that can save up to 90% of your data — all inside the browser itself.',
-    steps:[
-      'Download Opera Mini from Play Store.',
-      'Open the app and complete the quick one-time setup.',
-      'Tap the red <strong>O</strong> menu button at the bottom of the screen.',
-      'Go to <strong>Privacy and Security</strong> → enable <strong>VPN</strong> — it is completely free and unlimited.',
-      'Also enable <strong>Ad Blocker</strong> and <strong>Data Savings</strong> for the best experience.',
-      'A VPN badge appears in the address bar when the VPN is active.',
-    ],
-    tip:'💡 Opera\'s free VPN has no data limit but only protects traffic inside the Opera Mini browser itself. Use Psiphon or Windscribe to protect all your device apps.'
-  },
-  {
-    name:'ProtonVPN Free',emoji:'🔵',img:'protonvpn.jpg',
-    badges:['badge-free','badge-vpn'],badgeLabels:['Free','VPN'],
-    link:'https://play.google.com/store/apps/details?id=ch.protonvpn.android',
-    desc:'ProtonVPN offers a truly unlimited free tier with no data cap and no logs. Based in Switzerland with the strongest privacy laws in the world.',
-    steps:[
-      'Download ProtonVPN from Play Store (by Proton AG — the official app).',
-      'Visit protonvpn.com and create a free Proton account.',
-      'Open the app and sign in with your Proton account.',
-      'On the free plan, you can connect to servers in the US, Netherlands, or Japan.',
-      'Tap <strong>Quick Connect</strong> to automatically connect to the fastest free server.',
-      'ProtonVPN has no speed throttling and no data limits — browse freely.',
-    ],
-    tip:'💡 ProtonVPN is the only trustworthy free VPN with no data limit. The free servers are sometimes busy — try Japan or Netherlands servers for better speeds in Nigeria.'
-  },
-  {
-    name:'1.1.1.1 by Cloudflare',emoji:'☁',img:'cloudflare.jpg',
-    badges:['badge-free','badge-speed'],badgeLabels:['Free','DNS'],
-    link:'https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone',
-    desc:'Cloudflare\'s 1.1.1.1 app replaces your ISP\'s DNS with the fastest and most private DNS resolver in the world — speeds up browsing and bypasses DNS-based blocks.',
-    steps:[
-      'Download the <strong>1.1.1.1</strong> app from Play Store (by Cloudflare Inc.).',
-      'Open the app — no account required.',
-      'Toggle the switch to <strong>Connected</strong> position.',
-      'Your DNS is now routed through Cloudflare\'s 1.1.1.1 servers instead of your ISP.',
-      'Enable <strong>WARP Mode</strong> inside the app for additional VPN-like privacy on top of the DNS change.',
-      'That is it — browsing is now faster and many DNS-blocked sites become accessible.',
-    ],
-    tip:'💡 WARP mode (the + button) adds full traffic encryption on top of the DNS change for free. It is not as private as a full VPN but significantly faster than most free VPNs.'
-  },
-  {
-    name:'NetGuard — No Root Firewall',emoji:'🔥',img:'netguard.jpg',
-    badges:['badge-free','badge-speed'],badgeLabels:['Free','Firewall'],
-    link:'https://play.google.com/store/apps/details?id=eu.faircode.netguard',
-    desc:'NetGuard lets you control which apps can access the internet — block data-hungry background apps to save data and extend battery life without rooting your phone.',
-    steps:[
-      'Download NetGuard from Play Store (by Marcel Bokhorst — the official developer).',
-      'Open the app and grant VPN permission when asked — NetGuard uses a local VPN to filter traffic, no data leaves your device.',
-      'Toggle the main switch to <strong>ON</strong> at the top.',
-      'You will see a list of all your installed apps with WiFi and mobile data toggles.',
-      'Tap the WiFi or data icon next to any app to <strong>block</strong> its internet access.',
-      'Block heavy background apps like Facebook, Instagram updates — they will still work when you open them but will not use data in the background.',
-    ],
-    tip:'💡 Block auto-update for apps in the background — go to Play Store settings and disable auto-update over mobile data, then use NetGuard to block Play Store on mobile data.'
+    tip:'💡 Your ₦20,000 is a one-time lifetime purchase — no monthly fees, no renewals, ever. Works on Android, iOS, Windows and Mac simultaneously.'
   },
 ];
 
@@ -619,10 +619,19 @@ TOOLS.forEach((t,i)=>{
   card.className='tc';
   const badgeHTML=t.badges.map((b,j)=>`<span class="badge ${b}">${t.badgeLabels[j]}</span>`).join('');
   const stepsHTML=t.steps.map((s,j)=>`<li class="step"><div class="step-n">${j+1}</div><div class="step-t">${s}</div></li>`).join('');
+
+  // Different action button depending on paid vs free
+  const actionBtn = t.paid
+    ? `<button class="tc-btn" style="background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700;" onclick="openVpnModal()">Purchase VPN</button>`
+    : `<button class="tc-btn tc-btn-dl" onclick="openDl(${i})">⬇ Download</button>`;
+  const panelActionBtn = t.paid
+    ? `<button class="pbtn pbtn-gold" style="background:var(--gold);color:#fff;border-color:var(--gold);" onclick="openVpnModal()">🔒 Purchase Now — ₦20,000</button>`
+    : `<button class="pbtn pbtn-dark" onclick="openDl(${i})">⬇ Download ${t.name}</button>`;
+
   card.innerHTML=`
     <div class="tc-top">
       <div class="tc-logo">
-        <img src="${t.img}" alt="${t.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <img src="${t.img||''}" alt="${t.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
         <span style="display:none;">${t.emoji}</span>
       </div>
       <div class="tc-badges">${badgeHTML}</div>
@@ -632,7 +641,7 @@ TOOLS.forEach((t,i)=>{
       <div class="tc-desc">${t.desc}</div>
       <div class="tc-btns">
         <button class="tc-btn" onclick="togglePanel('panel-${i}',this)">📖 How to Use ↓</button>
-        <button class="tc-btn tc-btn-dl" onclick="openDl(${i})">⬇ Download</button>
+        ${actionBtn}
       </div>
     </div>
     <div class="tc-panel" id="panel-${i}">
@@ -640,7 +649,7 @@ TOOLS.forEach((t,i)=>{
       <ol class="steps">${stepsHTML}</ol>
       ${t.tip?`<div class="tip-box">${t.tip}</div>`:''}
       <div class="panel-btns">
-        <button class="pbtn pbtn-dark" onclick="openDl(${i})">⬇ Download ${t.name}</button>
+        ${panelActionBtn}
         <button class="pbtn pbtn-gold" onclick="togglePanel('panel-${i}',this)">Close ↑</button>
       </div>
     </div>`;
@@ -661,6 +670,70 @@ function openDl(i){
   document.getElementById('ld-txt').textContent='Opening '+TOOLS[i].name+'…';
   document.getElementById('loader').classList.add('on');
   setTimeout(()=>{document.getElementById('loader').classList.remove('on');window.open(TOOLS[i].link,'_blank');showToast('Opening '+TOOLS[i].name+' on Play Store');},1200);
+}
+
+/* ══ VPN MODAL ══ */
+function openVpnModal(){
+  document.getElementById('m-vpn').classList.add('on');
+  document.getElementById('vpn-ph-err').classList.remove('on');
+  document.getElementById('vpn-ph').value='';
+}
+function closeVpnModal(){
+  document.getElementById('m-vpn').classList.remove('on');
+}
+// Close on backdrop click
+document.getElementById('m-vpn').addEventListener('click',function(e){
+  if(e.target===this) closeVpnModal();
+});
+
+/* ══ VPN PAYSTACK PURCHASE ══ */
+const PK='pk_live_4ff37d15381d1d12c78fd66f7bc86beb64c59415';
+
+function purchaseVPN(){
+  const ph=document.getElementById('vpn-ph').value.trim();
+  if(!/^0\d{10}$/.test(ph)){
+    document.getElementById('vpn-ph-err').classList.add('on');
+    return;
+  }
+  document.getElementById('vpn-ph-err').classList.remove('on');
+  closeVpnModal();
+
+  // Show loader briefly before Paystack opens
+  document.getElementById('ld-txt').textContent='Connecting to Paystack…';
+  document.getElementById('loader').classList.add('on');
+
+  setTimeout(()=>{
+    document.getElementById('loader').classList.remove('on');
+    const handler=PaystackPop.setup({
+      key: PK,
+      email: `${ph}@unlimdata.ng`,
+      amount: 20000 * 100,       // ₦20,000 in kobo
+      currency: 'NGN',
+      ref: 'VPN' + Date.now(),
+      metadata:{product:'Unlimited VPN Lifetime Licence',phone:ph},
+      label:'UnlimData — Unlimited VPN Lifetime Licence',
+      onClose(){
+        showToast('Payment window closed. Tap Purchase VPN to try again.');
+      },
+      callback(resp){
+        onVpnPaySuccess(resp, ph);
+      }
+    });
+    handler.openIframe();
+  }, 900);
+}
+
+function onVpnPaySuccess(resp, ph){
+  document.getElementById('ld-txt').textContent='Activating your licence…';
+  document.getElementById('loader').classList.add('on');
+  setTimeout(()=>{
+    document.getElementById('loader').classList.remove('on');
+    const banner=document.getElementById('suc-banner');
+    document.getElementById('sb-msg').textContent=
+      `Your Unlimited VPN lifetime licence has been purchased successfully! Your licence key will be sent to ${ph} via SMS/WhatsApp within a few minutes. Thank you! 🎉`;
+    banner.classList.add('on');
+    setTimeout(()=>banner.classList.remove('on'), 14000);
+  }, 1400);
 }
 
 /* ══ SPEED TEST ══ */
