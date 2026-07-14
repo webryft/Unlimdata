@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>UnlimData — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{--gold:#f5a623;--gold2:#e6920f;--gold-dim:rgba(245,166,35,0.12);--gold-glow:rgba(245,166,35,0.30);--bg:#fff;--bg2:#fffdf5;--bg3:#fff8e1;--dark:#111;--dark2:#1c1c1c;--ink:#222;--muted:#666;--muted2:#999;--border:#e8e8e8;--border2:#d0d0d0;--green:#16a34a;--green-dim:rgba(22,163,74,0.10);--red:#dc2626;--red-dim:rgba(220,38,38,0.10);--display:'Syne',sans-serif;--body:'Inter',sans-serif;--r:14px;--rsm:9px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg2);color:var(--ink);font-family:var(--body);}
+::-webkit-scrollbar{width:8px;height:8px;}::-webkit-scrollbar-track{background:#f5f5f5;}::-webkit-scrollbar-thumb{background:#ddd;border-radius:4px;}
+button{font-family:var(--body);cursor:pointer;}
+a{text-decoration:none;color:inherit;}
+
+/* ---------- gate ---------- */
+#gate{position:fixed;inset:0;z-index:999;background:var(--dark);display:flex;align-items:center;justify-content:center;padding:20px;}
+.gate-box{background:#fff;border-radius:18px;padding:34px 28px;width:100%;max-width:360px;box-shadow:0 24px 80px rgba(0,0,0,0.4);text-align:center;}
+.gate-logo{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.gate-logo b{color:var(--gold);}
+.gate-sub{font-size:.78rem;color:var(--muted);margin-bottom:20px;}
+.gate-box input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);padding:12px 13px;font-size:.9rem;outline:none;margin-bottom:10px;transition:border-color .2s;}
+.gate-box input:focus{border-color:var(--gold);}
+.gate-box button{width:100%;background:var(--gold);color:#fff;font-weight:700;font-size:.88rem;padding:12px;border:none;border-radius:var(--rsm);transition:background .2s;}
+.gate-box button:hover{background:var(--gold2);}
+.gate-err{font-size:.76rem;color:var(--red);margin-top:8px;display:none;}
+.gate-err.on{display:block;}
+
+/* ---------- shell ---------- */
+#app{display:none;}
+#app.on{display:block;}
+nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(14px,3vw,40px);height:64px;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);}
+.nav-logo{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--dark);display:flex;align-items:center;gap:8px;}
+.nav-logo b{color:var(--gold);}
+.nav-tag{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);background:var(--gold-dim);padding:3px 10px;border-radius:20px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.live-dot{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);}
+.live-dot span{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.logout-btn{font-size:.76rem;font-weight:600;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border2);background:transparent;color:var(--ink);transition:all .2s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+
+main{padding:clamp(16px,3vw,40px);max-width:1400px;margin:0 auto;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:30px;}
+.stat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:-30px;right:-30px;width:90px;height:90px;border-radius:50%;background:var(--gold-dim);}
+.stat-ic{font-size:1.3rem;margin-bottom:10px;}
+.stat-v{font-family:var(--display);font-size:1.7rem;font-weight:800;color:var(--dark);letter-spacing:-.02em;position:relative;}
+.stat-l{font-size:.68rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;position:relative;}
+.stat-card.hl .stat-v{color:var(--gold2);}
+
+.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.tab-btn{font-size:.82rem;font-weight:600;padding:9px 18px;border-radius:20px;border:1.5px solid var(--border2);background:#fff;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:7px;}
+.tab-btn .cnt{background:var(--bg3);color:var(--muted);font-size:.68rem;font-weight:700;padding:1px 7px;border-radius:20px;}
+.tab-btn.on{background:var(--dark);color:#fff;border-color:var(--dark);}
+.tab-btn.on .cnt{background:var(--gold);color:#fff;}
+
+.panel{display:none;background:#fff;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.panel.on{display:block;}
+.panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.panel-title{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--dark);}
+.panel-sub{font-size:.76rem;color:var(--muted);margin-top:2px;}
+.search-box{background:var(--bg2);border:1.5px solid var(--border2);border-radius:20px;padding:8px 15px;font-size:.8rem;outline:none;min-width:200px;}
+.search-box:focus{border-color:var(--gold);}
+
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:680px;}
+thead th{text-align:left;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);padding:11px 16px;border-bottom:1.5px solid var(--border);background:var(--bg2);white-space:nowrap;}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
+tbody tr:hover{background:var(--bg2);}
+tbody tr:last-child td{border-bottom:none;}
+.cell-name{font-weight:700;color:var(--dark);}
+.cell-sub{font-size:.72rem;color:var(--muted);margin-top:1px;}
+.pill{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 11px;border-radius:20px;letter-spacing:.03em;}
+.pill.gold{background:var(--gold-dim);color:var(--gold2);}
+.pill.green{background:var(--green-dim);color:var(--green);}
+.pill.muted{background:var(--bg3);color:var(--muted);}
+.status-row{display:flex;gap:6px;}
+.st-btn{font-size:.7rem;font-weight:700;padding:6px 13px;border-radius:20px;border:1.5px solid var(--border2);background:#fff;color:var(--muted);transition:all .18s;}
+.st-btn.pending.active{background:rgba(245,166,35,0.15);border-color:var(--gold);color:var(--gold2);}
+.st-btn.settled.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.st-btn:hover{border-color:var(--gold);}
+.fulfill-btn{font-size:.7rem;font-weight:700;padding:6px 14px;border-radius:20px;border:none;background:var(--gold);color:#fff;transition:background .18s;}
+.fulfill-btn:hover{background:var(--gold2);}
+.fulfill-btn:disabled{background:var(--green);opacity:.7;cursor:default;}
+.empty-state{padding:50px 20px;text-align:center;color:var(--muted2);font-size:.86rem;}
+.loading-state{padding:50px 20px;text-align:center;color:var(--muted2);font-size:.86rem;}
+.ld-ring{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);z-index:800;background:var(--dark);color:#fff;font-size:.8rem;padding:9px 20px;border-radius:30px;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.22);}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:640px){table{min-width:560px;}.panel-head{align-items:flex-start;}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">Unlim<b>Data</b> Admin</div>
+    <div class="gate-sub">Restricted access — staff only.</div>
+    <input type="password" id="gate-pw" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkGate()"/>
+    <button onclick="checkGate()">Enter Dashboard</button>
+    <div class="gate-err" id="gate-err">Incorrect password.</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div id="app">
+  <nav>
+    <div class="nav-logo">Unlim<b>Data</b><span class="nav-tag">Admin</span></div>
+    <div class="nav-right">
+      <div class="live-dot"><span></span>Live</div>
+      <button class="logout-btn" onclick="location.reload()">Sign Out</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="stats-grid">
+      <div class="stat-card hl"><div class="stat-ic">👥</div><div class="stat-v" id="s-users">0</div><div class="stat-l">Users on Platform</div></div>
+      <div class="stat-card hl"><div class="stat-ic">💰</div><div class="stat-v" id="s-revenue">₦0</div><div class="stat-l">Total Amount (All Orders)</div></div>
+      <div class="stat-card"><div class="stat-ic">🛒</div><div class="stat-v" id="s-orders">0</div><div class="stat-l">Total Orders</div></div>
+      <div class="stat-card"><div class="stat-ic">⏳</div><div class="stat-v" id="s-pending">0</div><div class="stat-l">Pending Orders</div></div>
+      <div class="stat-card"><div class="stat-ic">🎁</div><div class="stat-v" id="s-redeem">0</div><div class="stat-l">Pending Bonus Redemptions</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn on" id="tab-orders-btn" onclick="switchTab('orders')">📦 Orders <span class="cnt" id="tab-orders-cnt">0</span></button>
+      <button class="tab-btn" id="tab-users-btn" onclick="switchTab('users')">👥 Registered Users <span class="cnt" id="tab-users-cnt">0</span></button>
+      <button class="tab-btn" id="tab-redeem-btn" onclick="switchTab('redeem')">🎁 Redeem Requests <span class="cnt" id="tab-redeem-cnt">0</span></button>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="panel on" id="panel-orders">
+      <div class="panel-head">
+        <div><div class="panel-title">Orders / Purchases</div><div class="panel-sub">Every data plan purchase — set status once you've delivered the plan.</div></div>
+        <input class="search-box" id="search-orders" placeholder="Search name, phone, network…" oninput="renderOrders()"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Buyer</th><th>Recipient</th><th>Network</th><th>Plan</th><th>Amount</th><th>Party</th><th>Referral</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="orders-empty" style="display:none;">No orders yet.</div>
+      <div class="loading-state" id="orders-loading"><div class="ld-ring"></div>Loading orders…</div>
+    </div>
+
+    <!-- USERS -->
+    <div class="panel" id="panel-users">
+      <div class="panel-head">
+        <div><div class="panel-title">Registered Users</div><div class="panel-sub">Everyone who created a UnlimData account.</div></div>
+        <input class="search-box" id="search-users" placeholder="Search name, email, phone…" oninput="renderUsers()"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Referrals</th><th>24hr Bonus</th><th>Joined</th></tr></thead>
+          <tbody id="users-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="users-empty" style="display:none;">No users yet.</div>
+      <div class="loading-state" id="users-loading"><div class="ld-ring"></div>Loading users…</div>
+    </div>
+
+    <!-- REDEEM -->
+    <div class="panel" id="panel-redeem">
+      <div class="panel-head">
+        <div><div class="panel-title">Bonus Redeem Requests</div><div class="panel-sub">Users who tapped "Redeem Bonus" for their 24hr Unlimited data.</div></div>
+        <input class="search-box" id="search-redeem" placeholder="Search name, phone…" oninput="renderRedeem()"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Requested</th><th>Status</th><th></th></tr></thead>
+          <tbody id="redeem-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="redeem-empty" style="display:none;">No redeem requests yet.</div>
+      <div class="loading-state" id="redeem-loading"><div class="ld-ring"></div>Loading requests…</div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============ ADMIN GATE ============
+   This is a lightweight client-side gate for convenience only — it does NOT
+   secure your data. Real protection must come from Firestore Security Rules
+   on the "users", "orders" and "redemptions" collections (e.g. restrict
+   writes/reads to authenticated admin accounts). Change ADMIN_PASSWORD below
+   and, ideally, replace this gate with real Firebase Auth. */
+const ADMIN_PASSWORD='unlimdata2026';
+function checkGate(){
+  const v=document.getElementById('gate-pw').value;
+  if(v===ADMIN_PASSWORD){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').classList.add('on');
+    sessionStorage.setItem('ud_admin_ok','1');
+    initAdmin();
+  }else{
+    document.getElementById('gate-err').classList.add('on');
+  }
+}
+if(sessionStorage.getItem('ud_admin_ok')==='1'){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').classList.add('on');
+  window.addEventListener('DOMContentLoaded',initAdmin);
+}
+
+/* ============ FIREBASE ============ */
+const firebaseConfig={apiKey:"AIzaSyDZGrmq77-b4suSUr_vZi66btpJYOc9780",authDomain:"unlimited-22ac9.firebaseapp.com",projectId:"unlimited-22ac9",storageBucket:"unlimited-22ac9.firebasestorage.app",messagingSenderId:"7559085841",appId:"1:7559085841:web:e16b96ffdd4374d72ad6b0",measurementId:"G-0PB1LMNVB4"};
+firebase.initializeApp(firebaseConfig);
+const dbFS=firebase.firestore();
+
+let USERS=[],ORDERS=[],REDEEMS=[];
+let started=false;
+function initAdmin(){
+  if(started)return;started=true;
+  dbFS.collection('users').orderBy('createdAt','desc').onSnapshot(snap=>{
+    USERS=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('users-loading').style.display='none';
+    renderUsers();renderStats();
+  },err=>{console.error(err);document.getElementById('users-loading').textContent='Could not load users.';});
+
+  dbFS.collection('orders').orderBy('createdAt','desc').onSnapshot(snap=>{
+    ORDERS=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('orders-loading').style.display='none';
+    renderOrders();renderStats();
+  },err=>{console.error(err);document.getElementById('orders-loading').textContent='Could not load orders.';});
+
+  dbFS.collection('redemptions').orderBy('requestedAt','desc').onSnapshot(snap=>{
+    REDEEMS=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('redeem-loading').style.display='none';
+    renderRedeem();renderStats();
+  },err=>{console.error(err);document.getElementById('redeem-loading').textContent='Could not load requests.';});
+}
+
+function fmtDate(ts){
+  try{
+    if(!ts)return '—';
+    const d=ts.toDate?ts.toDate():new Date(ts);
+    return d.toLocaleDateString('en-NG',{day:'2-digit',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-NG',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){return '—';}
+}
+function fmtMoney(n){return '₦'+(Number(n||0)).toLocaleString('en-NG');}
+function esc(s){return (s||'').toString().replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));}
+
+function renderStats(){
+  document.getElementById('s-users').textContent=USERS.length;
+  const totalAmount=ORDERS.reduce((sum,o)=>sum+(Number(o.amount)||0),0);
+  document.getElementById('s-revenue').textContent=fmtMoney(totalAmount);
+  document.getElementById('s-orders').textContent=ORDERS.length;
+  document.getElementById('s-pending').textContent=ORDERS.filter(o=>o.status!=='settled').length;
+  document.getElementById('s-redeem').textContent=REDEEMS.filter(r=>r.status!=='fulfilled').length;
+  document.getElementById('tab-orders-cnt').textContent=ORDERS.length;
+  document.getElementById('tab-users-cnt').textContent=USERS.length;
+  document.getElementById('tab-redeem-cnt').textContent=REDEEMS.length;
+}
+
+function switchTab(t){
+  ['orders','users','redeem'].forEach(x=>{
+    document.getElementById('panel-'+x).classList.toggle('on',x===t);
+    document.getElementById('tab-'+x+'-btn').classList.toggle('on',x===t);
+  });
+}
+
+/* ---------- ORDERS ---------- */
+function renderOrders(){
+  const q=(document.getElementById('search-orders').value||'').toLowerCase();
+  const body=document.getElementById('orders-body');
+  const rows=ORDERS.filter(o=>!q||[o.name,o.recipientPhone,o.network,o.email,o.buyerPhone].join(' ').toLowerCase().includes(q));
+  document.getElementById('orders-empty').style.display=rows.length?'none':'block';
+  body.innerHTML=rows.map(o=>`
+    <tr>
+      <td><div class="cell-name">${esc(o.name||'Guest')}</div><div class="cell-sub">${esc(o.email||o.buyerPhone||'')}</div></td>
+      <td>${esc(o.recipientPhone||'—')}${o.party==='third'?' <span class="pill muted">3rd Party</span>':''}</td>
+      <td>${esc(o.network||'—')}</td>
+      <td><div class="cell-name">${esc(o.planLabel||'')}</div><div class="cell-sub">${esc(o.plan||'')}</div></td>
+      <td>${fmtMoney(o.amount)}</td>
+      <td>${o.party==='third'?'3rd Party':'Self'}</td>
+      <td>${o.referralApplied?`<span class="pill gold">via ${esc(o.referredBy||'')}</span>`:'—'}</td>
+      <td>${fmtDate(o.createdAt)}</td>
+      <td>
+        <div class="status-row">
+          <button class="st-btn pending ${o.status!=='settled'?'active':''}" onclick="setOrderStatus('${o.id}','pending')">Pending</button>
+          <button class="st-btn settled ${o.status==='settled'?'active':''}" onclick="setOrderStatus('${o.id}','settled')">Settled</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+async function setOrderStatus(id,status){
+  try{await dbFS.collection('orders').doc(id).update({status});showToast(status==='settled'?'✅ Marked as settled':'Marked as pending');}
+  catch(e){console.error(e);showToast('Could not update status.');}
+}
+
+/* ---------- USERS ---------- */
+function renderUsers(){
+  const q=(document.getElementById('search-users').value||'').toLowerCase();
+  const body=document.getElementById('users-body');
+  const rows=USERS.filter(u=>!q||[u.name,u.email,u.phone].join(' ').toLowerCase().includes(q));
+  document.getElementById('users-empty').style.display=rows.length?'none':'block';
+  body.innerHTML=rows.map(u=>`
+    <tr>
+      <td class="cell-name">${esc(u.name||'—')}</td>
+      <td>${esc(u.email||'—')}</td>
+      <td>${esc(u.phone||'—')}</td>
+      <td><span class="pill muted">${u.referralCount||0}</span></td>
+      <td><span class="pill gold">x${u.bonusUnits||0}</span></td>
+      <td>${fmtDate(u.createdAt)}</td>
+    </tr>`).join('');
+}
+
+/* ---------- REDEEM REQUESTS ---------- */
+function renderRedeem(){
+  const q=(document.getElementById('search-redeem').value||'').toLowerCase();
+  const body=document.getElementById('redeem-body');
+  const rows=REDEEMS.filter(r=>!q||[r.name,r.userPhone,r.email].join(' ').toLowerCase().includes(q));
+  document.getElementById('redeem-empty').style.display=rows.length?'none':'block';
+  body.innerHTML=rows.map(r=>`
+    <tr>
+      <td class="cell-name">${esc(r.name||'—')}</td>
+      <td>${esc(r.email||'—')}</td>
+      <td>${esc(r.userPhone||'—')}</td>
+      <td>${fmtDate(r.requestedAt)}</td>
+      <td>${r.status==='fulfilled'?'<span class="pill green">Fulfilled</span>':'<span class="pill gold">Pending</span>'}</td>
+      <td>${r.status==='fulfilled'?`<button class="fulfill-btn" disabled>✓ Done</button>`:`<button class="fulfill-btn" onclick="fulfillRedeem('${r.id}')">Mark Fulfilled</button>`}</td>
+    </tr>`).join('');
+}
+async function fulfillRedeem(id){
+  try{await dbFS.collection('redemptions').doc(id).update({status:'fulfilled'});showToast('✅ Marked as fulfilled');}
+  catch(e){console.error(e);showToast('Could not update request.');}
+}
+
+let _tt;
+function showToast(msg,dur=2600){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('on'),dur);}
+</script>
+</body>
+</html>

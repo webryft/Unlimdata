@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 :root{--gold:#f5a623;--gold2:#e6920f;--gold-dim:rgba(245,166,35,0.12);--gold-glow:rgba(245,166,35,0.30);--bg:#fff;--bg2:#fffdf5;--bg3:#fff8e1;--dark:#111;--dark2:#1c1c1c;--ink:#222;--muted:#666;--muted2:#999;--border:#e8e8e8;--border2:#d0d0d0;--green:#16a34a;--green-dim:rgba(22,163,74,0.10);--red:#dc2626;--display:'Syne',sans-serif;--body:'Inter',sans-serif;--r:14px;--rsm:9px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -363,6 +365,8 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
 <div class="mw" id="m-signup"><div class="mb">
   <button class="mx" onclick="closeM('m-signup')">✕</button>
   <div class="mt">Create Account</div><div class="ms">Join UnlimData — takes under 30 seconds.</div>
+  <div class="fg"><label class="fl">Full Name</label><input class="fi" type="text" id="su-name" placeholder="Your full name"/><div class="ferr" id="su-name-err">Please enter your name.</div></div>
+  <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="su-email" placeholder="you@gmail.com"/><div class="ferr" id="su-email-err">Enter a valid email address.</div></div>
   <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="su-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="su-ph-err">Enter a valid 11-digit number.</div></div>
   <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="su-pw" placeholder="Create a password (min 6 chars)"/><div class="ferr" id="su-pw-err">Password must be at least 6 characters.</div></div>
   <button class="fbtn" onclick="doSignup()">Create Account — It's Free</button>
@@ -470,7 +474,7 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
     <h3>5. Prohibited Uses</h3>
     <ul><li>Purchasing data for fraudulent or illegal activities</li><li>Attempting to hack or reverse-engineer our platform</li><li>Creating multiple accounts to abuse referral programs</li><li>Reselling data plans without authorization</li></ul>
     <h3>6. Referral Program</h3>
-    <ul><li>1GB is credited per genuine referral (friend must complete a purchase)</li><li>Referral GB is redeemable when your bonus box reaches 50GB</li><li>Fraudulent referrals will result in account termination</li></ul>
+    <ul><li>24 hours Unlimited data is credited per genuine referral — your friend must purchase any plan other than the 24-hour plan</li><li>Each qualifying referral adds one redeemable 24-hour bonus (shown as x1, x2, x3…) to your account</li><li>Tap "Redeem Bonus" to request activation — our team reviews and activates redeemed bonuses</li><li>Fraudulent referrals will result in account termination</li></ul>
     <h3>7. Limitation of Liability</h3>
     <p>UnlimData is not liable for service interruptions caused by network providers. Our maximum liability is limited to the value of the transaction in dispute.</p>
     <h3>8. Contact</h3>
@@ -482,10 +486,10 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
 <!-- INVITE -->
 <div class="mw" id="m-invite"><div class="mb">
   <button class="mx" onclick="closeM('m-invite')">✕</button>
-  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">50 friend that subscribes earns you 24hr free Unlimited.</div>
+  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">Every friend who subscribes to a plan (7/30/90 days) earns you 24hr free Unlimited data.</div>
   <div id="inv-prompt" style="text-align:center;padding:20px 0;">
     <div style="font-size:2.5rem;margin-bottom:11px;">🔐</div>
-    <div style="font-size:.86rem;color:var(--muted);margin-bottom:16px;">Sign in to get your personal invite link and track your earned GBs.</div>
+    <div style="font-size:.86rem;color:var(--muted);margin-bottom:16px;">Sign in to get your personal invite link and track your earned 24hr bonuses.</div>
     <button class="fbtn" style="max-width:190px;margin:0 auto;" onclick="switchM('m-invite','m-login')">Sign In First</button>
   </div>
   <div id="inv-content" style="display:none;">
@@ -493,16 +497,23 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
     <div class="inv-box">
       <div class="inv-bh">🎁 Your Bonus Box</div>
       <div class="inv-row"><span>Friends Invited</span><span class="inv-val" id="inv-cnt">0</span></div>
-      <div class="inv-row"><span>GB Earned</span><span class="inv-val" id="inv-gb">0 GB</span></div>
-      <div class="inv-row"><span>Needed to Redeem</span><span class="inv-val">50 GB</span></div>
-      <div class="inv-bar-w"><div class="inv-bar" id="inv-bar" style="width:0%"></div></div>
-      <button class="inv-claim" id="inv-claim" disabled onclick="claimGB()">Claim Free Data (Need 50GB)</button>
+      <div class="inv-row"><span>24hr Bonus Available</span><span class="inv-val" id="inv-gb">x0</span></div>
+      <button class="inv-claim" id="inv-claim" disabled onclick="redeemBonus()">No Bonus Available Yet</button>
     </div>
+    <div style="font-size:.7rem;color:var(--muted2);margin-top:10px;text-align:center;">Redeeming sends a request to our team — your 24hr Unlimited data is activated shortly after.</div>
   </div>
 </div></div>
 
 <script>
 const PK='pk_live_4ff37d15381d1d12c78fd66f7bc86beb64c59415';
+const firebaseConfig={apiKey:"AIzaSyDZGrmq77-b4suSUr_vZi66btpJYOc9780",authDomain:"unlimited-22ac9.firebaseapp.com",projectId:"unlimited-22ac9",storageBucket:"unlimited-22ac9.firebasestorage.app",messagingSenderId:"7559085841",appId:"1:7559085841:web:e16b96ffdd4374d72ad6b0",measurementId:"G-0PB1LMNVB4"};
+firebase.initializeApp(firebaseConfig);
+const dbFS=firebase.firestore();
+async function fsGetUser(phone){try{const d=await dbFS.collection('users').doc(phone).get();return d.exists?d.data():null;}catch(e){console.error('fsGetUser',e);return null;}}
+async function fsCreateUser(u){await dbFS.collection('users').doc(u.phone).set(u);}
+async function fsUpdateUser(phone,fields){await dbFS.collection('users').doc(phone).update(fields);}
+async function fsAddOrder(o){await dbFS.collection('orders').add(o);}
+async function fsAddRedemption(r){await dbFS.collection('redemptions').add(r);}
 const NETS=[
   {id:'mtn',name:'MTN',img:'mtn.png',color:'#f5a623',bg:'#fff8e1',sub:'MTN Nigeria — 4G/5G Ready'},
   {id:'glo',name:'Glo',img:'glo.png',color:'#00a550',bg:'#e8f5e9',sub:'Glo Mobile — Broadband Speed'},
@@ -520,8 +531,10 @@ const PLANS=[
   {data:'UnlimData',price:4000,label:'₦40,000',val:'90 days Unlimited data'},
 ];
 let user=null,currentBuy={},buyParty='self',fpPhone='';
-try{user=JSON.parse(localStorage.getItem('ud_u')||'null');}catch(e){}
-if(user)refreshUI();
+const pendingRef=new URLSearchParams(location.search).get('ref')||sessionStorage.getItem('ud_ref')||'';
+if(pendingRef)sessionStorage.setItem('ud_ref',pendingRef);
+const _sessPhone=localStorage.getItem('ud_session');
+if(_sessPhone){fsGetUser(_sessPhone).then(u=>{if(u){user=u;refreshUI();}});}
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>10));
 const ng=document.getElementById('nets-grid');
 NETS.forEach(n=>{
@@ -580,49 +593,103 @@ function processBuy(){
     handler.openIframe();
   },800);
 }
-function onPaySuccess(resp,ph){
+async function onPaySuccess(resp,ph){
   showLoader('Activating your data…','Almost done — takes about 10 seconds…');
+  const purchaserId=user?user.phone:ph;
+  let referralApplied=false;
+  try{
+    if(pendingRef&&purchaserId&&pendingRef!==purchaserId&&currentBuy.plan.price!==100){
+      const refUser=await fsGetUser(pendingRef);
+      if(refUser){
+        await fsUpdateUser(pendingRef,{bonusUnits:firebase.firestore.FieldValue.increment(1),referralCount:firebase.firestore.FieldValue.increment(1)});
+        referralApplied=true;
+      }
+    }
+    await fsAddOrder({
+      buyerPhone:user?user.phone:null,
+      name:user?user.name:'Guest',
+      email:user?user.email:null,
+      network:currentBuy.net.name,
+      plan:currentBuy.plan.val,
+      planLabel:currentBuy.plan.label,
+      amount:currentBuy.plan.price*10,
+      recipientPhone:ph,
+      party:buyParty,
+      status:'pending',
+      referredBy:pendingRef||null,
+      referralApplied,
+      paystackRef:(resp&&resp.reference)?resp.reference:('UD'+Date.now()),
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }catch(e){console.error('order save failed',e);}
   setTimeout(()=>{hideLoader();showBanner(`Your ${currentBuy.plan.data} ${currentBuy.net.name} data plan (${currentBuy.plan.label}) has been successfully activated and sent to ${ph}. Enjoy browsing! 🎉`);setTimeout(()=>hideBanner(),12000);},1400);
 }
-function doSignup(){
-  const ph=document.getElementById('su-ph').value.trim();const pw=document.getElementById('su-pw').value;let ok=true;
+async function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const ph=document.getElementById('su-ph').value.trim();
+  const pw=document.getElementById('su-pw').value;
+  let ok=true;
+  if(!name){document.getElementById('su-name-err').classList.add('on');ok=false;}else document.getElementById('su-name-err').classList.remove('on');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('su-email-err').classList.add('on');ok=false;}else document.getElementById('su-email-err').classList.remove('on');
   if(!/^0\d{10}$/.test(ph)){document.getElementById('su-ph-err').classList.add('on');ok=false;}else document.getElementById('su-ph-err').classList.remove('on');
   if(pw.length<6){document.getElementById('su-pw-err').classList.add('on');ok=false;}else document.getElementById('su-pw-err').classList.remove('on');
-  if(!ok)return;const db=getDB();if(db[ph]){showToast('Account exists. Sign in instead.');return;}
-  db[ph]={phone:ph,pw,invGb:0,invites:0};saveDB(db);user=db[ph];localStorage.setItem('ud_u',JSON.stringify(user));
-  refreshUI();closeM('m-signup');showToast('✅ Account created! Welcome to UnlimData.');
+  if(!ok)return;
+  showLoader('Creating account…','Just a moment…');
+  try{
+    const existing=await fsGetUser(ph);
+    if(existing){hideLoader();showToast('Account exists. Sign in instead.');return;}
+    const newUser={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,referredBy:(pendingRef&&pendingRef!==ph)?pendingRef:null,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+    await fsCreateUser(newUser);
+    hideLoader();
+    user={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,referredBy:newUser.referredBy};
+    localStorage.setItem('ud_session',ph);
+    refreshUI();closeM('m-signup');showToast('✅ Account created! Welcome to UnlimData.');
+  }catch(e){hideLoader();console.error(e);showToast('Something went wrong. Please try again.');}
 }
-function doLogin(){
-  const ph=document.getElementById('li-ph').value.trim();const pw=document.getElementById('li-pw').value;const db=getDB();
-  if(!db[ph]||db[ph].pw!==pw){document.getElementById('li-err').classList.add('on');return;}
-  document.getElementById('li-err').classList.remove('on');user=db[ph];localStorage.setItem('ud_u',JSON.stringify(user));
-  refreshUI();closeM('m-login');showToast(`✅ Welcome back, ${ph}!`);
+async function doLogin(){
+  const ph=document.getElementById('li-ph').value.trim();const pw=document.getElementById('li-pw').value;
+  showLoader('Signing in…','Just a moment…');
+  try{
+    const u=await fsGetUser(ph);
+    hideLoader();
+    if(!u||u.pw!==pw){document.getElementById('li-err').classList.add('on');return;}
+    document.getElementById('li-err').classList.remove('on');user=u;localStorage.setItem('ud_session',ph);
+    refreshUI();closeM('m-login');showToast(`✅ Welcome back, ${ph}!`);
+  }catch(e){hideLoader();console.error(e);showToast('Something went wrong. Please try again.');}
 }
-function signOut(){user=null;localStorage.removeItem('ud_u');refreshUI();closeDrawer();showToast('Signed out successfully.');}
+function signOut(){user=null;localStorage.removeItem('ud_session');refreshUI();closeDrawer();showToast('Signed out successfully.');}
 function refreshUI(){
   const on=!!user;
   document.getElementById('dr-user').classList.toggle('on',on);
   document.getElementById('dr-so').classList.toggle('on',on);
   document.getElementById('dr-li').style.display=on?'none':'flex';
   document.getElementById('dr-su').style.display=on?'none':'flex';
-  if(on){document.getElementById('dr-uname').textContent=`📱 ${user.phone}`;document.getElementById('dr-ubonus').textContent=`🎁 Bonus: ${user.invGb||0}GB`;}
+  if(on){document.getElementById('dr-uname').textContent=`📱 ${user.phone}`;document.getElementById('dr-ubonus').textContent=`🎁 Bonus: x${user.bonusUnits||0} (24hr)`;}
   const cta=document.getElementById('nav-cta');const li=document.getElementById('nav-li');
   if(on){cta.textContent='My Account';cta.onclick=openDrawer;li.style.display='none';}
   else{cta.textContent='Get Started';cta.onclick=()=>openM('m-signup');li.style.display='';}
 }
-function fpStep1(){
-  const ph=document.getElementById('fp-ph').value.trim();const db=getDB();
-  if(!db[ph]){document.getElementById('fp-ph-err').classList.add('on');return;}
+async function fpStep1(){
+  const ph=document.getElementById('fp-ph').value.trim();
+  showLoader('Checking…','Just a moment…');
+  const u=await fsGetUser(ph);
+  hideLoader();
+  if(!u){document.getElementById('fp-ph-err').classList.add('on');return;}
   document.getElementById('fp-ph-err').classList.remove('on');fpPhone=ph;
   document.getElementById('fp-s1').style.display='none';document.getElementById('fp-s2').style.display='block';
   document.getElementById('fp-title').textContent='Change Password';document.getElementById('fp-sub').textContent=`Set a new password for ${ph}.`;
 }
-function fpStep2(){
+async function fpStep2(){
   const pw=document.getElementById('fp-npw').value;
   if(pw.length<6){document.getElementById('fp-pw-err').classList.add('on');return;}
   document.getElementById('fp-pw-err').classList.remove('on');
-  const db=getDB();db[fpPhone].pw=pw;saveDB(db);
-  if(user&&user.phone===fpPhone){user.pw=pw;localStorage.setItem('ud_u',JSON.stringify(user));}
+  showLoader('Updating password…','Just a moment…');
+  try{
+    await fsUpdateUser(fpPhone,{pw});
+    if(user&&user.phone===fpPhone){user.pw=pw;}
+  }catch(e){console.error(e);}
+  hideLoader();
   closeM('m-forgot');
   document.getElementById('fp-s1').style.display='block';document.getElementById('fp-s2').style.display='none';
   document.getElementById('fp-title').textContent='Reset Password';document.getElementById('fp-sub').textContent='Enter your registered phone number to continue.';
@@ -645,11 +712,10 @@ function openInvite(){
   document.getElementById('inv-content').style.display=on?'block':'none';
   if(on){
     document.getElementById('inv-link').value=`${location.origin}${location.pathname}?ref=${user.phone}`;
-    const gb=user.invGb||0,cnt=user.invites||0;
-    document.getElementById('inv-cnt').textContent=cnt;document.getElementById('inv-gb').textContent=gb+' GB';
-    document.getElementById('inv-bar').style.width=Math.min(100,gb/50*100)+'%';
-    const btn=document.getElementById('inv-claim');btn.disabled=gb<50;
-    btn.textContent=gb>=50?'🎉 Claim Your 50GB Now!':`Claim Free Data (${50-gb}GB more needed)`;
+    const units=user.bonusUnits||0,cnt=user.referralCount||0;
+    document.getElementById('inv-cnt').textContent=cnt;document.getElementById('inv-gb').textContent='x'+units;
+    const btn=document.getElementById('inv-claim');btn.disabled=units<1;
+    btn.textContent=units>=1?`🎉 Redeem Bonus (x${units} available)`:'No Bonus Available Yet';
   }
   openM('m-invite');
 }
@@ -657,15 +723,17 @@ function copyInvLink(){
   const v=document.getElementById('inv-link').value;
   navigator.clipboard.writeText(v).then(()=>showToast('✅ Invite link copied!')).catch(()=>{try{document.getElementById('inv-link').select();document.execCommand('copy');showToast('✅ Link copied!');}catch(e){showToast('Copy the link manually.');}});
 }
-function claimGB(){
-  if(!user||user.invGb<50)return;user.invGb-=50;
-  const db=getDB();db[user.phone].invGb=user.invGb;saveDB(db);localStorage.setItem('ud_u',JSON.stringify(user));
-  closeM('m-invite');showBanner('🎁 50GB referral bonus activated! Enjoy your free data.');setTimeout(()=>hideBanner(),10000);
+async function redeemBonus(){
+  if(!user||!((user.bonusUnits||0)>0))return;
+  showLoader('Sending request…','Just a moment…');
+  try{
+    await fsAddRedemption({userPhone:user.phone,name:user.name,email:user.email,requestedAt:firebase.firestore.FieldValue.serverTimestamp(),status:'pending'});
+    await fsUpdateUser(user.phone,{bonusUnits:firebase.firestore.FieldValue.increment(-1)});
+    user.bonusUnits=(user.bonusUnits||0)-1;
+    hideLoader();
+    closeM('m-invite');showBanner('🎁 Redeem request sent! Your 24hr Unlimited data will be activated shortly.');setTimeout(()=>hideBanner(),10000);
+  }catch(e){hideLoader();console.error(e);showToast('Something went wrong. Please try again.');}
 }
-const _ref=new URLSearchParams(location.search).get('ref');
-if(_ref&&user&&user.phone!==_ref){const db=getDB();if(db[_ref]){db[_ref].invGb=(db[_ref].invGb||0)+1;db[_ref].invites=(db[_ref].invites||0)+1;saveDB(db);}}
-function getDB(){try{return JSON.parse(localStorage.getItem('ud_db')||'{}');}catch(e){return{};}}
-function saveDB(d){localStorage.setItem('ud_db',JSON.stringify(d));}
 function openM(id){document.getElementById(id).classList.add('on');document.getElementById('dimmer').classList.add('on');}
 function closeM(id){document.getElementById(id).classList.remove('on');if(!document.querySelectorAll('.mw.on').length)document.getElementById('dimmer').classList.remove('on');}
 function switchM(a,b){closeM(a);setTimeout(()=>openM(b),180);}
