@@ -408,7 +408,7 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
   <div class="fg"><label class="fl">Your Phone Number</label><input class="fi" type="tel" id="ct-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="ct-ph-err">Enter a valid phone number.</div></div>
   <div class="fg"><label class="fl">Your Question or Issue</label><textarea class="fi" id="ct-msg" placeholder="Type your question here…"></textarea><div class="ferr" id="ct-msg-err">Please type your question.</div></div>
   <button class="fbtn" onclick="doContact()">💬 Send via WhatsApp</button>
-  <div style="margin-top:14px;text-align:center;font-size:.76rem;color:var(--muted2);">📞 WhatsApp: +1 (740) 406-1406 · Response time: under 30 minutes</div>
+  <div style="margin-top:14px;text-align:center;font-size:.76rem;color:var(--muted2);">📞 WhatsApp: · Response time: under 30 minutes</div>
 </div></div>
 
 <!-- ABOUT -->
@@ -702,7 +702,7 @@ function doContact(){
   if(!msg){document.getElementById('ct-msg-err').classList.add('on');ok=false;}else document.getElementById('ct-msg-err').classList.remove('on');
   if(!ok)return;
   const txt=encodeURIComponent(`Hello! I am contacting you from UnlimData.\n\nMy phone: ${ph}\n\n${msg}`);
-  window.open(`https://wa.me/17404061406?text=${txt}`,'_blank');
+  window.open(`https://wa.me/08140005079?text=${txt}`,'_blank');
   closeM('m-contact');document.getElementById('ct-ph').value='';document.getElementById('ct-msg').value='';
   showToast('Opening WhatsApp…');
 }
