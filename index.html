@@ -212,6 +212,62 @@ textarea.fi{resize:vertical;min-height:94px;}
 .suc-x{background:none;border:none;color:var(--muted2);font-size:1rem;flex-shrink:0;padding:2px;}
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);z-index:800;background:var(--dark);color:#fff;font-size:.8rem;padding:9px 20px;border-radius:30px;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.22);}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+.wallet-sec{padding-top:44px;padding-bottom:8px;}
+.wallet-guest{max-width:420px;margin:0 auto;text-align:center;background:linear-gradient(160deg,#fffdf5,#fff8e1);border:1.5px solid rgba(245,166,35,0.25);border-radius:var(--r);padding:32px 24px;}
+.wallet-guest-ic{width:54px;height:54px;border-radius:14px;background:var(--gold-dim);color:var(--gold2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.wallet-guest-h{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.wallet-guest-p{font-size:.84rem;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.wallet-guest-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.wallet-card{display:none;max-width:460px;margin:0 auto;background:linear-gradient(155deg,#171717,#0c0c0c);border-radius:20px;padding:26px 24px;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.22);}
+.wallet-card.on{display:block;}
+.wallet-guest.hidden{display:none;}
+.wallet-card::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(245,166,35,0.22),transparent 70%);}
+.wallet-top{display:flex;align-items:center;justify-content:space-between;position:relative;}
+.wallet-label{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);}
+.wallet-eye{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.75);width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.wallet-eye:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.wallet-amount{font-family:var(--display);font-size:2.3rem;font-weight:800;color:#fff;letter-spacing:-0.03em;margin:8px 0 20px;position:relative;}
+.wallet-actions{display:flex;align-items:center;gap:16px;margin-bottom:18px;position:relative;flex-wrap:wrap;}
+.wallet-btn-fill{display:inline-flex;align-items:center;gap:7px;background:var(--gold);color:#fff;font-weight:700;font-size:.83rem;padding:11px 20px;border-radius:30px;border:none;transition:all .2s;}
+.wallet-btn-fill:hover{background:var(--gold2);transform:translateY(-1px);}
+.wallet-btn-link{background:none;border:none;color:var(--gold);font-weight:600;font-size:.8rem;transition:opacity .2s;}
+.wallet-btn-link:hover{opacity:.7;}
+.wallet-bonus-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:11px 14px;cursor:pointer;transition:background .2s;position:relative;}
+.wallet-bonus-row:hover{background:rgba(255,255,255,0.1);}
+.wallet-bonus-l{display:flex;align-items:center;gap:7px;font-size:.78rem;color:rgba(255,255,255,0.7);font-weight:600;}
+.wallet-bonus-tag{font-size:.62rem;font-weight:700;color:var(--gold);background:rgba(245,166,35,0.15);padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em;}
+.wallet-bonus-amt{font-family:var(--display);font-size:.92rem;font-weight:800;color:var(--gold);}
+.wallet-masked{letter-spacing:.15em;}
+.af-input-row{position:relative;}
+.af-naira{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:.9rem;}
+.af-input-row input{padding-left:30px !important;}
+.af-quick{display:flex;gap:8px;margin:10px 0 4px;flex-wrap:wrap;}
+.af-quick button{flex:1;min-width:70px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:20px;padding:8px 6px;font-size:.76rem;font-weight:600;color:var(--ink);transition:all .2s;}
+.af-quick button:hover{border-color:var(--gold);color:var(--gold2);}
+.af-note{font-size:.72rem;color:var(--muted2);margin-top:4px;}
+.hist-list{max-height:360px;overflow-y:auto;}
+.hist-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--border);}
+.hist-item:last-child{border-bottom:none;}
+.hist-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hist-ic.in{background:var(--green-dim);color:var(--green);}
+.hist-ic.out{background:var(--gold-dim);color:var(--gold2);}
+.hist-body{flex:1;min-width:0;}
+.hist-title{font-size:.84rem;font-weight:700;color:var(--dark);}
+.hist-sub{font-size:.71rem;color:var(--muted);margin-top:1px;}
+.hist-amt{font-family:var(--display);font-weight:800;font-size:.86rem;white-space:nowrap;}
+.hist-amt.in{color:var(--green);}
+.hist-amt.out{color:var(--dark);}
+.hist-status{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:20px;margin-top:3px;display:inline-block;}
+.hist-status.pending{background:var(--gold-dim);color:var(--gold2);}
+.hist-status.settled,.hist-status.approved{background:var(--green-dim);color:var(--green);}
+.hist-status.declined{background:rgba(220,38,38,0.1);color:var(--red);}
+.hist-empty{text-align:center;padding:40px 10px;color:var(--muted2);font-size:.85rem;}
+#broadcast-banner{position:fixed;top:74px;left:50%;transform:translateX(-50%) translateY(-14px);z-index:650;max-width:min(520px,92vw);width:100%;background:var(--dark2);color:#fff;border-radius:16px;padding:15px 16px;display:flex;align-items:flex-start;gap:12px;box-shadow:0 14px 46px rgba(0,0,0,0.28);opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.34,1.56,.64,1);border:1px solid rgba(245,166,35,0.3);}
+#broadcast-banner.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;}
+.bc-ic{font-size:1.1rem;color:var(--gold);flex-shrink:0;margin-top:1px;}
+.bc-body{flex:1;font-size:.82rem;line-height:1.5;color:rgba(255,255,255,0.9);}
+.bc-body b{color:var(--gold);}
+.bc-x{background:none;border:none;color:rgba(255,255,255,0.5);font-size:.9rem;flex-shrink:0;}
 @media(max-width:600px){.plans-grid{grid-template-columns:repeat(2,1fr);}.ft-top{flex-direction:column;}.ft-bottom{flex-direction:column;align-items:flex-start;}.hero-stats{gap:24px;}.invite-inner{gap:22px;}.nbtn{display:none;}.ads-frame{height:70px;}}
 </style>
 </head>
@@ -219,6 +275,7 @@ textarea.fi{resize:vertical;min-height:94px;}
 <div id="loader"><div class="ld-ring"></div><div class="ld-txt" id="ld-txt">PROCESSING</div><div class="ld-sub" id="ld-sub">Please wait…</div></div>
 <div id="success"><div class="suc-ic">✅</div><div style="flex:1;"><div class="suc-t">Payment Successful!</div><div class="suc-m" id="suc-m">Your data plan has been activated.</div></div><button class="suc-x" onclick="hideBanner()">✕</button></div>
 <div id="toast"></div>
+<div id="broadcast-banner"><div class="bc-ic">🔔</div><div class="bc-body" id="bc-body"></div><button class="bc-x" onclick="dismissBroadcast()">✕</button></div>
 <div id="dimmer" onclick="closeDimmer()"></div>
 
 <nav id="nav">
@@ -267,6 +324,42 @@ textarea.fi{resize:vertical;min-height:94px;}
     <div class="stat"><div class="stat-n"><b>24</b>/7</div><div class="stat-l">Support</div></div>
   </div>
   <div class="scroll-hint"><div class="sarr">↓</div>Scroll to networks</div>
+</section>
+
+<section class="sec wallet-sec" id="wallet-sec">
+  <div id="wallet-guest" class="wallet-guest">
+    <div class="wallet-guest-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="6" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><circle cx="17" cy="15" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+    <div class="wallet-guest-h">Your Wallet</div>
+    <div class="wallet-guest-p">Sign in to fund your wallet and buy data instantly from your balance.</div>
+    <div class="wallet-guest-btns">
+      <button class="btn-p" style="padding:11px 22px;font-size:.82rem;" onclick="openM('m-login')">Sign In</button>
+      <button class="btn-o" style="padding:10px 21px;font-size:.82rem;" onclick="openM('m-signup')">Create Account</button>
+    </div>
+  </div>
+  <div id="wallet-card" class="wallet-card">
+    <div class="wallet-top">
+      <div class="wallet-label">Wallet Balance</div>
+      <button class="wallet-eye" id="wallet-eye" onclick="toggleBalanceVisibility()" aria-label="Show or hide balance">
+        <svg id="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none;"><path d="M3 3l18 18"/><path d="M10.6 5.2A10.9 10.9 0 0 1 12 5c7 0 10.5 7 10.5 7a17.7 17.7 0 0 1-3.2 4.1M6.6 6.6C3.6 8.5 1.5 12 1.5 12s3.5 7 10.5 7c1.6 0 3-.3 4.2-.9M9.9 10a3 3 0 0 0 4.2 4.2"/></svg>
+      </button>
+    </div>
+    <div class="wallet-amount" id="wallet-amount">₦0.00</div>
+    <div class="wallet-actions">
+      <button class="wallet-btn-fill" onclick="openAddFunds()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v8M8 12h8"/></svg>
+        Add Funds
+      </button>
+      <button class="wallet-btn-link" onclick="openHistory()">View History →</button>
+    </div>
+    <div class="wallet-bonus-row" id="wallet-bonus-row" onclick="openBonusNets()">
+      <span class="wallet-bonus-l">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M8.5 8.5h.01M15.5 15.5h.01M16 8l-8 8"/></svg>
+        Bonus Balance <span class="wallet-bonus-tag">1% daily</span>
+      </span>
+      <span class="wallet-bonus-amt" id="wallet-bonus-amount">₦0.00</span>
+    </div>
+  </div>
 </section>
 
 <div class="ads-wrap">
@@ -353,9 +446,10 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
 
 <!-- BUY MODAL -->
 <div class="mw" id="m-buy"><div class="mb">
-  <button class="mx" onclick="closeM('m-buy')">✕</button>
+  <button class="mx" onclick="closeBuyModal()">✕</button>
   <div class="mt">Confirm Purchase</div><div class="ms" id="buy-sub"></div>
   <div class="buy-pill"><div><div style="font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;">Selected Plan</div><div class="bp-data" id="buy-data"></div></div><div class="bp-price" id="buy-price"></div></div>
+  <div style="font-size:.74rem;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:9px 12px;margin-bottom:14px;" id="buy-source-note">Paying from Wallet Balance</div>
   <div class="party-row"><div class="pty on" onclick="setParty('self',this)">My Number</div><div class="pty" onclick="setParty('third',this)">3rd Party</div></div>
   <div class="fg"><label class="fl" id="buy-ph-lbl">Phone Number</label><input class="fi" type="tel" id="buy-ph" placeholder="080XXXXXXXX" maxlength="11"/><div class="ferr" id="buy-ph-err">Enter a valid 11-digit Nigerian number.</div><div style="font-size:.73rem;color:var(--muted);margin-top:4px;" id="buy-hint">Number that will receive the data.</div></div>
   <button class="fbtn" onclick="processBuy()">BUY NOW</button>
@@ -483,6 +577,29 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
   </div>
 </div></div>
 
+<!-- ADD FUNDS -->
+<div class="mw" id="m-addfunds"><div class="mb">
+  <button class="mx" onclick="closeM('m-addfunds')">✕</button>
+  <div class="mt">Add Funds to Wallet</div><div class="ms"> </div>
+  <div class="fg af-input-row"><label class="fl">Amount (₦)</label><span class="af-naira">₦</span><input class="fi" type="number" id="af-amount" placeholder="1000" min="1000" step="100"/><div class="ferr" id="af-amount-err">Minimum funding amount is ₦1,000.</div></div>
+  <div class="af-quick">
+    <button type="button" onclick="setFundAmount(1000)">₦1,000</button>
+    <button type="button" onclick="setFundAmount(5000)">₦5,000</button>
+    <button type="button" onclick="setFundAmount(10000)">₦10,000</button>
+    <button type="button" onclick="setFundAmount(20000)">₦20,000</button>
+  </div>
+  <div class="af-note"> </div>
+  <button class="fbtn" style="margin-top:16px;" onclick="sendAddFunds()">proceed</button>
+  <button class="fbtn red" style="margin-top:8px;" onclick="closeM('m-addfunds')">Cancel</button>
+</div></div>
+
+<!-- WALLET HISTORY -->
+<div class="mw" id="m-history"><div class="mb" style="max-width:480px;">
+  <button class="mx" onclick="closeM('m-history')">✕</button>
+  <div class="mt">Transaction History</div><div class="ms">All wallet funding and data purchases on your account.</div>
+  <div class="hist-list" id="hist-list"></div>
+</div></div>
+
 <!-- INVITE -->
 <div class="mw" id="m-invite"><div class="mb">
   <button class="mx" onclick="closeM('m-invite')">✕</button>
@@ -514,6 +631,7 @@ async function fsCreateUser(u){await dbFS.collection('users').doc(u.phone).set(u
 async function fsUpdateUser(phone,fields){await dbFS.collection('users').doc(phone).update(fields);}
 async function fsAddOrder(o){await dbFS.collection('orders').add(o);}
 async function fsAddRedemption(r){await dbFS.collection('redemptions').add(r);}
+async function fsAddFundRequest(r){await dbFS.collection('fundRequests').add(r);}
 const NETS=[
   {id:'mtn',name:'MTN',img:'mtn.png',color:'#f5a623',bg:'#fff8e1',sub:'MTN Nigeria — 4G/5G Ready'},
   {id:'glo',name:'Glo',img:'glo.png',color:'#00a550',bg:'#e8f5e9',sub:'Glo Mobile — Broadband Speed'},
@@ -530,11 +648,11 @@ const PLANS=[
   {data:'UnlimData',price:1500,label:'₦15,000',val:'30 days Unlimited data'},
   {data:'UnlimData',price:4000,label:'₦40,000',val:'90 days Unlimited data'},
 ];
-let user=null,currentBuy={},buyParty='self',fpPhone='';
+let user=null,currentBuy={},buyParty='self',fpPhone='',pendingBuy=null,buyFundSource='balance';
 const pendingRef=new URLSearchParams(location.search).get('ref')||sessionStorage.getItem('ud_ref')||'';
 if(pendingRef)sessionStorage.setItem('ud_ref',pendingRef);
 const _sessPhone=localStorage.getItem('ud_session');
-if(_sessPhone){fsGetUser(_sessPhone).then(u=>{if(u){user=u;refreshUI();}});}
+if(_sessPhone){fsGetUser(_sessPhone).then(u=>{if(u){user=u;refreshUI();accrueDailyBonus();}});}
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>10));
 const ng=document.getElementById('nets-grid');
 NETS.forEach(n=>{
@@ -557,10 +675,18 @@ function openNetModal(net){
   openM('m-net');
 }
 function openBuyModal(net,plan){
+  if(!user){
+    closeM('m-net');
+    pendingBuy={net,plan};
+    showToast('Please create an account or sign in to buy data.');
+    openM('m-signup');
+    return;
+  }
   currentBuy={net,plan};buyParty='self';
   document.getElementById('buy-sub').textContent=`${net.name} · ${plan.data} data plan`;
   document.getElementById('buy-data').textContent=plan.data;
   document.getElementById('buy-price').textContent=plan.label;
+  document.getElementById('buy-source-note').textContent=buyFundSource==='bonus'?`Paying from Bonus Balance (₦${(user.bonusBalance||0).toLocaleString('en-NG')} available)`:`Paying from Wallet Balance (₦${(user.balance||0).toLocaleString('en-NG')} available)`;
   document.getElementById('buy-ph').value=user?user.phone:'';
   document.getElementById('buy-ph-err').classList.remove('on');
   document.getElementById('buy-ph-lbl').textContent='My Number';
@@ -575,29 +701,34 @@ function setParty(type,el){
   if(type==='self'&&user)document.getElementById('buy-ph').value=user.phone;
   else if(type==='third')document.getElementById('buy-ph').value='';
 }
-function processBuy(){
+async function processBuy(){
   const ph=document.getElementById('buy-ph').value.trim();
   if(!/^0\d{10}$/.test(ph)){document.getElementById('buy-ph-err').classList.add('on');return;}
   document.getElementById('buy-ph-err').classList.remove('on');
-  closeM('m-buy');showLoader('Connecting to Paystack…','Securing your payment…');
-  setTimeout(()=>{
-    hideLoader();
-    const handler=PaystackPop.setup({
-      key:PK,email:user?`${user.phone}@unlimdata.ng`:`${document.getElementById('buy-ph').value.trim()}@unlimdata.ng`,
-      amount:currentBuy.plan.price*1000,currency:'NGN',ref:'UD'+Date.now(),
-      metadata:{network:currentBuy.net.name,data_plan:currentBuy.plan.data,phone:ph,party:buyParty},
-      label:`UnlimData — ${currentBuy.plan.data} on ${currentBuy.net.name}`,
-      onClose(){showToast('Payment window closed. You can try again anytime.');},
-      callback(resp){onPaySuccess(resp,ph);}
-    });
-    handler.openIframe();
-  },800);
-}
-async function onPaySuccess(resp,ph){
-  showLoader('Activating your data…','Almost done — takes about 10 seconds…');
-  const purchaserId=user?user.phone:ph;
-  let referralApplied=false;
+  if(!user){closeM('m-buy');openM('m-signup');return;}
+  const amount=currentBuy.plan.price*10;
+  const source=buyFundSource==='bonus'?'bonusBalance':'balance';
+  const available=user[source]||0;
+  if(available<amount){
+    closeM('m-buy');
+    showToast(`Insufficient ${source==='bonusBalance'?'Bonus':'Wallet'} Balance. Please add funds to continue.`);
+    if(source==='balance')setTimeout(()=>openAddFunds(),500);
+    buyFundSource='balance';
+    return;
+  }
+  closeM('m-buy');showLoader('Processing your order…','Deducting from your wallet…');
   try{
+    await dbFS.runTransaction(async(tx)=>{
+      const ref=dbFS.collection('users').doc(user.phone);
+      const snap=await tx.get(ref);
+      const cur=(snap.data()||{})[source]||0;
+      if(cur<amount)throw new Error('insufficient-funds');
+      tx.update(ref,{[source]:cur-amount});
+    });
+    user[source]=(user[source]||0)-amount;
+    refreshWalletUI();
+    const purchaserId=user.phone;
+    let referralApplied=false;
     if(pendingRef&&purchaserId&&pendingRef!==purchaserId&&currentBuy.plan.price!==100){
       const refUser=await fsGetUser(pendingRef);
       if(refUser){
@@ -606,24 +737,151 @@ async function onPaySuccess(resp,ph){
       }
     }
     await fsAddOrder({
-      buyerPhone:user?user.phone:null,
-      name:user?user.name:'Guest',
-      email:user?user.email:null,
+      buyerPhone:user.phone,
+      name:user.name,
+      email:user.email,
       network:currentBuy.net.name,
       plan:currentBuy.plan.val,
       planLabel:currentBuy.plan.label,
-      amount:currentBuy.plan.price*10,
+      amount,
+      paidFrom:source,
       recipientPhone:ph,
       party:buyParty,
       status:'pending',
       referredBy:pendingRef||null,
       referralApplied,
-      paystackRef:(resp&&resp.reference)?resp.reference:('UD'+Date.now()),
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
-  }catch(e){console.error('order save failed',e);}
-  setTimeout(()=>{hideLoader();showBanner(`Your ${currentBuy.plan.data} ${currentBuy.net.name} data plan (${currentBuy.plan.label}) has been successfully activated and sent to ${ph}. Enjoy browsing! 🎉`);setTimeout(()=>hideBanner(),12000);},1400);
+    hideLoader();
+    showBanner(`Your ${currentBuy.plan.data} ${currentBuy.net.name} data plan (${currentBuy.plan.label}) has been placed and is being processed for ${ph}. Enjoy browsing soon! 🎉`);
+    setTimeout(()=>hideBanner(),12000);
+  }catch(e){
+    hideLoader();console.error('purchase failed',e);
+    showToast('Insufficient funds or a network error occurred. Please try again.');
+  }
+  buyFundSource='balance';
 }
+function openBonusNets(){
+  if(!user){openM('m-signup');return;}
+  buyFundSource='bonus';
+  showToast(`Using Bonus Balance (₦${(user.bonusBalance||0).toLocaleString('en-NG')}) — pick a network to continue.`);
+  scrollToNets();
+}
+function closeBuyModal(){buyFundSource='balance';closeM('m-buy');}
+function setFundAmount(v){document.getElementById('af-amount').value=v;}
+function openAddFunds(){
+  if(!user){openM('m-signup');return;}
+  document.getElementById('af-amount').value='';
+  document.getElementById('af-amount-err').classList.remove('on');
+  openM('m-addfunds');
+}
+function sendAddFunds(){
+  const amt=parseInt(document.getElementById('af-amount').value,10);
+  if(!amt||amt<1000){document.getElementById('af-amount-err').classList.add('on');return;}
+  document.getElementById('af-amount-err').classList.remove('on');
+  closeM('m-addfunds');showLoader('Connecting to Paystack…','Securing your payment…');
+  setTimeout(()=>{
+    hideLoader();
+    const handler=PaystackPop.setup({
+      key:PK,email:user.email||`${user.phone}@unlimdata.ng`,
+      amount:amt*100,currency:'NGN',ref:'UDF'+Date.now(),
+      metadata:{type:'wallet_funding',phone:user.phone,amount:amt},
+      label:`UnlimData Wallet Funding — ₦${amt.toLocaleString('en-NG')}`,
+      onClose(){showToast('Payment window closed. You can try again anytime.');},
+      callback(resp){onFundPaySuccess(resp,amt);}
+    });
+    handler.openIframe();
+  },800);
+}
+async function onFundPaySuccess(resp,amt){
+  showLoader('Submitting for approval…','Almost done…');
+  try{
+    await fsAddFundRequest({
+      userPhone:user.phone,name:user.name,email:user.email,amount:amt,
+      paystackRef:(resp&&resp.reference)?resp.reference:('UDF'+Date.now()),
+      status:'pending',requestedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }catch(e){console.error('fund request save failed',e);}
+  setTimeout(()=>{hideLoader();showBanner(`Payment received! Your ₦${amt.toLocaleString('en-NG')} funding request is pending approval and will reflect in your wallet balance shortly.`);setTimeout(()=>hideBanner(),12000);},1200);
+}
+async function accrueDailyBonus(){
+  if(!user)return;
+  const now=Date.now();
+  let lastRaw=user.lastBonusAccrualAt;
+  let last=lastRaw&&lastRaw.toDate?lastRaw.toDate().getTime():(lastRaw?new Date(lastRaw).getTime():now);
+  let bal=user.balance||0,bonus=user.bonusBalance||0;
+  let periods=Math.floor((now-last)/86400000);
+  if(periods<=0)return;
+  periods=Math.min(periods,90);
+  for(let i=0;i<periods;i++){bonus+=bal*0.01;}
+  const newLast=new Date(last+periods*86400000);
+  try{
+    await fsUpdateUser(user.phone,{bonusBalance:bonus,lastBonusAccrualAt:newLast});
+    user.bonusBalance=bonus;user.lastBonusAccrualAt=newLast;
+    refreshWalletUI();
+  }catch(e){console.error('bonus accrual failed',e);}
+}
+function toggleBalanceVisibility(){
+  const hidden=localStorage.getItem('ud_balance_hidden')==='1';
+  localStorage.setItem('ud_balance_hidden',hidden?'0':'1');
+  refreshWalletUI();
+}
+function refreshWalletUI(){
+  const on=!!user;
+  document.getElementById('wallet-card').classList.toggle('on',on);
+  document.getElementById('wallet-guest').classList.toggle('hidden',on);
+  if(!on)return;
+  const hidden=localStorage.getItem('ud_balance_hidden')==='1';
+  document.getElementById('eye-open').style.display=hidden?'none':'block';
+  document.getElementById('eye-closed').style.display=hidden?'block':'none';
+  const bal=user.balance||0,bonus=user.bonusBalance||0;
+  const walletEl=document.getElementById('wallet-amount');
+  walletEl.textContent=hidden?'₦ • • • • • •':'₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+  walletEl.classList.toggle('wallet-masked',hidden);
+  document.getElementById('wallet-bonus-amount').textContent=hidden?'₦ • • • •':'₦'+bonus.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+async function openHistory(){
+  if(!user)return;
+  document.getElementById('hist-list').innerHTML='<div class="hist-empty">Loading…</div>';
+  openM('m-history');
+  try{
+    const [ordersSnap,fundsSnap]=await Promise.all([
+      dbFS.collection('orders').where('buyerPhone','==',user.phone).orderBy('createdAt','desc').limit(30).get(),
+      dbFS.collection('fundRequests').where('userPhone','==',user.phone).orderBy('requestedAt','desc').limit(30).get()
+    ]);
+    const items=[];
+    ordersSnap.forEach(d=>{const o=d.data();items.push({time:o.createdAt,title:`${o.network} · ${o.planLabel}`,sub:`From ${o.paidFrom==='bonusBalance'?'Bonus Balance':'Wallet Balance'} · to ${o.recipientPhone}`,amount:o.amount,status:o.status,dir:'out'});});
+    fundsSnap.forEach(d=>{const f=d.data();items.push({time:f.requestedAt,title:'Wallet Funding',sub:'via Paystack',amount:f.amount,status:f.status,dir:'in'});});
+    items.sort((a,b)=>{
+      const ta=a.time&&a.time.toDate?a.time.toDate().getTime():0;
+      const tb=b.time&&b.time.toDate?b.time.toDate().getTime():0;
+      return tb-ta;
+    });
+    if(!items.length){document.getElementById('hist-list').innerHTML='<div class="hist-empty">No transactions yet.</div>';return;}
+    document.getElementById('hist-list').innerHTML=items.map(it=>`
+      <div class="hist-item">
+        <div class="hist-ic ${it.dir}">${it.dir==='in'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'}</div>
+        <div class="hist-body"><div class="hist-title">${it.title}</div><div class="hist-sub">${it.sub}</div><span class="hist-status ${it.status}">${it.status}</span></div>
+        <div class="hist-amt ${it.dir}">${it.dir==='in'?'+':'-'}₦${Number(it.amount||0).toLocaleString('en-NG')}</div>
+      </div>`).join('');
+  }catch(e){console.error('history load failed',e);document.getElementById('hist-list').innerHTML='<div class="hist-empty">Could not load history right now.</div>';}
+}
+function escBC(s){return (s||'').toString().replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+function loadBroadcast(){
+  dbFS.collection('broadcasts').where('active','==',true).orderBy('createdAt','desc').limit(1).get().then(snap=>{
+    if(snap.empty)return;
+    const d=snap.docs[0];const b=d.data();
+    if(localStorage.getItem('ud_seen_broadcast')===d.id)return;
+    document.getElementById('bc-body').innerHTML=escBC(b.message);
+    const el=document.getElementById('broadcast-banner');el.dataset.id=d.id;el.classList.add('on');
+  }).catch(e=>console.error('broadcast load failed',e));
+}
+function dismissBroadcast(){
+  const el=document.getElementById('broadcast-banner');
+  if(el.dataset.id)localStorage.setItem('ud_seen_broadcast',el.dataset.id);
+  el.classList.remove('on');
+}
+loadBroadcast();
 async function doSignup(){
   const name=document.getElementById('su-name').value.trim();
   const email=document.getElementById('su-email').value.trim();
@@ -639,12 +897,13 @@ async function doSignup(){
   try{
     const existing=await fsGetUser(ph);
     if(existing){hideLoader();showToast('Account exists. Sign in instead.');return;}
-    const newUser={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,referredBy:(pendingRef&&pendingRef!==ph)?pendingRef:null,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+    const newUser={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,balance:0,bonusBalance:0,referredBy:(pendingRef&&pendingRef!==ph)?pendingRef:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastBonusAccrualAt:firebase.firestore.FieldValue.serverTimestamp()};
     await fsCreateUser(newUser);
     hideLoader();
-    user={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,referredBy:newUser.referredBy};
+    user={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,balance:0,bonusBalance:0,referredBy:newUser.referredBy,lastBonusAccrualAt:new Date()};
     localStorage.setItem('ud_session',ph);
     refreshUI();closeM('m-signup');showToast('✅ Account created! Welcome to UnlimData.');
+    if(pendingBuy){const pb=pendingBuy;pendingBuy=null;setTimeout(()=>openBuyModal(pb.net,pb.plan),350);}
   }catch(e){hideLoader();console.error(e);showToast('Something went wrong. Please try again.');}
 }
 async function doLogin(){
@@ -656,6 +915,8 @@ async function doLogin(){
     if(!u||u.pw!==pw){document.getElementById('li-err').classList.add('on');return;}
     document.getElementById('li-err').classList.remove('on');user=u;localStorage.setItem('ud_session',ph);
     refreshUI();closeM('m-login');showToast(`✅ Welcome back, ${ph}!`);
+    accrueDailyBonus();
+    if(pendingBuy){const pb=pendingBuy;pendingBuy=null;setTimeout(()=>openBuyModal(pb.net,pb.plan),350);}
   }catch(e){hideLoader();console.error(e);showToast('Something went wrong. Please try again.');}
 }
 function signOut(){user=null;localStorage.removeItem('ud_session');refreshUI();closeDrawer();showToast('Signed out successfully.');}
@@ -669,6 +930,7 @@ function refreshUI(){
   const cta=document.getElementById('nav-cta');const li=document.getElementById('nav-li');
   if(on){cta.textContent='My Account';cta.onclick=openDrawer;li.style.display='none';}
   else{cta.textContent='Get Started';cta.onclick=()=>openM('m-signup');li.style.display='';}
+  refreshWalletUI();
 }
 async function fpStep1(){
   const ph=document.getElementById('fp-ph').value.trim();

@@ -128,12 +128,16 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="stat-card"><div class="stat-ic">🛒</div><div class="stat-v" id="s-orders">0</div><div class="stat-l">Total Orders</div></div>
       <div class="stat-card"><div class="stat-ic">⏳</div><div class="stat-v" id="s-pending">0</div><div class="stat-l">Pending Orders</div></div>
       <div class="stat-card"><div class="stat-ic">🎁</div><div class="stat-v" id="s-redeem">0</div><div class="stat-l">Pending Bonus Redemptions</div></div>
+      <div class="stat-card"><div class="stat-ic">💳</div><div class="stat-v" id="s-fundpending">0</div><div class="stat-l">Pending Fund Requests</div></div>
+      <div class="stat-card"><div class="stat-ic">🏦</div><div class="stat-v" id="s-wallet">₦0</div><div class="stat-l">Total Wallet Balances</div></div>
     </div>
 
     <div class="tabs">
-      <button class="tab-btn on" id="tab-orders-btn" onclick="switchTab('orders')">📦 Orders <span class="cnt" id="tab-orders-cnt">0</span></button>
+      <button class="tab-btn on" id="tab-orders-btn" onclick="switchTab('orders')">📦 Data Orders <span class="cnt" id="tab-orders-cnt">0</span></button>
+      <button class="tab-btn" id="tab-funds-btn" onclick="switchTab('funds')">💳 Fund Requests <span class="cnt" id="tab-funds-cnt">0</span></button>
       <button class="tab-btn" id="tab-users-btn" onclick="switchTab('users')">👥 Registered Users <span class="cnt" id="tab-users-cnt">0</span></button>
       <button class="tab-btn" id="tab-redeem-btn" onclick="switchTab('redeem')">🎁 Redeem Requests <span class="cnt" id="tab-redeem-cnt">0</span></button>
+      <button class="tab-btn" id="tab-broadcast-btn" onclick="switchTab('broadcast')">📣 Broadcast</button>
     </div>
 
     <!-- ORDERS -->
@@ -160,12 +164,28 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Referrals</th><th>24hr Bonus</th><th>Joined</th></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Referrals</th><th>24hr Bonus</th><th>Wallet Balance</th><th>Bonus Balance</th><th>Joined</th></tr></thead>
           <tbody id="users-body"></tbody>
         </table>
       </div>
       <div class="empty-state" id="users-empty" style="display:none;">No users yet.</div>
       <div class="loading-state" id="users-loading"><div class="ld-ring"></div>Loading users…</div>
+    </div>
+
+    <!-- FUND REQUESTS -->
+    <div class="panel" id="panel-funds">
+      <div class="panel-head">
+        <div><div class="panel-title">Fund Requests</div><div class="panel-sub">Users who paid via Paystack to top up their wallet — approve to credit their balance.</div></div>
+        <input class="search-box" id="search-funds" placeholder="Search name, phone…" oninput="renderFunds()"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Amount</th><th>Paystack Ref</th><th>Requested</th><th>Decision</th></tr></thead>
+          <tbody id="funds-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="funds-empty" style="display:none;">No funding requests yet.</div>
+      <div class="loading-state" id="funds-loading"><div class="ld-ring"></div>Loading funding requests…</div>
     </div>
 
     <!-- REDEEM -->
@@ -182,6 +202,21 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="empty-state" id="redeem-empty" style="display:none;">No redeem requests yet.</div>
       <div class="loading-state" id="redeem-loading"><div class="ld-ring"></div>Loading requests…</div>
+    </div>
+
+    <!-- BROADCAST -->
+    <div class="panel" id="panel-broadcast">
+      <div class="panel-head">
+        <div><div class="panel-title">Broadcast Message</div><div class="panel-sub">Send a notification banner that every visitor sees on the site.</div></div>
+      </div>
+      <div style="padding:20px;">
+        <textarea id="bc-input" placeholder="Type your announcement…" style="width:100%;min-height:90px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);padding:12px 13px;font-family:var(--body);font-size:.86rem;outline:none;resize:vertical;margin-bottom:12px;"></textarea>
+        <button class="fulfill-btn" style="padding:10px 22px;" onclick="sendBroadcast()">📣 Send Broadcast</button>
+        <div style="margin-top:26px;">
+          <div class="panel-title" style="font-size:.86rem;margin-bottom:8px;">Recent Broadcasts</div>
+          <div id="broadcast-list"></div>
+        </div>
+      </div>
     </div>
   </main>
 </div>
@@ -216,7 +251,7 @@ const firebaseConfig={apiKey:"AIzaSyDZGrmq77-b4suSUr_vZi66btpJYOc9780",authDomai
 firebase.initializeApp(firebaseConfig);
 const dbFS=firebase.firestore();
 
-let USERS=[],ORDERS=[],REDEEMS=[];
+let USERS=[],ORDERS=[],REDEEMS=[],FUNDS=[],BROADCASTS=[];
 let started=false;
 function initAdmin(){
   if(started)return;started=true;
@@ -237,6 +272,17 @@ function initAdmin(){
     document.getElementById('redeem-loading').style.display='none';
     renderRedeem();renderStats();
   },err=>{console.error(err);document.getElementById('redeem-loading').textContent='Could not load requests.';});
+
+  dbFS.collection('fundRequests').orderBy('requestedAt','desc').onSnapshot(snap=>{
+    FUNDS=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('funds-loading').style.display='none';
+    renderFunds();renderStats();
+  },err=>{console.error(err);document.getElementById('funds-loading').textContent='Could not load funding requests.';});
+
+  dbFS.collection('broadcasts').orderBy('createdAt','desc').limit(20).onSnapshot(snap=>{
+    BROADCASTS=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderBroadcasts();
+  },err=>console.error(err));
 }
 
 function fmtDate(ts){
@@ -256,15 +302,20 @@ function renderStats(){
   document.getElementById('s-orders').textContent=ORDERS.length;
   document.getElementById('s-pending').textContent=ORDERS.filter(o=>o.status!=='settled').length;
   document.getElementById('s-redeem').textContent=REDEEMS.filter(r=>r.status!=='fulfilled').length;
+  document.getElementById('s-fundpending').textContent=FUNDS.filter(f=>f.status==='pending').length;
+  const totalWallet=USERS.reduce((sum,u)=>sum+(Number(u.balance)||0)+(Number(u.bonusBalance)||0),0);
+  document.getElementById('s-wallet').textContent=fmtMoney(totalWallet);
   document.getElementById('tab-orders-cnt').textContent=ORDERS.length;
   document.getElementById('tab-users-cnt').textContent=USERS.length;
   document.getElementById('tab-redeem-cnt').textContent=REDEEMS.length;
+  document.getElementById('tab-funds-cnt').textContent=FUNDS.length;
 }
 
 function switchTab(t){
-  ['orders','users','redeem'].forEach(x=>{
-    document.getElementById('panel-'+x).classList.toggle('on',x===t);
-    document.getElementById('tab-'+x+'-btn').classList.toggle('on',x===t);
+  ['orders','funds','users','redeem','broadcast'].forEach(x=>{
+    const panel=document.getElementById('panel-'+x);const btn=document.getElementById('tab-'+x+'-btn');
+    if(panel)panel.classList.toggle('on',x===t);
+    if(btn)btn.classList.toggle('on',x===t);
   });
 }
 
@@ -280,20 +331,24 @@ function renderOrders(){
       <td>${esc(o.recipientPhone||'—')}${o.party==='third'?' <span class="pill muted">3rd Party</span>':''}</td>
       <td>${esc(o.network||'—')}</td>
       <td><div class="cell-name">${esc(o.planLabel||'')}</div><div class="cell-sub">${esc(o.plan||'')}</div></td>
-      <td>${fmtMoney(o.amount)}</td>
+      <td>${fmtMoney(o.amount)}<div class="cell-sub">${o.paidFrom==='bonusBalance'?'Bonus Balance':(o.paidFrom==='balance'?'Wallet Balance':'—')}</div></td>
       <td>${o.party==='third'?'3rd Party':'Self'}</td>
       <td>${o.referralApplied?`<span class="pill gold">via ${esc(o.referredBy||'')}</span>`:'—'}</td>
       <td>${fmtDate(o.createdAt)}</td>
-      <td>
-        <div class="status-row">
-          <button class="st-btn pending ${o.status!=='settled'?'active':''}" onclick="setOrderStatus('${o.id}','pending')">Pending</button>
-          <button class="st-btn settled ${o.status==='settled'?'active':''}" onclick="setOrderStatus('${o.id}','settled')">Settled</button>
-        </div>
-      </td>
+      <td>${orderStatusHtml(o)}</td>
     </tr>`).join('');
 }
+function orderStatusHtml(o){
+  if(o.status==='settled')return `<button class="st-btn settled active" disabled>Settled ✓</button>`;
+  return `<div class="status-row">
+    <button class="st-btn pending active" onclick="setOrderStatus('${o.id}','pending')">Pending</button>
+    <button class="st-btn settled" onclick="setOrderStatus('${o.id}','settled')">Settled</button>
+  </div>`;
+}
 async function setOrderStatus(id,status){
-  try{await dbFS.collection('orders').doc(id).update({status});showToast(status==='settled'?'✅ Marked as settled':'Marked as pending');}
+  const o=ORDERS.find(x=>x.id===id);
+  if(o&&o.status==='settled')return;
+  try{await dbFS.collection('orders').doc(id).update({status});showToast(status==='settled'?'✅ Marked as settled — locked in':'Marked as pending');}
   catch(e){console.error(e);showToast('Could not update status.');}
 }
 
@@ -310,8 +365,80 @@ function renderUsers(){
       <td>${esc(u.phone||'—')}</td>
       <td><span class="pill muted">${u.referralCount||0}</span></td>
       <td><span class="pill gold">x${u.bonusUnits||0}</span></td>
+      <td>${fmtMoney(u.balance)}</td>
+      <td>${fmtMoney(u.bonusBalance)}</td>
       <td>${fmtDate(u.createdAt)}</td>
     </tr>`).join('');
+}
+
+/* ---------- FUND REQUESTS ---------- */
+function renderFunds(){
+  const q=(document.getElementById('search-funds').value||'').toLowerCase();
+  const body=document.getElementById('funds-body');
+  const rows=FUNDS.filter(f=>!q||[f.name,f.userPhone,f.email].join(' ').toLowerCase().includes(q));
+  document.getElementById('funds-empty').style.display=rows.length?'none':'block';
+  body.innerHTML=rows.map(f=>`
+    <tr>
+      <td class="cell-name">${esc(f.name||'—')}</td>
+      <td>${esc(f.email||'—')}</td>
+      <td>${esc(f.userPhone||'—')}</td>
+      <td>${fmtMoney(f.amount)}</td>
+      <td class="cell-sub">${esc(f.paystackRef||'—')}</td>
+      <td>${fmtDate(f.requestedAt)}</td>
+      <td>${fundStatusHtml(f)}</td>
+    </tr>`).join('');
+}
+function fundStatusHtml(f){
+  if(f.status==='approved')return `<button class="st-btn settled active" disabled>Approved ✓</button>`;
+  if(f.status==='declined')return `<button class="st-btn" style="border-color:var(--red);color:var(--red);" disabled>Declined</button>`;
+  return `<div class="status-row">
+    <button class="st-btn settled" onclick="decideFund('${f.id}','approved')">Approve</button>
+    <button class="st-btn" style="border-color:var(--red);color:var(--red);" onclick="decideFund('${f.id}','declined')">Decline</button>
+  </div>`;
+}
+async function decideFund(id,decision){
+  const f=FUNDS.find(x=>x.id===id);
+  if(!f||f.status!=='pending')return;
+  try{
+    if(decision==='approved'){
+      await dbFS.runTransaction(async(tx)=>{
+        const uRef=dbFS.collection('users').doc(f.userPhone);
+        const uSnap=await tx.get(uRef);
+        const cur=(uSnap.data()||{}).balance||0;
+        tx.update(uRef,{balance:cur+Number(f.amount||0)});
+        tx.update(dbFS.collection('fundRequests').doc(id),{status:'approved',decidedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      });
+      showToast('✅ Approved — wallet credited');
+    }else{
+      await dbFS.collection('fundRequests').doc(id).update({status:'declined',decidedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      showToast('Request declined');
+    }
+  }catch(e){console.error(e);showToast('Could not process this request.');}
+}
+
+/* ---------- BROADCAST ---------- */
+function sendBroadcast(){
+  const msg=document.getElementById('bc-input').value.trim();
+  if(!msg){showToast('Type a message first.');return;}
+  dbFS.collection('broadcasts').add({message:msg,active:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()})
+    .then(()=>{document.getElementById('bc-input').value='';showToast('📣 Broadcast sent to all users');})
+    .catch(e=>{console.error(e);showToast('Could not send broadcast.');});
+}
+async function deactivateBroadcast(id){
+  try{await dbFS.collection('broadcasts').doc(id).update({active:false});showToast('Broadcast deactivated');}
+  catch(e){console.error(e);showToast('Could not update broadcast.');}
+}
+function renderBroadcasts(){
+  const el=document.getElementById('broadcast-list');
+  if(!BROADCASTS.length){el.innerHTML='<div class="empty-state" style="padding:24px 0;">No broadcasts sent yet.</div>';return;}
+  el.innerHTML=BROADCASTS.map(b=>`
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);">
+      <div style="flex:1;">
+        <div style="font-size:.83rem;color:var(--dark);">${esc(b.message)}</div>
+        <div class="cell-sub" style="margin-top:4px;">${fmtDate(b.createdAt)} · ${b.active?'<span class="pill gold">Active</span>':'<span class="pill muted">Inactive</span>'}</div>
+      </div>
+      ${b.active?`<button class="st-btn" onclick="deactivateBroadcast('${b.id}')">Deactivate</button>`:''}
+    </div>`).join('');
 }
 
 /* ---------- REDEEM REQUESTS ---------- */
