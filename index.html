@@ -1084,12 +1084,10 @@ async function fpStep1(resend){
   showLoader('Sending code…','Delivering to your email…');
   try{
     await dbFS.collection('passwordResets').doc(ph).set({code,expiresAt,verified:false,email,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-    if(window.emailjs&&EMAILJS_PUBLIC_KEY!=='YOUR_EMAILJS_PUBLIC_KEY'){
-      await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_OTP_TEMPLATE_ID,{to_email:email,to_name:user&&user.phone===ph?user.name:'',otp_code:code});
-    }else{
-      console.warn('EmailJS is not configured yet — OTP email was not actually sent. See the EMAILJS_* constants near the top of the script.');
-    }
-  }catch(e){hideLoader();console.error(e);showToast('Could not send the verification email. Please try again.');return;}
+    if(!window.emailjs)throw new Error('EmailJS library failed to load (check network/adblocker).');
+    const result=await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_OTP_TEMPLATE_ID,{to_email:email,to_name:user&&user.phone===ph?user.name:'',otp_code:code});
+    console.log('EmailJS response:',result);
+  }catch(e){hideLoader();console.error('OTP email send failed:',e);showToast('Could not send the verification email. Check the browser console for details.',5000);return;}
   hideLoader();
   document.getElementById('fp-s1').style.display='none';
   document.getElementById('fp-s1b').style.display='block';
