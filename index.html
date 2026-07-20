@@ -158,6 +158,8 @@ textarea.fi{resize:vertical;min-height:94px;}
 .fbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .fbtn.red{background:rgba(220,38,38,0.08);color:var(--red);border:1.5px solid rgba(220,38,38,0.2);}
 .fbtn.red:hover{background:rgba(220,38,38,0.14);}
+.fbtn.outline{background:transparent;color:var(--ink);border:1.5px solid var(--border2);}
+.fbtn.outline:hover{border-color:var(--gold);color:var(--gold2);background:var(--bg2);}
 .flink{display:block;text-align:center;font-size:0.8rem;color:var(--gold2);cursor:pointer;margin-top:13px;transition:opacity .2s;font-weight:500;}
 .flink:hover{opacity:.7;}
 .fdiv{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--muted2);font-size:0.76rem;}
@@ -239,6 +241,9 @@ textarea.fi{resize:vertical;min-height:94px;}
 .wallet-bonus-tag{font-size:.62rem;font-weight:700;color:var(--gold);background:rgba(245,166,35,0.15);padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em;}
 .wallet-bonus-amt{font-family:var(--display);font-size:.92rem;font-weight:800;color:var(--gold);}
 .wallet-masked{letter-spacing:.15em;}
+.wallet-welcome{font-size:.76rem;color:rgba(255,255,255,0.55);margin-bottom:2px;position:relative;}
+.wallet-btn-fill.pulse-hint{animation:walletPulse 1s ease-in-out 3;}
+@keyframes walletPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,0.55);}50%{box-shadow:0 0 0 9px rgba(245,166,35,0);}}
 .af-input-row{position:relative;}
 .af-naira{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:.9rem;}
 .af-input-row input{padding-left:30px !important;}
@@ -345,7 +350,8 @@ textarea.fi{resize:vertical;min-height:94px;}
         <button class="btn-o" style="padding:10px 21px;font-size:.82rem;" onclick="openM('m-signup')">Create Account</button>
       </div>
     </div>
-    <div id="wallet-card" class="wallet-card">
+    <div class="wallet-card" id="wallet-card">
+      <div class="wallet-welcome" id="wallet-welcome">Welcome, </div>
       <div class="wallet-top">
         <div class="wallet-label">Wallet Balance</div>
         <button class="wallet-eye" id="wallet-eye" onclick="toggleBalanceVisibility()" aria-label="Show or hide balance">
@@ -378,7 +384,7 @@ textarea.fi{resize:vertical;min-height:94px;}
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-n"><b>8</b>+</div><div class="stat-l">Networks</div></div>
-    <div class="stat"><div class="stat-n"><b>90</b>D</div><div class="stat-l">Max Plan</div></div>
+    <div class="stat"><div class="stat-n"><b>30</b>D</div><div class="stat-l">Max Plan</div></div>
     <div class="stat"><div class="stat-n">₦<b>1000</b></div><div class="stat-l">Starts From</div></div>
     <div class="stat"><div class="stat-n"><b>24</b>/7</div><div class="stat-l">Support</div></div>
   </div>
@@ -649,8 +655,28 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
   <div class="if-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5M12 16h.01"/></svg></div>
   <div class="if-title">Insufficient Funds</div>
   <div class="if-msg" id="if-msg">Your wallet balance is too low to complete this purchase.</div>
-  <button class="fbtn" id="if-primary-btn" onclick="closeM('m-insufficient');openAddFunds()">Add Funds</button>
+  <button class="fbtn" id="if-primary-btn" onclick="closeM('m-insufficient');scrollToWallet();">Go to Wallet</button>
   <button class="fbtn red" style="margin-top:8px;" onclick="closeM('m-insufficient')">Cancel</button>
+</div></div>
+
+<!-- PIN SETUP (first purchase) -->
+<div class="mw" id="m-pin-setup"><div class="mb">
+  <button class="mx" onclick="closeM('m-pin-setup')">✕</button>
+  <div class="mt">Secure Your Purchases</div><div class="ms">Set a 4-digit PIN so only you can buy data with your wallet — or just use your account password instead.</div>
+  <div class="fg"><label class="fl">Create 4-digit PIN</label><input class="fi" type="text" inputmode="numeric" maxlength="4" id="pinset-pin1" placeholder="••••"/></div>
+  <div class="fg"><label class="fl">Confirm PIN</label><input class="fi" type="text" inputmode="numeric" maxlength="4" id="pinset-pin2" placeholder="••••"/><div class="ferr" id="pinset-err">PIN must be exactly 4 digits.</div></div>
+  <button class="fbtn" onclick="savePurchasePin()">Save PIN & Continue</button>
+  <div style="text-align:center;margin:14px 0 4px;font-size:.76rem;color:var(--muted2);">— or —</div>
+  <button class="fbtn outline" onclick="useSavedPasswordAsPin()">Use My Password Instead</button>
+</div></div>
+
+<!-- PIN CONFIRM (every purchase) -->
+<div class="mw" id="m-pin-confirm"><div class="mb">
+  <button class="mx" onclick="closeM('m-pin-confirm')">✕</button>
+  <div class="mt">Confirm Purchase</div><div class="ms">For your security, confirm it's really you before we deduct from your wallet.</div>
+  <div class="fg"><label class="fl" id="pinconfirm-label">Enter your 4-digit PIN</label><input class="fi" type="text" inputmode="numeric" maxlength="4" id="pinconfirm-input" placeholder="4-digit PIN"/><div class="ferr" id="pinconfirm-err">Incorrect PIN. Please try again.</div></div>
+  <button class="fbtn" onclick="verifyPurchasePin()">Confirm & Buy</button>
+  <button class="fbtn red" style="margin-top:8px;" onclick="closeM('m-pin-confirm')">Cancel</button>
 </div></div>
 
 <!-- INVITE -->
@@ -768,21 +794,80 @@ function setParty(type,el){
   if(type==='self'&&user)document.getElementById('buy-ph').value=user.phone;
   else if(type==='third')document.getElementById('buy-ph').value='';
 }
+let pinFlowPh='';
 async function processBuy(){
   const ph=document.getElementById('buy-ph').value.trim();
   if(!/^0\d{10}$/.test(ph)){document.getElementById('buy-ph-err').classList.add('on');return;}
   document.getElementById('buy-ph-err').classList.remove('on');
   if(!user){closeM('m-buy');openM('m-signup');return;}
+  closeM('m-buy');
+  pinFlowPh=ph;
+  if(user.pinMode==='pin'||user.pinMode==='password'){
+    openPinConfirm();
+  }else{
+    openPinSetup();
+  }
+}
+function openPinSetup(){
+  document.getElementById('pinset-pin1').value='';
+  document.getElementById('pinset-pin2').value='';
+  document.getElementById('pinset-err').classList.remove('on');
+  openM('m-pin-setup');
+}
+async function useSavedPasswordAsPin(){
+  showLoader('Saving preference…','Just a moment…');
+  try{
+    await fsUpdateUser(user.phone,{pinMode:'password'});
+    user.pinMode='password';
+    hideLoader();closeM('m-pin-setup');
+    executePurchase(pinFlowPh);
+  }catch(e){hideLoader();console.error(e);showToast('Could not save this preference. Please try again.');}
+}
+async function savePurchasePin(){
+  const p1=document.getElementById('pinset-pin1').value.trim();
+  const p2=document.getElementById('pinset-pin2').value.trim();
+  if(!/^\d{4}$/.test(p1)){document.getElementById('pinset-err').textContent='PIN must be exactly 4 digits.';document.getElementById('pinset-err').classList.add('on');return;}
+  if(p1!==p2){document.getElementById('pinset-err').textContent='PINs do not match.';document.getElementById('pinset-err').classList.add('on');return;}
+  document.getElementById('pinset-err').classList.remove('on');
+  showLoader('Saving your PIN…','Just a moment…');
+  try{
+    await fsUpdateUser(user.phone,{pin:p1,pinMode:'pin'});
+    user.pin=p1;user.pinMode='pin';
+    hideLoader();closeM('m-pin-setup');
+    executePurchase(pinFlowPh);
+  }catch(e){hideLoader();console.error(e);showToast('Could not save your PIN. Please try again.');}
+}
+function openPinConfirm(){
+  const isPin=user.pinMode==='pin';
+  const input=document.getElementById('pinconfirm-input');
+  input.value='';
+  input.type=isPin?'text':'password';
+  input.setAttribute('inputmode',isPin?'numeric':'text');
+  input.setAttribute('maxlength',isPin?'4':'64');
+  input.setAttribute('placeholder',isPin?'4-digit PIN':'Account password');
+  document.getElementById('pinconfirm-label').textContent=isPin?'Enter your 4-digit PIN':'Enter your account password';
+  document.getElementById('pinconfirm-err').textContent=isPin?'Incorrect PIN. Please try again.':'Incorrect password. Please try again.';
+  document.getElementById('pinconfirm-err').classList.remove('on');
+  openM('m-pin-confirm');
+}
+function verifyPurchasePin(){
+  const v=document.getElementById('pinconfirm-input').value.trim();
+  const isPin=user.pinMode==='pin';
+  const ok=isPin?(v===user.pin):(v===user.pw);
+  if(!ok){document.getElementById('pinconfirm-err').classList.add('on');return;}
+  closeM('m-pin-confirm');
+  executePurchase(pinFlowPh);
+}
+async function executePurchase(ph){
   const amount=currentBuy.plan.price*10;
   const source=buyFundSource==='bonus'?'bonusBalance':'balance';
   const available=user[source]||0;
   if(available<amount){
-    closeM('m-buy');
     showInsufficientFunds(source,amount,available);
     buyFundSource='balance';
     return;
   }
-  closeM('m-buy');showLoader('Processing your order…','Deducting from your wallet…');
+  showLoader('Processing your order…','Deducting from your wallet…');
   try{
     await dbFS.runTransaction(async(tx)=>{
       const ref=dbFS.collection('users').doc(user.phone);
@@ -827,11 +912,18 @@ async function processBuy(){
   }
   buyFundSource='balance';
 }
+function scrollToWallet(){
+  const el=document.getElementById('wallet-sec');
+  if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  const btn=document.querySelector('.wallet-btn-fill');
+  if(btn){btn.classList.add('pulse-hint');setTimeout(()=>btn.classList.remove('pulse-hint'),3200);}
+}
 function showInsufficientFunds(source,needed,available){
   const label=source==='bonusBalance'?'Bonus Balance':'Wallet Balance';
   document.getElementById('if-msg').textContent=`Your ${label} (₦${Number(available||0).toLocaleString('en-NG')}) is not enough for this ₦${Number(needed||0).toLocaleString('en-NG')} plan. Please add funds to continue.`;
   const btn=document.getElementById('if-primary-btn');
-  if(source==='balance'){btn.style.display='block';btn.textContent='Add Funds';btn.onclick=()=>{closeM('m-insufficient');openAddFunds();};}
+  if(source==='balance'){btn.style.display='block';btn.textContent='Go to Wallet';btn.onclick=()=>{closeM('m-insufficient');scrollToWallet();};}
   else{btn.style.display='none';}
   openM('m-insufficient');
 }
@@ -905,6 +997,7 @@ function refreshWalletUI(){
   document.getElementById('wallet-card').classList.toggle('on',on);
   document.getElementById('wallet-guest').classList.toggle('hidden',on);
   if(!on)return;
+  document.getElementById('wallet-welcome').textContent=`Welcome, ${(user.name||'').split(' ')[0]||user.phone}`;
   const hidden=localStorage.getItem('ud_balance_hidden')==='1';
   document.getElementById('eye-open').style.display=hidden?'none':'block';
   document.getElementById('eye-closed').style.display=hidden?'block':'none';

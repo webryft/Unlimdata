@@ -164,7 +164,7 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Referrals</th><th>24hr Bonus</th><th>Wallet Balance</th><th>Bonus Balance</th><th>Joined</th></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Referrals</th><th>24hr Bonus</th><th>Wallet Balance</th><th>Bonus Balance</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="users-body"></tbody>
         </table>
       </div>
@@ -219,6 +219,18 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
     </div>
   </main>
+</div>
+
+<!-- DELETE ACCOUNT CONFIRM MODAL -->
+<div id="del-modal" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:26px 24px;width:100%;max-width:360px;margin:16px;box-shadow:0 24px 70px rgba(0,0,0,0.3);">
+    <div style="font-family:var(--display);font-size:1.05rem;font-weight:800;color:var(--dark);margin-bottom:4px;">Delete Account</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px;">This permanently deletes <b id="del-target-name" style="color:var(--dark);"></b>'s account (<span id="del-target-phone"></span>). This cannot be undone. Enter your admin password to confirm.</div>
+    <input type="password" id="del-pw" placeholder="Admin password" style="width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);padding:11px 13px;font-size:.86rem;outline:none;margin-bottom:8px;" onkeydown="if(event.key==='Enter')confirmDeleteUser()"/>
+    <div id="del-err" style="display:none;font-size:.74rem;color:var(--red);margin-bottom:8px;">Incorrect admin password.</div>
+    <button class="fulfill-btn" style="width:100%;background:var(--red);margin-top:4px;" onclick="confirmDeleteUser()">Delete Permanently</button>
+    <button class="st-btn" style="width:100%;margin-top:8px;" onclick="closeDeleteModal()">Cancel</button>
+  </div>
 </div>
 
 <script>
@@ -340,16 +352,37 @@ function renderOrders(){
 }
 function orderStatusHtml(o){
   if(o.status==='settled')return `<button class="st-btn settled active" disabled>Settled ✓</button>`;
+  if(o.status==='declined')return `<button class="st-btn" style="border-color:var(--red);color:var(--red);" disabled>Declined ✕ (Refunded)</button>`;
   return `<div class="status-row">
     <button class="st-btn pending active" onclick="setOrderStatus('${o.id}','pending')">Pending</button>
     <button class="st-btn settled" onclick="setOrderStatus('${o.id}','settled')">Settled</button>
+    <button class="st-btn" style="border-color:var(--red);color:var(--red);" onclick="declineOrder('${o.id}')">Decline</button>
   </div>`;
 }
 async function setOrderStatus(id,status){
   const o=ORDERS.find(x=>x.id===id);
-  if(o&&o.status==='settled')return;
+  if(o&&(o.status==='settled'||o.status==='declined'))return;
   try{await dbFS.collection('orders').doc(id).update({status});showToast(status==='settled'?'✅ Marked as settled — locked in':'Marked as pending');}
   catch(e){console.error(e);showToast('Could not update status.');}
+}
+async function declineOrder(id){
+  const o=ORDERS.find(x=>x.id===id);
+  if(!o||o.status==='settled'||o.status==='declined')return;
+  if(!o.buyerPhone||!o.paidFrom){
+    try{await dbFS.collection('orders').doc(id).update({status:'declined'});showToast('Order declined.');}
+    catch(e){console.error(e);showToast('Could not decline order.');}
+    return;
+  }
+  try{
+    await dbFS.runTransaction(async(tx)=>{
+      const uRef=dbFS.collection('users').doc(o.buyerPhone);
+      const uSnap=await tx.get(uRef);
+      const cur=(uSnap.data()||{})[o.paidFrom]||0;
+      tx.update(uRef,{[o.paidFrom]:cur+Number(o.amount||0)});
+      tx.update(dbFS.collection('orders').doc(id),{status:'declined'});
+    });
+    showToast('✅ Order declined — amount refunded to user wallet');
+  }catch(e){console.error(e);showToast('Could not decline this order.');}
 }
 
 /* ---------- USERS ---------- */
@@ -368,7 +401,28 @@ function renderUsers(){
       <td>${fmtMoney(u.balance)}</td>
       <td>${fmtMoney(u.bonusBalance)}</td>
       <td>${fmtDate(u.createdAt)}</td>
+      <td><button class="st-btn" style="border-color:var(--red);color:var(--red);" onclick="openDeleteModal('${esc(u.phone)}','${esc(u.name||'this user')}')">Delete</button></td>
     </tr>`).join('');
+}
+let delTargetPhone='';
+function openDeleteModal(phone,name){
+  delTargetPhone=phone;
+  document.getElementById('del-target-name').textContent=name;
+  document.getElementById('del-target-phone').textContent=phone;
+  document.getElementById('del-pw').value='';
+  document.getElementById('del-err').style.display='none';
+  document.getElementById('del-modal').style.display='flex';
+}
+function closeDeleteModal(){document.getElementById('del-modal').style.display='none';delTargetPhone='';}
+async function confirmDeleteUser(){
+  const pw=document.getElementById('del-pw').value;
+  if(pw!==ADMIN_PASSWORD){document.getElementById('del-err').style.display='block';return;}
+  if(!delTargetPhone)return;
+  try{
+    await dbFS.collection('users').doc(delTargetPhone).delete();
+    showToast('✅ Account deleted');
+    closeDeleteModal();
+  }catch(e){console.error(e);showToast('Could not delete this account.');}
 }
 
 /* ---------- FUND REQUESTS ---------- */
