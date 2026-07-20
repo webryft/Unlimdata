@@ -10,6 +10,7 @@
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{--gold:#f5a623;--gold2:#e6920f;--gold-dim:rgba(245,166,35,0.12);--gold-glow:rgba(245,166,35,0.30);--bg:#fff;--bg2:#fffdf5;--bg3:#fff8e1;--dark:#111;--dark2:#1c1c1c;--ink:#222;--muted:#666;--muted2:#999;--border:#e8e8e8;--border2:#d0d0d0;--green:#16a34a;--green-dim:rgba(22,163,74,0.10);--red:#dc2626;--display:'Syne',sans-serif;--body:'Inter',sans-serif;--r:14px;--rsm:9px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -266,13 +267,22 @@ textarea.fi{resize:vertical;min-height:94px;}
 .bell-btn:hover{border-color:var(--gold);color:var(--gold2);}
 .bell-badge{position:absolute;top:-6px;right:-6px;min-width:17px;height:17px;padding:0 4px;border-radius:20px;background:var(--red);color:#fff;font-size:.62rem;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1;box-shadow:0 0 0 2px #fff;}
 .notif-list{max-height:380px;overflow-y:auto;}
-.notif-item{display:flex;gap:11px;padding:14px 0;border-bottom:1px solid var(--border);}
+.notif-item{display:flex;align-items:center;gap:11px;padding:14px 2px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;border-radius:8px;}
+.notif-item:hover{background:var(--bg2);}
 .notif-item:last-child{border-bottom:none;}
+.notif-item.unread .notif-title::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:7px;vertical-align:middle;}
 .notif-ic{width:34px;height:34px;border-radius:10px;background:var(--gold-dim);color:var(--gold2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.notif-body{flex:1;}
-.notif-msg{font-size:.84rem;color:var(--dark);line-height:1.5;}
-.notif-time{font-size:.7rem;color:var(--muted2);margin-top:4px;}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:.83rem;font-weight:700;color:var(--dark);}
+.notif-sub{font-size:.78rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.notif-time{font-size:.68rem;color:var(--muted2);margin-top:4px;}
+.notif-chevron{color:var(--muted2);font-size:1rem;flex-shrink:0;}
 .notif-empty{text-align:center;padding:40px 10px;color:var(--muted2);font-size:.85rem;}
+.notif-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--gold2);font-weight:600;font-size:.8rem;margin-bottom:16px;padding:0;}
+.notif-back:hover{opacity:.75;}
+.notif-detail-title{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold2);margin-bottom:6px;}
+.notif-detail-time{font-size:.72rem;color:var(--muted2);margin-bottom:16px;}
+.notif-detail-body{font-size:.9rem;color:var(--ink);line-height:1.75;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:16px;}
 .if-modal .mb{max-width:400px;}
 .if-ic{width:56px;height:56px;border-radius:50%;background:rgba(220,38,38,0.1);color:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .if-title{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--dark);text-align:center;margin-bottom:8px;}
@@ -502,7 +512,7 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
     <span class="flink" onclick="switchM('m-forgot','m-login')">← Back to Sign In</span>
   </div>
   <div id="fp-s1b" style="display:none;">
-    <div class="fg"><label class="fl">Verification Code</label><input class="fi" type="text" inputmode="numeric" maxlength="6" id="fp-otp" placeholder="6-digit code"/><div class="ferr" id="fp-otp-err">Incorrect or expired code. Please try again.</div><div style="font-size:.73rem;color:var(--muted);margin-top:6px;">Code expires in 10 minutes.</div></div>
+    <div class="fg"><label class="fl">Verification Code</label><input class="fi" type="text" inputmode="numeric" maxlength="6" id="fp-otp" placeholder="6-digit code"/><div class="ferr" id="fp-otp-err">Incorrect or expired code. Please try again.</div><div style="font-size:.73rem;color:var(--muted);margin-top:6px;">Check your inbox (and spam folder) — code expires in 10 minutes.</div></div>
     <button class="fbtn" onclick="fpVerifyOtp()">Verify Code</button>
     <span class="flink" onclick="fpStep1(true)">Resend code</span>
   </div>
@@ -621,8 +631,16 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
 <!-- NOTIFICATIONS -->
 <div class="mw" id="m-notifs"><div class="mb" style="max-width:460px;">
   <button class="mx" onclick="closeM('m-notifs')">✕</button>
-  <div class="mt">Notifications</div><div class="ms">Announcements and updates from the UnlimData team.</div>
-  <div class="notif-list" id="notif-list"></div>
+  <div id="notif-list-view">
+    <div class="mt">Notifications</div><div class="ms">Announcements and updates from the UnlimData team.</div>
+    <div class="notif-list" id="notif-list"></div>
+  </div>
+  <div id="notif-detail-view" style="display:none;">
+    <button class="notif-back" onclick="closeNotifDetail()">← Back to Notifications</button>
+    <div class="notif-detail-title">📣 Announcement</div>
+    <div class="notif-detail-time" id="nd-time"></div>
+    <div class="notif-detail-body" id="nd-body"></div>
+  </div>
 </div></div>
 
 <!-- INSUFFICIENT FUNDS -->
@@ -661,6 +679,20 @@ const PK='pk_live_4ff37d15381d1d12c78fd66f7bc86beb64c59415';
 const firebaseConfig={apiKey:"AIzaSyDZGrmq77-b4suSUr_vZi66btpJYOc9780",authDomain:"unlimited-22ac9.firebaseapp.com",projectId:"unlimited-22ac9",storageBucket:"unlimited-22ac9.firebasestorage.app",messagingSenderId:"7559085841",appId:"1:7559085841:web:e16b96ffdd4374d72ad6b0",measurementId:"G-0PB1LMNVB4"};
 firebase.initializeApp(firebaseConfig);
 const dbFS=firebase.firestore();
+/* EmailJS is used to deliver the OTP verification code by email — no backend server needed.
+   Create a free account at https://emailjs.com, then replace the 3 values below with your own
+   Service ID, Template ID (a template with vars {{to_email}}, {{to_name}}, {{otp_code}}), and Public Key.
+   Until these are filled in, the OTP email will NOT actually be delivered. */
+const EMAILJS_PUBLIC_KEY='MKObfodD2T0rLZ1E4';
+const EMAILJS_SERVICE_ID='service_jh5da5l';
+const EMAILJS_OTP_TEMPLATE_ID='template_j0h7g4b';
+if(window.emailjs&&EMAILJS_PUBLIC_KEY!=='YOUR_EMAILJS_PUBLIC_KEY'){emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});}
+function maskEmail(email){
+  if(!email||email.indexOf('@')<0)return 'your email';
+  const [name,domain]=email.split('@');
+  const shown=name.slice(0,2);
+  return `${shown}${'*'.repeat(Math.max(3,name.length-2))}@${domain}`;
+}
 async function fsGetUser(phone){try{const d=await dbFS.collection('users').doc(phone).get();return d.exists?d.data():null;}catch(e){console.error('fsGetUser',e);return null;}}
 async function fsCreateUser(u){await dbFS.collection('users').doc(u.phone).set(u);}
 async function fsUpdateUser(phone,fields){await dbFS.collection('users').doc(phone).update(fields);}
@@ -683,7 +715,7 @@ const PLANS=[
   {data:'UnlimData',price:1500,label:'₦15,000',val:'30 days Unlimited data'},
   {data:'UnlimData',price:4000,label:'₦40,000',val:'90 days Unlimited data'},
 ];
-let user=null,currentBuy={},buyParty='self',fpPhone='',fpVerified=false,pendingBuy=null,buyFundSource='balance';
+let user=null,currentBuy={},buyParty='self',fpPhone='',fpEmail='',fpVerified=false,pendingBuy=null,buyFundSource='balance';
 const pendingRef=new URLSearchParams(location.search).get('ref')||sessionStorage.getItem('ud_ref')||'';
 if(pendingRef)sessionStorage.setItem('ud_ref',pendingRef);
 const _sessPhone=localStorage.getItem('ud_session');
@@ -942,20 +974,45 @@ function updateBellBadge(){
   if(unread>0){badge.textContent=unread>99?'99+':unread;badge.style.display='flex';}
   else{badge.style.display='none';}
 }
+function truncate(s,n){s=(s||'').toString();return s.length>n?s.slice(0,n).trim()+'…':s;}
 function openNotifs(){
+  document.getElementById('notif-list-view').style.display='block';
+  document.getElementById('notif-detail-view').style.display='none';
+  const lastOpened=parseInt(localStorage.getItem('ud_notif_last_opened')||'0',10);
   const list=document.getElementById('notif-list');
   if(!NOTIF_CACHE.length){
     list.innerHTML='<div class="notif-empty">No notifications yet.</div>';
   }else{
-    list.innerHTML=NOTIF_CACHE.map(n=>`
-      <div class="notif-item">
+    list.innerHTML=NOTIF_CACHE.map((n,i)=>{
+      const t=n.createdAt&&n.createdAt.toDate?n.createdAt.toDate().getTime():0;
+      const unread=t>lastOpened;
+      return `
+      <div class="notif-item ${unread?'unread':''}" onclick="openNotifDetail(${i})">
         <div class="notif-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9a6 6 0 0 1 12 0c0 4.5 1.5 6 2 6.5H4c.5-.5 2-2 2-6.5Z"/><path d="M10 19.5a2 2 0 0 0 4 0"/></svg></div>
-        <div class="notif-body"><div class="notif-msg">${escBC(n.message)}</div><div class="notif-time">${timeAgo(n.createdAt)}</div></div>
-      </div>`).join('');
+        <div class="notif-body">
+          <div class="notif-title">Announcement</div>
+          <div class="notif-sub">${escBC(truncate(n.message,64))}</div>
+          <div class="notif-time">${timeAgo(n.createdAt)}</div>
+        </div>
+        <div class="notif-chevron">›</div>
+      </div>`;
+    }).join('');
   }
   openM('m-notifs');
   localStorage.setItem('ud_notif_last_opened',Date.now().toString());
   updateBellBadge();
+}
+function openNotifDetail(i){
+  const n=NOTIF_CACHE[i];
+  if(!n)return;
+  document.getElementById('nd-body').innerHTML=escBC(n.message).replace(/\n/g,'<br>');
+  document.getElementById('nd-time').textContent=timeAgo(n.createdAt);
+  document.getElementById('notif-list-view').style.display='none';
+  document.getElementById('notif-detail-view').style.display='block';
+}
+function closeNotifDetail(){
+  document.getElementById('notif-detail-view').style.display='none';
+  document.getElementById('notif-list-view').style.display='block';
 }
 loadNotifications();
 setInterval(loadNotifications,60000);
@@ -1011,29 +1068,37 @@ function refreshUI(){
 }
 async function fpStep1(resend){
   const ph=document.getElementById('fp-ph').value.trim()||fpPhone;
+  let email=fpEmail;
   if(!resend){
     showLoader('Checking…','Just a moment…');
     const u=await fsGetUser(ph);
     hideLoader();
     if(!u){document.getElementById('fp-ph-err').classList.add('on');return;}
+    if(!u.email){document.getElementById('fp-ph-err').textContent='No email is on file for this account. Please contact support.';document.getElementById('fp-ph-err').classList.add('on');return;}
     document.getElementById('fp-ph-err').classList.remove('on');
+    email=u.email;
   }
-  fpPhone=ph;fpVerified=false;
+  fpPhone=ph;fpEmail=email;fpVerified=false;
   const code=Math.floor(100000+Math.random()*900000).toString();
   const expiresAt=Date.now()+10*60*1000;
-  showLoader('Sending code…','Just a moment…');
+  showLoader('Sending code…','Delivering to your email…');
   try{
-    await dbFS.collection('passwordResets').doc(ph).set({code,expiresAt,verified:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-  }catch(e){hideLoader();console.error(e);showToast('Could not send verification code. Please try again.');return;}
+    await dbFS.collection('passwordResets').doc(ph).set({code,expiresAt,verified:false,email,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    if(window.emailjs&&EMAILJS_PUBLIC_KEY!=='YOUR_EMAILJS_PUBLIC_KEY'){
+      await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_OTP_TEMPLATE_ID,{to_email:email,to_name:user&&user.phone===ph?user.name:'',otp_code:code});
+    }else{
+      console.warn('EmailJS is not configured yet — OTP email was not actually sent. See the EMAILJS_* constants near the top of the script.');
+    }
+  }catch(e){hideLoader();console.error(e);showToast('Could not send the verification email. Please try again.');return;}
   hideLoader();
   document.getElementById('fp-s1').style.display='none';
   document.getElementById('fp-s1b').style.display='block';
   document.getElementById('fp-s2').style.display='none';
   document.getElementById('fp-title').textContent='Enter Verification Code';
-  document.getElementById('fp-sub').textContent=`We sent a 6-digit code to ${ph}.`;
+  document.getElementById('fp-sub').textContent=`We sent a 6-digit code to ${maskEmail(email)}.`;
   document.getElementById('fp-otp').value='';
   document.getElementById('fp-otp-err').classList.remove('on');
-  showToast(`📟 Demo mode — your code is ${code} (connect an SMS provider to deliver this by text)`,7000);
+  showToast(`📧 A verification code was sent to ${maskEmail(email)}`,5000);
 }
 async function fpVerifyOtp(){
   const code=document.getElementById('fp-otp').value.trim();
@@ -1068,7 +1133,7 @@ async function fpStep2(){
   }catch(e){console.error(e);}
   hideLoader();
   closeM('m-forgot');
-  fpVerified=false;
+  fpVerified=false;fpEmail='';
   document.getElementById('fp-s1').style.display='block';
   document.getElementById('fp-s1b').style.display='none';
   document.getElementById('fp-s2').style.display='none';
