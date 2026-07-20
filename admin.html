@@ -83,6 +83,10 @@ tbody tr:last-child td{border-bottom:none;}
 .pill.muted{background:var(--bg3);color:var(--muted);}
 .status-row{display:flex;gap:6px;}
 .st-btn{font-size:.7rem;font-weight:700;padding:6px 13px;border-radius:20px;border:1.5px solid var(--border2);background:#fff;color:var(--muted);transition:all .18s;}
+.edit-field{margin-bottom:12px;}
+.edit-field label{display:block;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;}
+.edit-field input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);padding:10px 12px;font-size:.86rem;outline:none;font-family:var(--body);}
+.edit-field input:focus{border-color:var(--gold);}
 .st-btn.pending.active{background:rgba(245,166,35,0.15);border-color:var(--gold);color:var(--gold2);}
 .st-btn.settled.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
 .st-btn:hover{border-color:var(--gold);}
@@ -127,7 +131,6 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="stat-card hl"><div class="stat-ic">💰</div><div class="stat-v" id="s-revenue">₦0</div><div class="stat-l">Total Amount (All Orders)</div></div>
       <div class="stat-card"><div class="stat-ic">🛒</div><div class="stat-v" id="s-orders">0</div><div class="stat-l">Total Orders</div></div>
       <div class="stat-card"><div class="stat-ic">⏳</div><div class="stat-v" id="s-pending">0</div><div class="stat-l">Pending Orders</div></div>
-      <div class="stat-card"><div class="stat-ic">🎁</div><div class="stat-v" id="s-redeem">0</div><div class="stat-l">Pending Bonus Redemptions</div></div>
       <div class="stat-card"><div class="stat-ic">💳</div><div class="stat-v" id="s-fundpending">0</div><div class="stat-l">Pending Fund Requests</div></div>
       <div class="stat-card"><div class="stat-ic">🏦</div><div class="stat-v" id="s-wallet">₦0</div><div class="stat-l">Total Wallet Balances</div></div>
     </div>
@@ -136,7 +139,6 @@ tbody tr:last-child td{border-bottom:none;}
       <button class="tab-btn on" id="tab-orders-btn" onclick="switchTab('orders')">📦 Data Orders <span class="cnt" id="tab-orders-cnt">0</span></button>
       <button class="tab-btn" id="tab-funds-btn" onclick="switchTab('funds')">💳 Fund Requests <span class="cnt" id="tab-funds-cnt">0</span></button>
       <button class="tab-btn" id="tab-users-btn" onclick="switchTab('users')">👥 Registered Users <span class="cnt" id="tab-users-cnt">0</span></button>
-      <button class="tab-btn" id="tab-redeem-btn" onclick="switchTab('redeem')">🎁 Redeem Requests <span class="cnt" id="tab-redeem-cnt">0</span></button>
       <button class="tab-btn" id="tab-broadcast-btn" onclick="switchTab('broadcast')">📣 Broadcast</button>
     </div>
 
@@ -148,7 +150,7 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Buyer</th><th>Recipient</th><th>Network</th><th>Plan</th><th>Amount</th><th>Party</th><th>Referral</th><th>Date</th><th>Status</th></tr></thead>
+          <thead><tr><th>Buyer</th><th>Recipient</th><th>Network</th><th>Plan</th><th>Amount</th><th>Party</th><th>Date</th><th>Status</th></tr></thead>
           <tbody id="orders-body"></tbody>
         </table>
       </div>
@@ -164,7 +166,7 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Referrals</th><th>24hr Bonus</th><th>Wallet Balance</th><th>Bonus Balance</th><th>Joined</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Wallet Balance</th><th>Bonus Balance</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="users-body"></tbody>
         </table>
       </div>
@@ -186,22 +188,6 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="empty-state" id="funds-empty" style="display:none;">No funding requests yet.</div>
       <div class="loading-state" id="funds-loading"><div class="ld-ring"></div>Loading funding requests…</div>
-    </div>
-
-    <!-- REDEEM -->
-    <div class="panel" id="panel-redeem">
-      <div class="panel-head">
-        <div><div class="panel-title">Bonus Redeem Requests</div><div class="panel-sub">Users who tapped "Redeem Bonus" for their 24hr Unlimited data.</div></div>
-        <input class="search-box" id="search-redeem" placeholder="Search name, phone…" oninput="renderRedeem()"/>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Requested</th><th>Status</th><th></th></tr></thead>
-          <tbody id="redeem-body"></tbody>
-        </table>
-      </div>
-      <div class="empty-state" id="redeem-empty" style="display:none;">No redeem requests yet.</div>
-      <div class="loading-state" id="redeem-loading"><div class="ld-ring"></div>Loading requests…</div>
     </div>
 
     <!-- BROADCAST -->
@@ -233,11 +219,50 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- EDIT ACCESS PASSWORD GATE -->
+<div id="editpw-modal" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:26px 24px;width:100%;max-width:360px;margin:16px;box-shadow:0 24px 70px rgba(0,0,0,0.3);">
+    <div style="font-family:var(--display);font-size:1.05rem;font-weight:800;color:var(--dark);margin-bottom:4px;">Confirm Admin Access</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:16px;">Enter your admin password to edit <b id="editpw-target-name" style="color:var(--dark);"></b>'s account.</div>
+    <input type="password" id="editpw-input" placeholder="Admin password" style="width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--rsm);padding:11px 13px;font-size:.86rem;outline:none;margin-bottom:8px;" onkeydown="if(event.key==='Enter')confirmEditAccess()"/>
+    <div id="editpw-err" style="display:none;font-size:.74rem;color:var(--red);margin-bottom:8px;">Incorrect admin password.</div>
+    <button class="fulfill-btn" style="width:100%;margin-top:4px;" onclick="confirmEditAccess()">Continue</button>
+    <button class="st-btn" style="width:100%;margin-top:8px;" onclick="closeEditPwModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT USER MODAL -->
+<div id="edit-user-modal" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;overflow-y:auto;padding:20px;">
+  <div style="background:#fff;border-radius:16px;padding:26px 24px;width:100%;max-width:420px;box-shadow:0 24px 70px rgba(0,0,0,0.3);">
+    <div style="font-family:var(--display);font-size:1.05rem;font-weight:800;color:var(--dark);margin-bottom:2px;">Edit User Account</div>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:16px;">Phone: <b id="eu-phone" style="color:var(--dark);"></b></div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;">
+      <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;">
+        <div style="font-family:var(--display);font-weight:800;font-size:1.05rem;color:var(--gold2);" id="eu-tx-count">0</div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Data Orders</div>
+      </div>
+      <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;">
+        <div style="font-family:var(--display);font-weight:800;font-size:1.05rem;color:var(--gold2);" id="eu-fund-count">0</div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Fund Requests</div>
+      </div>
+    </div>
+    <div class="edit-field"><label>Full Name</label><input type="text" id="eu-name"/></div>
+    <div class="edit-field"><label>Email Address</label><input type="email" id="eu-email"/></div>
+    <div class="edit-field"><label>Account Password</label><input type="text" id="eu-pw"/></div>
+    <div class="edit-field"><label>Wallet Balance (₦)</label><input type="number" id="eu-balance"/></div>
+    <div class="edit-field"><label>Bonus Balance (₦)</label><input type="number" id="eu-bonusbalance"/></div>
+    <div class="edit-field"><label>Transaction PIN (4-digit, optional)</label><input type="text" maxlength="4" id="eu-pin" placeholder="Leave blank to keep unchanged"/></div>
+    <div id="eu-err" style="display:none;font-size:.76rem;color:var(--red);margin:4px 0 8px;"></div>
+    <button class="fulfill-btn" style="width:100%;margin-top:6px;" onclick="saveUserEdit()">Save Changes</button>
+    <button class="st-btn" style="width:100%;margin-top:8px;" onclick="closeEditUserModal()">Cancel</button>
+  </div>
+</div>
+
 <script>
 /* ============ ADMIN GATE ============
    This is a lightweight client-side gate for convenience only — it does NOT
    secure your data. Real protection must come from Firestore Security Rules
-   on the "users", "orders" and "redemptions" collections (e.g. restrict
+   on the "users", "orders" and "fundRequests" collections (e.g. restrict
    writes/reads to authenticated admin accounts). Change ADMIN_PASSWORD below
    and, ideally, replace this gate with real Firebase Auth. */
 const ADMIN_PASSWORD='unlimdata2026';
@@ -263,7 +288,7 @@ const firebaseConfig={apiKey:"AIzaSyDZGrmq77-b4suSUr_vZi66btpJYOc9780",authDomai
 firebase.initializeApp(firebaseConfig);
 const dbFS=firebase.firestore();
 
-let USERS=[],ORDERS=[],REDEEMS=[],FUNDS=[],BROADCASTS=[];
+let USERS=[],ORDERS=[],FUNDS=[],BROADCASTS=[];
 let started=false;
 function initAdmin(){
   if(started)return;started=true;
@@ -278,12 +303,6 @@ function initAdmin(){
     document.getElementById('orders-loading').style.display='none';
     renderOrders();renderStats();
   },err=>{console.error(err);document.getElementById('orders-loading').textContent='Could not load orders.';});
-
-  dbFS.collection('redemptions').orderBy('requestedAt','desc').onSnapshot(snap=>{
-    REDEEMS=snap.docs.map(d=>({id:d.id,...d.data()}));
-    document.getElementById('redeem-loading').style.display='none';
-    renderRedeem();renderStats();
-  },err=>{console.error(err);document.getElementById('redeem-loading').textContent='Could not load requests.';});
 
   dbFS.collection('fundRequests').orderBy('requestedAt','desc').onSnapshot(snap=>{
     FUNDS=snap.docs.map(d=>({id:d.id,...d.data()}));
@@ -313,18 +332,16 @@ function renderStats(){
   document.getElementById('s-revenue').textContent=fmtMoney(totalAmount);
   document.getElementById('s-orders').textContent=ORDERS.length;
   document.getElementById('s-pending').textContent=ORDERS.filter(o=>o.status!=='settled').length;
-  document.getElementById('s-redeem').textContent=REDEEMS.filter(r=>r.status!=='fulfilled').length;
   document.getElementById('s-fundpending').textContent=FUNDS.filter(f=>f.status==='pending').length;
   const totalWallet=USERS.reduce((sum,u)=>sum+(Number(u.balance)||0)+(Number(u.bonusBalance)||0),0);
   document.getElementById('s-wallet').textContent=fmtMoney(totalWallet);
   document.getElementById('tab-orders-cnt').textContent=ORDERS.length;
   document.getElementById('tab-users-cnt').textContent=USERS.length;
-  document.getElementById('tab-redeem-cnt').textContent=REDEEMS.length;
   document.getElementById('tab-funds-cnt').textContent=FUNDS.length;
 }
 
 function switchTab(t){
-  ['orders','funds','users','redeem','broadcast'].forEach(x=>{
+  ['orders','funds','users','broadcast'].forEach(x=>{
     const panel=document.getElementById('panel-'+x);const btn=document.getElementById('tab-'+x+'-btn');
     if(panel)panel.classList.toggle('on',x===t);
     if(btn)btn.classList.toggle('on',x===t);
@@ -345,7 +362,6 @@ function renderOrders(){
       <td><div class="cell-name">${esc(o.planLabel||'')}</div><div class="cell-sub">${esc(o.plan||'')}</div></td>
       <td>${fmtMoney(o.amount)}<div class="cell-sub">${o.paidFrom==='bonusBalance'?'Bonus Balance':(o.paidFrom==='balance'?'Wallet Balance':'—')}</div></td>
       <td>${o.party==='third'?'3rd Party':'Self'}</td>
-      <td>${o.referralApplied?`<span class="pill gold">via ${esc(o.referredBy||'')}</span>`:'—'}</td>
       <td>${fmtDate(o.createdAt)}</td>
       <td>${orderStatusHtml(o)}</td>
     </tr>`).join('');
@@ -396,13 +412,70 @@ function renderUsers(){
       <td class="cell-name">${esc(u.name||'—')}</td>
       <td>${esc(u.email||'—')}</td>
       <td>${esc(u.phone||'—')}</td>
-      <td><span class="pill muted">${u.referralCount||0}</span></td>
-      <td><span class="pill gold">x${u.bonusUnits||0}</span></td>
       <td>${fmtMoney(u.balance)}</td>
       <td>${fmtMoney(u.bonusBalance)}</td>
       <td>${fmtDate(u.createdAt)}</td>
-      <td><button class="st-btn" style="border-color:var(--red);color:var(--red);" onclick="openDeleteModal('${esc(u.phone)}','${esc(u.name||'this user')}')">Delete</button></td>
+      <td>
+        <button class="st-btn" onclick="openEditModal('${esc(u.phone)}','${esc(u.name||'this user')}')">Edit</button>
+        <button class="st-btn" style="border-color:var(--red);color:var(--red);margin-left:6px;" onclick="openDeleteModal('${esc(u.phone)}','${esc(u.name||'this user')}')">Delete</button>
+      </td>
     </tr>`).join('');
+}
+let editTargetPhone='';
+function openEditModal(phone,name){
+  editTargetPhone=phone;
+  document.getElementById('editpw-target-name').textContent=name;
+  document.getElementById('editpw-input').value='';
+  document.getElementById('editpw-err').style.display='none';
+  document.getElementById('editpw-modal').style.display='flex';
+}
+function closeEditPwModal(){document.getElementById('editpw-modal').style.display='none';}
+function confirmEditAccess(){
+  const pw=document.getElementById('editpw-input').value;
+  if(pw!==ADMIN_PASSWORD){document.getElementById('editpw-err').style.display='block';return;}
+  closeEditPwModal();
+  openEditUserModal(editTargetPhone);
+}
+function openEditUserModal(phone){
+  const u=USERS.find(x=>x.phone===phone);
+  if(!u){showToast('User not found.');return;}
+  document.getElementById('eu-phone').textContent=phone;
+  document.getElementById('eu-name').value=u.name||'';
+  document.getElementById('eu-email').value=u.email||'';
+  document.getElementById('eu-pw').value=u.pw||'';
+  document.getElementById('eu-balance').value=u.balance||0;
+  document.getElementById('eu-bonusbalance').value=u.bonusBalance||0;
+  document.getElementById('eu-pin').value=u.pin||'';
+  document.getElementById('eu-err').style.display='none';
+  const txCount=ORDERS.filter(o=>o.buyerPhone===phone).length;
+  const fundCount=FUNDS.filter(f=>f.userPhone===phone).length;
+  document.getElementById('eu-tx-count').textContent=txCount;
+  document.getElementById('eu-fund-count').textContent=fundCount;
+  document.getElementById('edit-user-modal').style.display='flex';
+}
+function closeEditUserModal(){document.getElementById('edit-user-modal').style.display='none';editTargetPhone='';}
+async function saveUserEdit(){
+  const name=document.getElementById('eu-name').value.trim();
+  const email=document.getElementById('eu-email').value.trim();
+  const pw=document.getElementById('eu-pw').value;
+  const balance=parseFloat(document.getElementById('eu-balance').value);
+  const bonusBalance=parseFloat(document.getElementById('eu-bonusbalance').value);
+  const pin=document.getElementById('eu-pin').value.trim();
+  const errEl=document.getElementById('eu-err');
+  if(!name){errEl.textContent='Name cannot be empty.';errEl.style.display='block';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Enter a valid email address.';errEl.style.display='block';return;}
+  if(!pw||pw.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+  if(isNaN(balance)||balance<0){errEl.textContent='Wallet balance must be a valid number.';errEl.style.display='block';return;}
+  if(isNaN(bonusBalance)||bonusBalance<0){errEl.textContent='Bonus balance must be a valid number.';errEl.style.display='block';return;}
+  if(pin&&!/^\d{4}$/.test(pin)){errEl.textContent='PIN must be exactly 4 digits, or left blank.';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  const updateData={name,email,pw,balance,bonusBalance};
+  if(pin){updateData.pin=pin;updateData.pinMode='pin';}
+  try{
+    await dbFS.collection('users').doc(editTargetPhone).update(updateData);
+    showToast('✅ Account updated');
+    closeEditUserModal();
+  }catch(e){console.error(e);errEl.textContent='Could not save changes. Please try again.';errEl.style.display='block';}
 }
 let delTargetPhone='';
 function openDeleteModal(phone,name){
@@ -493,27 +566,6 @@ function renderBroadcasts(){
       </div>
       ${b.active?`<button class="st-btn" onclick="deactivateBroadcast('${b.id}')">Deactivate</button>`:''}
     </div>`).join('');
-}
-
-/* ---------- REDEEM REQUESTS ---------- */
-function renderRedeem(){
-  const q=(document.getElementById('search-redeem').value||'').toLowerCase();
-  const body=document.getElementById('redeem-body');
-  const rows=REDEEMS.filter(r=>!q||[r.name,r.userPhone,r.email].join(' ').toLowerCase().includes(q));
-  document.getElementById('redeem-empty').style.display=rows.length?'none':'block';
-  body.innerHTML=rows.map(r=>`
-    <tr>
-      <td class="cell-name">${esc(r.name||'—')}</td>
-      <td>${esc(r.email||'—')}</td>
-      <td>${esc(r.userPhone||'—')}</td>
-      <td>${fmtDate(r.requestedAt)}</td>
-      <td>${r.status==='fulfilled'?'<span class="pill green">Fulfilled</span>':'<span class="pill gold">Pending</span>'}</td>
-      <td>${r.status==='fulfilled'?`<button class="fulfill-btn" disabled>✓ Done</button>`:`<button class="fulfill-btn" onclick="fulfillRedeem('${r.id}')">Mark Fulfilled</button>`}</td>
-    </tr>`).join('');
-}
-async function fulfillRedeem(id){
-  try{await dbFS.collection('redemptions').doc(id).update({status:'fulfilled'});showToast('✅ Marked as fulfilled');}
-  catch(e){console.error(e);showToast('Could not update request.');}
 }
 
 let _tt;

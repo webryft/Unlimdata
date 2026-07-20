@@ -86,13 +86,6 @@ nav.scrolled{box-shadow:0 2px 22px rgba(0,0,0,0.09);}
 .feat-ic{width:42px;height:42px;border-radius:10px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px;}
 .feat-h{font-family:var(--display);font-size:0.96rem;font-weight:700;color:var(--dark);margin-bottom:6px;}
 .feat-p{font-size:0.83rem;color:var(--muted);line-height:1.65;}
-.invite-sec{background:linear-gradient(135deg,#fffbea,#fff8d6);border-top:1px solid rgba(245,166,35,0.2);border-bottom:1px solid rgba(245,166,35,0.2);}
-.invite-inner{display:flex;align-items:center;gap:38px;flex-wrap:wrap;}
-.invite-em{font-size:3.4rem;flex-shrink:0;line-height:1;}
-.invite-body{flex:1;min-width:230px;}
-.invite-h{font-family:var(--display);font-size:1.45rem;font-weight:800;color:var(--dark);margin-bottom:7px;}
-.invite-p{font-size:0.88rem;color:var(--muted);line-height:1.66;margin-bottom:4px;}
-.invite-note{font-size:0.72rem;color:var(--muted2);font-style:italic;}
 .tstrip{background:var(--dark2);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;gap:16px;text-decoration:none;transition:background .22s;-webkit-tap-highlight-color:transparent;}
 .tstrip:hover{background:var(--dark);}
 .ts-ic{font-size:1.55rem;flex-shrink:0;}
@@ -125,7 +118,6 @@ footer{background:var(--dark);color:rgba(255,255,255,0.8);padding:54px clamp(14p
 .dr-user.on{display:block;}
 .dr-uname{font-family:var(--display);font-size:0.9rem;font-weight:700;color:var(--dark);}
 .dr-usub{font-size:0.73rem;color:var(--muted);margin-top:2px;}
-.dr-ubonus{font-size:0.7rem;color:var(--gold2);font-weight:600;margin-top:5px;background:#fff;padding:3px 9px;border-radius:20px;display:inline-block;}
 .dr-body{padding:10px;flex:1;}
 .dr-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:9px;cursor:pointer;transition:background .2s;font-size:0.87rem;font-weight:500;color:var(--muted);-webkit-tap-highlight-color:transparent;}
 .dr-item:hover{background:var(--bg3);color:var(--dark);}
@@ -184,16 +176,6 @@ textarea.fi{resize:vertical;min-height:94px;}
 .party-row{display:flex;border-radius:var(--rsm);overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px;}
 .pty{flex:1;padding:10px 7px;text-align:center;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--muted);background:var(--bg2);-webkit-tap-highlight-color:transparent;}
 .pty.on{background:var(--gold);color:#fff;}
-.inv-box{background:var(--bg3);border:1.5px solid rgba(245,166,35,0.24);border-radius:var(--rsm);padding:15px;margin-top:15px;}
-.inv-bh{font-family:var(--display);font-size:.83rem;font-weight:700;color:var(--dark);margin-bottom:11px;display:flex;align-items:center;gap:6px;}
-.inv-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--border);}
-.inv-row:last-of-type{border-bottom:none;}
-.inv-val{font-family:var(--display);font-weight:700;color:var(--gold2);}
-.inv-bar-w{height:7px;background:var(--border);border-radius:4px;margin-top:9px;overflow:hidden;}
-.inv-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px;transition:width .6s;}
-.inv-claim{width:100%;margin-top:11px;padding:10px;border-radius:var(--rsm);background:var(--gold-dim);border:1.5px solid rgba(245,166,35,0.3);color:var(--gold2);font-size:.8rem;font-weight:700;transition:all .2s;}
-.inv-claim:hover:not(:disabled){background:rgba(245,166,35,0.2);}
-.inv-claim:disabled{opacity:.4;cursor:not-allowed;}
 .policy-body{font-size:0.84rem;color:var(--muted);line-height:1.8;}
 .policy-body h3{font-family:var(--display);font-size:0.88rem;font-weight:700;color:var(--dark);margin:16px 0 6px;}
 .policy-body h3:first-child{margin-top:0;}
@@ -292,7 +274,7 @@ textarea.fi{resize:vertical;min-height:94px;}
 .if-ic{width:56px;height:56px;border-radius:50%;background:rgba(220,38,38,0.1);color:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
 .if-title{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--dark);text-align:center;margin-bottom:8px;}
 .if-msg{font-size:.86rem;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:22px;}
-@media(max-width:600px){.plans-grid{grid-template-columns:repeat(2,1fr);}.ft-top{flex-direction:column;}.ft-bottom{flex-direction:column;align-items:flex-start;}.hero-stats{gap:24px;}.invite-inner{gap:22px;}.nbtn{display:none;}.ads-frame{height:70px;}}
+@media(max-width:600px){.plans-grid{grid-template-columns:repeat(2,1fr);}.ft-top{flex-direction:column;}.ft-bottom{flex-direction:column;align-items:flex-start;}.hero-stats{gap:24px;}.nbtn{display:none;}.ads-frame{height:70px;}}
 </style>
 </head>
 <body>
@@ -316,13 +298,12 @@ textarea.fi{resize:vertical;min-height:94px;}
 
 <div id="drawer">
   <div class="dr-head"><div class="dr-logo">Unlim<b>Data</b></div><button class="dr-x" onclick="closeDrawer()">✕</button></div>
-  <div class="dr-user" id="dr-user"><div class="dr-uname" id="dr-uname"></div><div class="dr-usub">UnlimData Member</div><div class="dr-ubonus" id="dr-ubonus">🎁 Bonus: 0 GB</div></div>
+  <div class="dr-user" id="dr-user"><div class="dr-uname" id="dr-uname"></div><div class="dr-usub">UnlimData Member</div></div>
   <div class="dr-body">
     <a class="tstrip" href="unlimited.html" target="_blank" style="margin-bottom:12px;">
       <div class="ts-ic">🛠</div><div class="ts-body"><div class="ts-title">Data Tools</div><div class="ts-sub">Browse safely · Bypass restrictions</div></div><div class="ts-arr">↗</div>
     </a>
     <div class="dr-item" onclick="closeDrawer();scrollToNets()"><span class="dr-ic">📡</span>Buy Data</div>
-    <div class="dr-item hl" onclick="closeDrawer();openInvite()"><span class="dr-ic">🎁</span>Invite Friends — Earn 24hr unlim..</div>
     <div class="dr-sep"></div>
     <div class="dr-item" id="dr-li" onclick="closeDrawer();openM('m-login')"><span class="dr-ic">👤</span>Sign In</div>
     <div class="dr-item" id="dr-su" onclick="closeDrawer();openM('m-signup')"><span class="dr-ic">✨</span>Create Account</div>
@@ -422,22 +403,7 @@ textarea.fi{resize:vertical;min-height:94px;}
     <div class="feat"><div class="feat-ic">🔐</div><div class="feat-h">Secure Payments</div><div class="feat-p">Powered by Paystack — Nigeria's most trusted payment gateway. Every transaction is encrypted end-to-end.</div></div>
     <div class="feat"><div class="feat-ic">📡</div><div class="feat-h">All Major Networks</div><div class="feat-p">MTN, Glo, Airtel, 9Mobile, Smile, T-Mobile, Vodafone, ntel — all in one place.</div></div>
     <div class="feat"><div class="feat-ic">💸</div><div class="feat-h">Unbeatable Prices</div><div class="feat-p">₦15,000 for 30 days unlimited. Our rates beat any reseller in the market, guaranteed.</div></div>
-    <div class="feat"><div class="feat-ic">🎁</div><div class="feat-h">Refer &amp; Earn Free Data</div><div class="feat-p">Invite friends and earn 24 hours unlimited per referral.</div></div>
     <div class="feat"><div class="feat-ic">🛠</div><div class="feat-h">Free Browsing Tools</div><div class="feat-p">The Unlim premium VPN ensures that your subscription remains unlimited and uninterrupted.</div></div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<section class="sec invite-sec">
-  <div class="invite-inner">
-    <div class="invite-em">🎁</div>
-    <div class="invite-body">
-      <div class="invite-h">Invite Friends, Earn Free Data</div>
-      <div class="invite-p">Every friend you bring earns you <strong> 24 hours unlimited data free</strong>. Accumulate in your bonus.</div>
-      <div class="invite-note">* Referral unlimited redeemable 24hr free.</div>
-    </div>
-    <button class="btn-p" onclick="openInvite()">🔗 Get My Invite Link</button>
   </div>
 </section>
 
@@ -455,7 +421,7 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
 <footer>
   <div class="ft-top">
     <div class="ft-brand"><div class="ft-logo">Unlim<b>Data</b></div><div class="ft-tag">Unlimited internet subscription for all Nigerian and global networks. Browse anything, anywhere, anytime.</div></div>
-    <div><div class="ft-col-h">Services</div><span class="ft-lnk" onclick="scrollToNets()">Buy Data</span><a class="ft-lnk" href="unlimited.html" target="_blank">Data Tools</a><span class="ft-lnk" onclick="openInvite()">Referral Program</span></div>
+    <div><div class="ft-col-h">Services</div><span class="ft-lnk" onclick="scrollToNets()">Buy Data</span><a class="ft-lnk" href="unlimited.html" target="_blank">Data Tools</a></div>
     <div><div class="ft-col-h">Account</div><span class="ft-lnk" onclick="openM('m-signup')">Create Account</span><span class="ft-lnk" onclick="openM('m-login')">Sign In</span><span class="ft-lnk" onclick="openM('m-forgot')">Forgot Password</span></div>
     <div><div class="ft-col-h">Company</div><span class="ft-lnk" onclick="openM('m-about')">About Us</span><span class="ft-lnk" onclick="openM('m-contact')">Contact Us</span><span class="ft-lnk" onclick="openM('m-privacy')">Privacy Policy</span><span class="ft-lnk" onclick="openM('m-terms')">Terms of Service</span></div>
   </div>
@@ -553,7 +519,6 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
       <li>Instant activation across 8+ networks</li>
       <li>3rd party gifting — send data to any number</li>
       <li>Free data tools: VPN guides, speed tests, bypass tools</li>
-      <li>Referral program — earn 24 hours Unlimited data per friend invited</li>
     </ul>
     <h3>Why Trust Us</h3>
     <p>Thousands of users across Nigeria trust UnlimData to keep them connected. Every transaction is processed securely through Paystack and every plan is activated instantly.</p>
@@ -579,10 +544,10 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
     <p>We use minimal browser storage  to keep you signed in and remember preferences. No third-party tracking cookies are used.</p>
     <h3>6. Your Rights</h3>
     <ul><li>Right to access your personal data</li><li>Right to delete your account and data</li><li>Right to opt out of communications</li></ul>
-    <p>To exercise these rights, contact us via WhatsApp at 09052469112.</p>
+    <p>To exercise these rights, contact us via WhatsApp at +1 (740) 406-1406.</p>
     <h3>7. Changes to This Policy</h3>
     <p>We may update this policy occasionally. Continued use of UnlimData after changes means you accept the updated policy.</p>
-    <div class="policy-footer">© Unlimited Data 2026 · Contact: WhatsApp 09052469112</div>
+    <div class="policy-footer">© Unlimited Data 2026 · Contact: WhatsApp +1 (740) 406-1406</div>
   </div>
 </div></div>
 
@@ -600,13 +565,11 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
     <h3>4. Payments and Refunds</h3>
     <ul><li>All payments are processed securely by Paystack</li><li>Prices are displayed in Nigerian Naira (₦) and are final</li><li>Data plans are activated automatically after payment confirmation</li><li>Refunds are processed within 24–48 hours for failed activations only</li></ul>
     <h3>5. Prohibited Uses</h3>
-    <ul><li>Purchasing data for fraudulent or illegal activities</li><li>Attempting to hack or reverse-engineer our platform</li><li>Creating multiple accounts to abuse referral programs</li><li>Reselling data plans without authorization</li></ul>
-    <h3>6. Referral Program</h3>
-    <ul><li>24 hours Unlimited data is credited per genuine referral — your friend must purchase any plan other than the 24-hour plan</li><li>Each qualifying referral adds one redeemable 24-hour bonus (shown as x1, x2, x3…) to your account</li><li>Tap "Redeem Bonus" to request activation — our team reviews and activates redeemed bonuses</li><li>Fraudulent referrals will result in account termination</li></ul>
-    <h3>7. Limitation of Liability</h3>
+    <ul><li>Purchasing data for fraudulent or illegal activities</li><li>Attempting to hack or reverse-engineer our platform</li><li>Reselling data plans without authorization</li></ul>
+    <h3>6. Limitation of Liability</h3>
     <p>UnlimData is not liable for service interruptions caused by network providers. Our maximum liability is limited to the value of the transaction in dispute.</p>
-    <h3>8. Contact</h3>
-    <p>For any disputes, contact us via WhatsApp at 09052469112.</p>
+    <h3>7. Contact</h3>
+    <p>For any disputes, contact us via WhatsApp at +1 (740) 406-1406.</p>
     <div class="policy-footer">© Unlimited Data 2026 · These terms are governed by Nigerian law.</div>
   </div>
 </div></div>
@@ -679,27 +642,6 @@ Unlim vpn</div><div class="ts-sub">Unlim VPN · Psiphon · Orbot/Tor · Speedify
   <button class="fbtn red" style="margin-top:8px;" onclick="closeM('m-pin-confirm')">Cancel</button>
 </div></div>
 
-<!-- INVITE -->
-<div class="mw" id="m-invite"><div class="mb">
-  <button class="mx" onclick="closeM('m-invite')">✕</button>
-  <div class="mt">🎁 Invite and Earn Data</div><div class="ms">Every friend who subscribes to a plan (7/30/90 days) earns you 24hr free Unlimited data.</div>
-  <div id="inv-prompt" style="text-align:center;padding:20px 0;">
-    <div style="font-size:2.5rem;margin-bottom:11px;">🔐</div>
-    <div style="font-size:.86rem;color:var(--muted);margin-bottom:16px;">Sign in to get your personal invite link and track your earned 24hr bonuses.</div>
-    <button class="fbtn" style="max-width:190px;margin:0 auto;" onclick="switchM('m-invite','m-login')">Sign In First</button>
-  </div>
-  <div id="inv-content" style="display:none;">
-    <div class="fg"><label class="fl">Your Invite Link</label><div style="display:flex;gap:8px;"><input class="fi" type="text" id="inv-link" readonly style="flex:1;"/><button class="fbtn" style="width:auto;padding:0 15px;margin-top:0;" onclick="copyInvLink()">Copy</button></div></div>
-    <div class="inv-box">
-      <div class="inv-bh">🎁 Your Bonus Box</div>
-      <div class="inv-row"><span>Friends Invited</span><span class="inv-val" id="inv-cnt">0</span></div>
-      <div class="inv-row"><span>24hr Bonus Available</span><span class="inv-val" id="inv-gb">x0</span></div>
-      <button class="inv-claim" id="inv-claim" disabled onclick="redeemBonus()">No Bonus Available Yet</button>
-    </div>
-    <div style="font-size:.7rem;color:var(--muted2);margin-top:10px;text-align:center;">Redeeming sends a request to our team — your 24hr Unlimited data is activated shortly after.</div>
-  </div>
-</div></div>
-
 <script>
 const PK='pk_live_4ff37d15381d1d12c78fd66f7bc86beb64c59415';
 const firebaseConfig={apiKey:"AIzaSyDZGrmq77-b4suSUr_vZi66btpJYOc9780",authDomain:"unlimited-22ac9.firebaseapp.com",projectId:"unlimited-22ac9",storageBucket:"unlimited-22ac9.firebasestorage.app",messagingSenderId:"7559085841",appId:"1:7559085841:web:e16b96ffdd4374d72ad6b0",measurementId:"G-0PB1LMNVB4"};
@@ -723,7 +665,6 @@ async function fsGetUser(phone){try{const d=await dbFS.collection('users').doc(p
 async function fsCreateUser(u){await dbFS.collection('users').doc(u.phone).set(u);}
 async function fsUpdateUser(phone,fields){await dbFS.collection('users').doc(phone).update(fields);}
 async function fsAddOrder(o){await dbFS.collection('orders').add(o);}
-async function fsAddRedemption(r){await dbFS.collection('redemptions').add(r);}
 async function fsAddFundRequest(r){await dbFS.collection('fundRequests').add(r);}
 const NETS=[
   {id:'mtn',name:'MTN',img:'mtn.png',color:'#f5a623',bg:'#fff8e1',sub:'MTN Nigeria — 4G/5G Ready'},
@@ -742,8 +683,6 @@ const PLANS=[
   {data:'UnlimData',price:4000,label:'₦40,000',val:'90 days Unlimited data'},
 ];
 let user=null,currentBuy={},buyParty='self',fpPhone='',fpEmail='',fpVerified=false,pendingBuy=null,buyFundSource='balance';
-const pendingRef=new URLSearchParams(location.search).get('ref')||sessionStorage.getItem('ud_ref')||'';
-if(pendingRef)sessionStorage.setItem('ud_ref',pendingRef);
 const _sessPhone=localStorage.getItem('ud_session');
 if(_sessPhone){fsGetUser(_sessPhone).then(u=>{if(u){user=u;refreshUI();accrueDailyBonus();}});}
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>10));
@@ -878,15 +817,6 @@ async function executePurchase(ph){
     });
     user[source]=(user[source]||0)-amount;
     refreshWalletUI();
-    const purchaserId=user.phone;
-    let referralApplied=false;
-    if(pendingRef&&purchaserId&&pendingRef!==purchaserId&&currentBuy.plan.price!==100){
-      const refUser=await fsGetUser(pendingRef);
-      if(refUser){
-        await fsUpdateUser(pendingRef,{bonusUnits:firebase.firestore.FieldValue.increment(1),referralCount:firebase.firestore.FieldValue.increment(1)});
-        referralApplied=true;
-      }
-    }
     await fsAddOrder({
       buyerPhone:user.phone,
       name:user.name,
@@ -899,8 +829,6 @@ async function executePurchase(ph){
       recipientPhone:ph,
       party:buyParty,
       status:'pending',
-      referredBy:pendingRef||null,
-      referralApplied,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     hideLoader();
@@ -1124,10 +1052,10 @@ async function doSignup(){
   try{
     const existing=await fsGetUser(ph);
     if(existing){hideLoader();showToast('Account exists. Sign in instead.');return;}
-    const newUser={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,balance:0,bonusBalance:0,referredBy:(pendingRef&&pendingRef!==ph)?pendingRef:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastBonusAccrualAt:firebase.firestore.FieldValue.serverTimestamp()};
+    const newUser={name,email,phone:ph,pw,balance:0,bonusBalance:0,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastBonusAccrualAt:firebase.firestore.FieldValue.serverTimestamp()};
     await fsCreateUser(newUser);
     hideLoader();
-    user={name,email,phone:ph,pw,bonusUnits:0,referralCount:0,balance:0,bonusBalance:0,referredBy:newUser.referredBy,lastBonusAccrualAt:new Date()};
+    user={name,email,phone:ph,pw,balance:0,bonusBalance:0,lastBonusAccrualAt:new Date()};
     localStorage.setItem('ud_session',ph);
     refreshUI();closeM('m-signup');showToast('✅ Account created! Welcome to UnlimData.');
     if(pendingBuy){const pb=pendingBuy;pendingBuy=null;setTimeout(()=>openBuyModal(pb.net,pb.plan),350);}
@@ -1153,7 +1081,7 @@ function refreshUI(){
   document.getElementById('dr-so').classList.toggle('on',on);
   document.getElementById('dr-li').style.display=on?'none':'flex';
   document.getElementById('dr-su').style.display=on?'none':'flex';
-  if(on){document.getElementById('dr-uname').textContent=`📱 ${user.phone}`;document.getElementById('dr-ubonus').textContent=`🎁 Bonus: x${user.bonusUnits||0} (24hr)`;}
+  if(on){document.getElementById('dr-uname').textContent=`📱 ${user.phone}`;}
   const cta=document.getElementById('nav-cta');const li=document.getElementById('nav-li');
   if(on){cta.textContent='My Account';cta.onclick=openDrawer;li.style.display='none';}
   else{cta.textContent='Get Started';cta.onclick=()=>openM('m-signup');li.style.display='';}
@@ -1238,37 +1166,9 @@ function doContact(){
   if(!msg){document.getElementById('ct-msg-err').classList.add('on');ok=false;}else document.getElementById('ct-msg-err').classList.remove('on');
   if(!ok)return;
   const txt=encodeURIComponent(`Hello! I am contacting you from UnlimData.\n\nMy phone: ${ph}\n\n${msg}`);
-  window.open(`https://wa.me/09052469112?text=${txt}`,'_blank');
+  window.open(`https://wa.me/08140005079?text=${txt}`,'_blank');
   closeM('m-contact');document.getElementById('ct-ph').value='';document.getElementById('ct-msg').value='';
   showToast('Opening WhatsApp…');
-}
-function openInvite(){
-  const on=!!user;
-  document.getElementById('inv-prompt').style.display=on?'none':'block';
-  document.getElementById('inv-content').style.display=on?'block':'none';
-  if(on){
-    document.getElementById('inv-link').value=`${location.origin}${location.pathname}?ref=${user.phone}`;
-    const units=user.bonusUnits||0,cnt=user.referralCount||0;
-    document.getElementById('inv-cnt').textContent=cnt;document.getElementById('inv-gb').textContent='x'+units;
-    const btn=document.getElementById('inv-claim');btn.disabled=units<1;
-    btn.textContent=units>=1?`🎉 Redeem Bonus (x${units} available)`:'No Bonus Available Yet';
-  }
-  openM('m-invite');
-}
-function copyInvLink(){
-  const v=document.getElementById('inv-link').value;
-  navigator.clipboard.writeText(v).then(()=>showToast('✅ Invite link copied!')).catch(()=>{try{document.getElementById('inv-link').select();document.execCommand('copy');showToast('✅ Link copied!');}catch(e){showToast('Copy the link manually.');}});
-}
-async function redeemBonus(){
-  if(!user||!((user.bonusUnits||0)>0))return;
-  showLoader('Sending request…','Just a moment…');
-  try{
-    await fsAddRedemption({userPhone:user.phone,name:user.name,email:user.email,requestedAt:firebase.firestore.FieldValue.serverTimestamp(),status:'pending'});
-    await fsUpdateUser(user.phone,{bonusUnits:firebase.firestore.FieldValue.increment(-1)});
-    user.bonusUnits=(user.bonusUnits||0)-1;
-    hideLoader();
-    closeM('m-invite');showBanner('🎁 Redeem request sent! Your 24hr Unlimited data will be activated shortly.');setTimeout(()=>hideBanner(),10000);
-  }catch(e){hideLoader();console.error(e);showToast('Something went wrong. Please try again.');}
 }
 function openM(id){document.getElementById(id).classList.add('on');document.getElementById('dimmer').classList.add('on');}
 function closeM(id){document.getElementById(id).classList.remove('on');if(!document.querySelectorAll('.mw.on').length)document.getElementById('dimmer').classList.remove('on');}
