@@ -1166,7 +1166,7 @@ function doContact(){
   if(!msg){document.getElementById('ct-msg-err').classList.add('on');ok=false;}else document.getElementById('ct-msg-err').classList.remove('on');
   if(!ok)return;
   const txt=encodeURIComponent(`Hello! I am contacting you from UnlimData.\n\nMy phone: ${ph}\n\n${msg}`);
-  window.open(`https://wa.me/08140005079?text=${txt}`,'_blank');
+  window.open(`https://wa.me/09052469112?text=${txt}`,'_blank');
   closeM('m-contact');document.getElementById('ct-ph').value='';document.getElementById('ct-msg').value='';
   showToast('Opening WhatsApp…');
 }
